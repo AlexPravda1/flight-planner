@@ -17,8 +17,3 @@ pipelines:
             script:
               # Security scan for sensitive data
               - pipe: atlassian/git-secrets-scan:0.5.1
-        - step:
-            name: SonarCloud Scan
-            script:
-              # Detect bugs & vulnerabilities
-              - pipe: sonarsource/sonarcloud-scan:1.4.0

@@ -13,7 +13,7 @@
 
     </Appenders>
     <Loggers>
-        <Logger name="planner" level="info" additivity="false">
+        <Logger name="planner" level="DEBUG" additivity="false">
             <AppenderRef ref="LogToConsole"/>
             <AppenderRef ref="FileLogger"/>
         </Logger>

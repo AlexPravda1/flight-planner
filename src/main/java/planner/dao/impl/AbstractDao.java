@@ -53,6 +53,7 @@ public abstract class AbstractDao<T, I extends Serializable> {
         }
     }
 
+    @SuppressWarnings("try")
     public void delete(I id) {
         Session session = null;
         Transaction transaction = null;

@@ -1,13 +1,9 @@
 package planner.model.dto.response;
 
 import java.util.List;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public class UserResponseDto {
     private Long id;
     private List<RoleResponseDto> roles;

@@ -14,6 +14,7 @@ public abstract class AbstractDao<T, I extends Serializable> {
     protected final SessionFactory sessionFactory;
     protected final Class<T> clazz;
 
+    @SuppressWarnings("TryFinallyCanBeTryWithResources")
     public T save(T entity) {
         Session session = null;
         Transaction transaction = null;
@@ -53,7 +54,7 @@ public abstract class AbstractDao<T, I extends Serializable> {
         }
     }
 
-    @SuppressWarnings("try")
+    @SuppressWarnings("TryFinallyCanBeTryWithResources")
     public void delete(I id) {
         Session session = null;
         Transaction transaction = null;
@@ -74,6 +75,7 @@ public abstract class AbstractDao<T, I extends Serializable> {
         }
     }
 
+    @SuppressWarnings("TryFinallyCanBeTryWithResources")
     public T update(T entity) {
         Session session = null;
         Transaction transaction = null;

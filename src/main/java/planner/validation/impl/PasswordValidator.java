@@ -1,7 +1,7 @@
 package planner.validation.impl;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 import org.springframework.beans.BeanWrapperImpl;
 import planner.model.dto.request.UserRegistrationDto;
 import planner.validation.Password;

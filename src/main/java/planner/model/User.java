@@ -13,8 +13,6 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Table(name = "users")
@@ -31,7 +29,6 @@ public class User {
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    @Fetch(FetchMode.JOIN)
     private Set<Role> roles;
 
     @Column(unique = true, nullable = false)
@@ -45,4 +42,15 @@ public class User {
 
     @Column(nullable = false)
     private String surname;
+
+    @Override
+    public String toString() {
+        return "User{"
+                + "id=" + id
+                + ", roles=" + roles
+                + ", email='" + email
+                + ", name='" + name
+                + ", surname='" + surname
+                + '}';
+    }
 }

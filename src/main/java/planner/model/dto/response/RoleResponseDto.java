@@ -1,13 +1,9 @@
 package planner.model.dto.response;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public class RoleResponseDto {
     private Long id;
-    private String name;
+    private String roleName;
 }

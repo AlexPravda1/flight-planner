@@ -11,6 +11,7 @@ public class IndexController {
     public String hello(Authentication authentication, HttpServletRequest request) {
         String sessionId = request.getSession().getId();
         return String.format("Hello, %s!", authentication.getName()
+                + ". Your access level: " + authentication.getAuthorities()
                 + ". Your session id is: " + sessionId);
     }
 }

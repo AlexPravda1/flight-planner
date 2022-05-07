@@ -21,18 +21,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder);
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 
     protected void configure(HttpSecurity http) throws Exception {
-        /*
-        http.httpBasic().disable()
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/")
-                .permitAll();
-        */
         http
                 .httpBasic().disable()
                 .csrf().disable()
@@ -42,25 +34,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
 
                 .antMatchers(HttpMethod.GET,
-                        "/register/**",
-                        "/inject/**",
-                        "/users/**",
-                        "/test/**").permitAll()
+                        "/test/**").hasRole("ADMIN")
+
+                .antMatchers(HttpMethod.GET,
+                        "/index").hasAnyRole("ADMIN", "USER")
 
                 .antMatchers(HttpMethod.POST,
                         "/register/**",
                         "/login/**").permitAll()
 
                 .antMatchers(HttpMethod.DELETE).hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET,
-                        "/index/**").hasAnyRole()
+                .antMatchers(HttpMethod.PUT).hasRole("ADMIN")
 
                 .anyRequest().authenticated()
+
                 .and()
-                .formLogin()
-                .permitAll()
-                .and()
+                .formLogin().disable()
+
                 .apply(new JwtConfigurer(jwtTokenProvider))
+
                 .and()
                 .headers().frameOptions().disable();
     }

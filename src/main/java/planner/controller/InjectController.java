@@ -1,18 +1,20 @@
 package planner.controller;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import planner.model.Role;
 import planner.model.User;
+import planner.model.dto.response.UserResponseDto;
 import planner.service.RoleService;
 import planner.service.UserService;
+import planner.util.MapperUtil;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/test")
 public class InjectController {
     private final RoleService roleService;
     private final UserService userService;
@@ -20,46 +22,27 @@ public class InjectController {
     @GetMapping("/inject")
     public String injectData() {
         List<Role> roles = roleService.findAll();
-        if (!roles.isEmpty()) {
-            return "Injection complete";
-        }
-        // Save roles
-        roleService.save(new Role(Role.RoleName.ADMIN));
-        roleService.save(new Role(Role.RoleName.USER));
-        roles = roleService.findAll();
-
-        // save users
-        User bobAdmin = new User();
-        bobAdmin.setRoles(new HashSet<>(roles));
-        bobAdmin.setEmail("bob@i.ua");
-        bobAdmin.setPassword("1234");
-        bobAdmin.setName("bob");
-        bobAdmin.setSurname("bobinsky");
-        userService.save(bobAdmin);
-
-        User aliceUser = new User();
-        aliceUser.setRoles(Set.of(roles.get(0)));
-        aliceUser.setEmail("alice@i.ua");
-        aliceUser.setPassword("1234");
-        aliceUser.setName("alice");
-        aliceUser.setSurname("alicynsky");
-        userService.save(aliceUser);
-
-        return roles + "*|*|*|*|*|*|**|*|*"
-                + bobAdmin + "*|*|*|*|*|*|**|*|*"
-                + aliceUser + "*|*|*|*|*|*|**|*|*"
-                + "Done!";
+        return "Injection must have been done already by @PostConstruct. "
+                + "Roles list must have at least 2 roles: "
+                + roles.toString();
     }
 
-    @GetMapping("/test")
+    @GetMapping("/message")
     public String getTest() {
-        return "This is test page";
+        return "This is test String message only";
     }
 
     @GetMapping("/users")
-    public List<User> getUsers() {
+    public List<UserResponseDto> getUsers() {
         User bob = userService.findByEmail("bob@i.ua").get();
         User alice = userService.findByEmail("alice@i.ua").get();
-        return List.of(bob, alice);
+        List<User> users = List.of(bob, alice);
+        return MapperUtil.getMappedDtoList(users, UserResponseDto.class);
+    }
+
+    @GetMapping("/users/bob")
+    public UserResponseDto getUserBob() {
+        User bob = userService.findByEmail("bob@i.ua").get();
+        return MapperUtil.getMappedDtoEntity(bob, UserResponseDto.class);
     }
 }

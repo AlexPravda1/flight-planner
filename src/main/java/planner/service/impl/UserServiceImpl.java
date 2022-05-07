@@ -3,6 +3,7 @@ package planner.service.impl;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import planner.dao.UserDao;
@@ -23,7 +24,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Long id) {
-        return userDao.findById(id).get();
+        return userDao.findById(id).orElseThrow(
+                () -> new UsernameNotFoundException("User for id: " + id + " not found in DB."));
     }
 
     @Override

@@ -3,7 +3,7 @@ package planner.controller;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
-import org.dozer.DozerBeanMapper;
+import lombok.RequiredArgsConstructor;
 import org.dozer.Mapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,19 +19,11 @@ import planner.security.AuthenticationService;
 import planner.security.jwt.JwtTokenProvider;
 
 @RestController
+@RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
-
-    /// !!<<< FIX: BEAN AUTOWIRE
-    private final Mapper userMapper = new DozerBeanMapper();
-
     private final JwtTokenProvider jwtTokenProvider;
-
-    public AuthenticationController(AuthenticationService authenticationService,
-                                    JwtTokenProvider jwtTokenProvider) {
-        this.authenticationService = authenticationService;
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
+    private final Mapper userMapper;
 
     @PostMapping("/register")
     public UserResponseDto register(@RequestBody @Valid UserRegistrationDto registrationDto) {

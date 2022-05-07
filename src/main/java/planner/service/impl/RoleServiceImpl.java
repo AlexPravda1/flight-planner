@@ -3,6 +3,7 @@ package planner.service.impl;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import planner.dao.RoleDao;
+import planner.exception.DataProcessingException;
 import planner.model.Role;
 import planner.service.RoleService;
 
@@ -21,7 +22,8 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role getRoleByName(String roleName) {
-        return roleDao.getRoleByName(roleName).orElseThrow();
+        return roleDao.getRoleByName(roleName).orElseThrow(() -> new DataProcessingException(
+                "Role with name: " + roleName + " was not found in DB."));
     }
 
     @Override

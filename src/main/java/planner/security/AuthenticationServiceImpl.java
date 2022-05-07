@@ -22,7 +22,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public User register(String email, String password, String name, String surname) {
         User user = new User();
-        user.setRoles(Set.of(roleService.getRoleByName(ROLE_USER.getValue())));
+        user.setRoles(Set.of(roleService.getRoleByName(ROLE_USER.value())));
         user.setEmail(email);
         user.setPassword(password);
         user.setName(name);

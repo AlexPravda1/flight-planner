@@ -26,7 +26,7 @@ public enum ConfigProperty {
         this.value = value;
     }
 
-    public String getValue() {
+    public String value() {
         return value;
     }
 }

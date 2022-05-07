@@ -41,18 +41,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
 
                 .antMatchers(HttpMethod.GET,
-                        POINT_TEST.getValue()).hasRole(ROLE_ADMIN.getValue())
+                        POINT_TEST.value()).hasRole(ROLE_ADMIN.value())
 
                 .antMatchers(HttpMethod.GET,
-                        POINT_INDEX.getValue())
-                .hasAnyRole(ROLE_ADMIN.getValue(), ROLE_USER.getValue())
+                        POINT_INDEX.value())
+                .hasAnyRole(ROLE_ADMIN.value(), ROLE_USER.value())
 
                 .antMatchers(HttpMethod.POST,
-                        POINT_REGISTER.getValue(),
-                        POINT_LOGIN.getValue()).permitAll()
+                        POINT_REGISTER.value(),
+                        POINT_LOGIN.value()).permitAll()
 
-                .antMatchers(HttpMethod.DELETE).hasRole(ROLE_ADMIN.getValue())
-                .antMatchers(HttpMethod.PUT).hasRole(ROLE_ADMIN.getValue())
+                .antMatchers(HttpMethod.DELETE).hasRole(ROLE_ADMIN.value())
+                .antMatchers(HttpMethod.PUT).hasRole(ROLE_ADMIN.value())
 
                 .anyRequest().authenticated()
 

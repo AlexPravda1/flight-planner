@@ -34,10 +34,10 @@ public class AppConfig {
     @Bean
     public DataSource getDataSource() {
         BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName(environment.getProperty(DB_DRIVER.getValue()));
-        dataSource.setUrl(environment.getProperty(DB_URL.getValue()));
-        dataSource.setUsername(environment.getProperty(DB_USERNAME.getValue()));
-        dataSource.setPassword(environment.getProperty(DB_PASSWORD.getValue()));
+        dataSource.setDriverClassName(environment.getProperty(DB_DRIVER.value()));
+        dataSource.setUrl(environment.getProperty(DB_URL.value()));
+        dataSource.setUsername(environment.getProperty(DB_USERNAME.value()));
+        dataSource.setPassword(environment.getProperty(DB_PASSWORD.value()));
         return dataSource;
     }
 
@@ -47,14 +47,14 @@ public class AppConfig {
         localSessionFactoryBean.setDataSource(getDataSource());
 
         Properties properties = new Properties();
-        properties.put("show_sql", environment.getProperty(HIBERNATE_SQL.getValue()));
+        properties.put("show_sql", environment.getProperty(HIBERNATE_SQL.value()));
         properties.put("hibernate.dialect",
-                environment.getProperty(HIBERNATE_DIALECT.getValue()));
+                environment.getProperty(HIBERNATE_DIALECT.value()));
         properties.put("hibernate.hbm2ddl.auto",
-                environment.getProperty(HIBERNATE_HBM2DDL.getValue()));
+                environment.getProperty(HIBERNATE_HBM2DDL.value()));
 
         localSessionFactoryBean.setHibernateProperties(properties);
-        localSessionFactoryBean.setPackagesToScan(PACKAGES_TO_SCAN.getValue());
+        localSessionFactoryBean.setPackagesToScan(PACKAGES_TO_SCAN.value());
 
         return localSessionFactoryBean;
     }

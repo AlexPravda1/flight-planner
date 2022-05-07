@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.dozer.Mapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,13 +16,13 @@ import planner.model.dto.request.UserRegistrationDto;
 import planner.model.dto.response.UserResponseDto;
 import planner.security.AuthenticationService;
 import planner.security.jwt.JwtTokenProvider;
+import planner.util.MapperUtil;
 
 @RestController
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final JwtTokenProvider jwtTokenProvider;
-    private final Mapper userMapper;
 
     @PostMapping("/register")
     public UserResponseDto register(@RequestBody @Valid UserRegistrationDto registrationDto) {
@@ -32,7 +31,7 @@ public class AuthenticationController {
                 registrationDto.getPassword(),
                 registrationDto.getName(),
                 registrationDto.getSurname());
-        return userMapper.map(user, UserResponseDto.class);
+        return MapperUtil.getDtoEntity(user, UserResponseDto.class);
     }
 
     @PostMapping("/login")

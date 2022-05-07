@@ -37,12 +37,12 @@ public class InjectController {
         User bob = userService.findByEmail("bob@i.ua").get();
         User alice = userService.findByEmail("alice@i.ua").get();
         List<User> users = List.of(bob, alice);
-        return MapperUtil.getMappedDtoList(users, UserResponseDto.class);
+        return MapperUtil.getDtoList(users, UserResponseDto.class);
     }
 
     @GetMapping("/users/bob")
     public UserResponseDto getUserBob() {
         User bob = userService.findByEmail("bob@i.ua").get();
-        return MapperUtil.getMappedDtoEntity(bob, UserResponseDto.class);
+        return MapperUtil.getDtoEntity(bob, UserResponseDto.class);
     }
 }

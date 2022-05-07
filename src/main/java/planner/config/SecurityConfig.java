@@ -1,5 +1,12 @@
 package planner.config;
 
+import static planner.config.ConfigProperty.POINT_INDEX;
+import static planner.config.ConfigProperty.POINT_LOGIN;
+import static planner.config.ConfigProperty.POINT_REGISTER;
+import static planner.config.ConfigProperty.POINT_TEST;
+import static planner.config.ConfigProperty.ROLE_ADMIN;
+import static planner.config.ConfigProperty.ROLE_USER;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -34,17 +41,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
 
                 .antMatchers(HttpMethod.GET,
-                        "/test/**").hasRole("ADMIN")
+                        POINT_TEST.getValue()).hasRole(ROLE_ADMIN.getValue())
 
                 .antMatchers(HttpMethod.GET,
-                        "/index").hasAnyRole("ADMIN", "USER")
+                        POINT_INDEX.getValue())
+                .hasAnyRole(ROLE_ADMIN.getValue(), ROLE_USER.getValue())
 
                 .antMatchers(HttpMethod.POST,
-                        "/register/**",
-                        "/login/**").permitAll()
+                        POINT_REGISTER.getValue(),
+                        POINT_LOGIN.getValue()).permitAll()
 
-                .antMatchers(HttpMethod.DELETE).hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT).hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE).hasRole(ROLE_ADMIN.getValue())
+                .antMatchers(HttpMethod.PUT).hasRole(ROLE_ADMIN.getValue())
 
                 .anyRequest().authenticated()
 

@@ -1,6 +1,7 @@
 package planner.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,16 +34,15 @@ public class InjectController {
     }
 
     @GetMapping("/users")
-    public List<UserResponseDto> getUsers() {
-        User bob = userService.findByEmail("bob@i.ua").get();
-        User alice = userService.findByEmail("alice@i.ua").get();
-        List<User> users = List.of(bob, alice);
-        return MapperUtil.getDtoList(users, UserResponseDto.class);
+    public List<String> getUsers() {
+        return userService.findAll().stream()
+                .map(User::getEmail)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/users/bob")
     public UserResponseDto getUserBob() {
         User bob = userService.findByEmail("bob@i.ua").get();
-        return MapperUtil.getDtoEntity(bob, UserResponseDto.class);
+        return MapperUtil.map(bob, UserResponseDto.class);
     }
 }

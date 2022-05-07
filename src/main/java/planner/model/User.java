@@ -3,7 +3,6 @@ package planner.model;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -43,15 +42,4 @@ public class User {
 
     @Column(nullable = false)
     private String surname;
-
-    @Override
-    public String toString() {
-        return "User{"
-                + "id=" + id
-                + ", roles=" + roles
-                + ", email='" + email
-                + ", name='" + name
-                + ", surname='" + surname
-                + '}';
-    }
 }

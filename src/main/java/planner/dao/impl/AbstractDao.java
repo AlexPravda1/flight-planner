@@ -11,6 +11,7 @@ import planner.exception.DataProcessingException;
 
 @RequiredArgsConstructor
 public abstract class AbstractDao<T, I extends Serializable> {
+    private static final String MESSAGE = "Can't perform action on Entity: %S";
     protected final SessionFactory sessionFactory;
     protected final Class<T> clazz;
 
@@ -28,7 +29,7 @@ public abstract class AbstractDao<T, I extends Serializable> {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new DataProcessingException("Can't create entity: " + entity, e);
+            throw new DataProcessingException(String.format(MESSAGE, "save " + entity), e);
         } finally {
             if (session != null) {
                 session.close();
@@ -40,8 +41,8 @@ public abstract class AbstractDao<T, I extends Serializable> {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("from " + clazz.getSimpleName(), clazz).getResultList();
         } catch (Exception e) {
-            throw new DataProcessingException("Can't get all entities: "
-                    + clazz.getSimpleName(), e);
+            throw new DataProcessingException(String.format(MESSAGE, "find all "
+                    + clazz.getSimpleName()), e);
         }
     }
 
@@ -49,8 +50,8 @@ public abstract class AbstractDao<T, I extends Serializable> {
         try (Session session = sessionFactory.openSession()) {
             return Optional.ofNullable(session.get(clazz, id));
         } catch (Exception e) {
-            throw new DataProcessingException("Can't get entity: " + clazz.getSimpleName()
-                    + " by id " + id, e);
+            throw new DataProcessingException(String.format(MESSAGE,
+                    "find " + clazz.getSimpleName() + " by id:" + id), e);
         }
     }
 
@@ -67,7 +68,7 @@ public abstract class AbstractDao<T, I extends Serializable> {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new DataProcessingException("Can't delete entity by id: " + id, e);
+            throw new DataProcessingException(String.format(MESSAGE, "delete by id: " + id), e);
         } finally {
             if (session != null) {
                 session.close();
@@ -88,7 +89,7 @@ public abstract class AbstractDao<T, I extends Serializable> {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new DataProcessingException("Can't update entity: " + entity, e);
+            throw new DataProcessingException(String.format(MESSAGE, "update " + entity), e);
         } finally {
             if (session != null) {
                 session.close();

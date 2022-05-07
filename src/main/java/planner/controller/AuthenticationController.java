@@ -31,7 +31,7 @@ public class AuthenticationController {
                 registrationDto.getPassword(),
                 registrationDto.getName(),
                 registrationDto.getSurname());
-        return MapperUtil.getDtoEntity(user, UserResponseDto.class);
+        return MapperUtil.map(user, UserResponseDto.class);
     }
 
     @PostMapping("/login")

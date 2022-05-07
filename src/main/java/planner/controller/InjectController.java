@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import planner.model.Role;
 import planner.model.User;
@@ -14,12 +13,11 @@ import planner.service.UserService;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/inject")
 public class InjectController {
     private final RoleService roleService;
     private final UserService userService;
 
-    @GetMapping
+    @GetMapping("/inject")
     public String injectData() {
         List<Role> roles = roleService.findAll();
         if (!roles.isEmpty()) {
@@ -56,5 +54,12 @@ public class InjectController {
     @GetMapping("/test")
     public String getTest() {
         return "This is test page";
+    }
+
+    @GetMapping("/users")
+    public List<User> getUsers() {
+        User bob = userService.findByEmail("bob@i.ua").get();
+        User alice = userService.findByEmail("alice@i.ua").get();
+        return List.of(bob, alice);
     }
 }

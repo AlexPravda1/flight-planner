@@ -18,11 +18,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User register(String email, String password) {
+    public User register(String email, String password, String name, String surname) {
         User user = new User();
+        user.setRoles(Set.of(roleService.getRoleByName("USER")));
         user.setEmail(email);
         user.setPassword(password);
-        user.setRoles(Set.of(roleService.getRoleByName("USER")));
+        user.setName(name);
+        user.setSurname(surname);
         user = userService.save(user);
         return user;
     }

@@ -10,6 +10,6 @@ public class UserLoginDto {
     @Size(min = 3, message = "Login must be at least 3 symbols long")
     private String login;
     @NotBlank(message = "Password can't be blank!")
-    @Size(min = 8, message = "Password must be at least 8 symbols long")
+    @Size(min = 3, message = "Password must be at least 3 symbols long")
     private String password;
 }

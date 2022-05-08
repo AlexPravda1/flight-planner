@@ -4,6 +4,7 @@ import static planner.config.enums.EndpointConfig.INDEX;
 import static planner.config.enums.EndpointConfig.LOGIN;
 import static planner.config.enums.EndpointConfig.REGISTER;
 import static planner.config.enums.EndpointConfig.TEST;
+import static planner.config.enums.EndpointConfig.WELCOME;
 import static planner.config.enums.UserRoleName.ADMIN;
 import static planner.config.enums.UserRoleName.USER;
 
@@ -50,6 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,
                         REGISTER.value(),
                         LOGIN.value()).permitAll()
+
+                .antMatchers(WELCOME.value()).permitAll()
 
                 .antMatchers(HttpMethod.DELETE).hasRole(ADMIN.value())
                 .antMatchers(HttpMethod.PUT).hasRole(ADMIN.value())

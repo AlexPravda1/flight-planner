@@ -34,7 +34,7 @@ public class Role {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "roleName = " + roleName.name() + ")";
+        return getClass().getSimpleName() + "("
+                + "roleName = " + roleName.name() + ")";
     }
 }

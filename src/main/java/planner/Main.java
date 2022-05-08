@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
-import planner.config.enums.SessionFactoryBeanConfig;
 import planner.config.enums.UserRoleName;
 import planner.model.Role;
 import planner.model.User;

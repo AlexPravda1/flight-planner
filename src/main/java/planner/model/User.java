@@ -42,4 +42,13 @@ public class User {
 
     @Column(nullable = false)
     private String surname;
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "("
+                + "id = " + id + ", "
+                + "email = " + email + ", "
+                + "name = " + name + ", "
+                + "surname = " + surname + ")";
+    }
 }

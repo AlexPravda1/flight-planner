@@ -31,4 +31,10 @@ public class Role {
     public Role(UserRoleName roleName) {
         this.roleName = roleName;
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "roleName = " + roleName.name() + ")";
+    }
 }

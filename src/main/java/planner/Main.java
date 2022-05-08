@@ -32,7 +32,5 @@ public class Main {
         List<RoleResponseDto> roles = responseDto.getRoles();
         System.out.println("RR DTO " + roles);
 
-        System.out.println(SessionFactoryBeanConfig.SHOW_SQL.name());
-        System.out.println(SessionFactoryBeanConfig.SHOW_SQL.value());
     }
 }

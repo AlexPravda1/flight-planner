@@ -1,6 +1,7 @@
 package planner.service.impl;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import planner.dao.RoleDao;
 import planner.exception.DataProcessingException;
@@ -8,12 +9,9 @@ import planner.model.Role;
 import planner.service.RoleService;
 
 @Service
+@RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
     private final RoleDao roleDao;
-
-    public RoleServiceImpl(RoleDao roleDao) {
-        this.roleDao = roleDao;
-    }
 
     @Override
     public Role save(Role role) {

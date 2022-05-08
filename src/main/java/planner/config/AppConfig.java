@@ -1,13 +1,13 @@
 package planner.config;
 
-import static planner.config.ConfigProperty.DB_DRIVER;
-import static planner.config.ConfigProperty.DB_PASSWORD;
-import static planner.config.ConfigProperty.DB_URL;
-import static planner.config.ConfigProperty.DB_USERNAME;
-import static planner.config.ConfigProperty.HIBERNATE_DIALECT;
-import static planner.config.ConfigProperty.HIBERNATE_HBM2DDL;
-import static planner.config.ConfigProperty.HIBERNATE_SQL;
-import static planner.config.ConfigProperty.PACKAGES_TO_SCAN;
+import static planner.config.enums.DataSourceBeanConfig.DB_DRIVER;
+import static planner.config.enums.DataSourceBeanConfig.DB_PASSWORD;
+import static planner.config.enums.DataSourceBeanConfig.DB_URL;
+import static planner.config.enums.DataSourceBeanConfig.DB_USERNAME;
+import static planner.config.enums.SessionFactoryBeanConfig.HIBERNATE_DIALECT;
+import static planner.config.enums.SessionFactoryBeanConfig.HIBERNATE_HBM2DDL;
+import static planner.config.enums.SessionFactoryBeanConfig.PACKAGES_TO_SCAN;
+import static planner.config.enums.SessionFactoryBeanConfig.SHOW_SQL;
 
 import java.util.Properties;
 import javax.sql.DataSource;
@@ -47,10 +47,10 @@ public class AppConfig {
         localSessionFactoryBean.setDataSource(getDataSource());
 
         Properties properties = new Properties();
-        properties.put("show_sql", environment.getProperty(HIBERNATE_SQL.value()));
-        properties.put("hibernate.dialect",
+        properties.put(SHOW_SQL.name(), environment.getProperty(SHOW_SQL.value()));
+        properties.put(HIBERNATE_DIALECT.value(),
                 environment.getProperty(HIBERNATE_DIALECT.value()));
-        properties.put("hibernate.hbm2ddl.auto",
+        properties.put(HIBERNATE_HBM2DDL.value(),
                 environment.getProperty(HIBERNATE_HBM2DDL.value()));
 
         localSessionFactoryBean.setHibernateProperties(properties);

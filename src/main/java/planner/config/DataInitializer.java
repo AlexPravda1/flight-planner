@@ -1,5 +1,8 @@
 package planner.config;
 
+import static planner.config.enums.UserRoleName.ADMIN;
+import static planner.config.enums.UserRoleName.USER;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,8 +25,8 @@ public class DataInitializer {
         List<Role> roles = roleService.findAll();
 
         if (roles.isEmpty()) {
-            roleService.save(new Role(Role.RoleName.ADMIN));
-            roleService.save(new Role(Role.RoleName.USER));
+            roleService.save(new Role(ADMIN));
+            roleService.save(new Role(USER));
             roles = roleService.findAll();
 
             User bobAdmin = new User();

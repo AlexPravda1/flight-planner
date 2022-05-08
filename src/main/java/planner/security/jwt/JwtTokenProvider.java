@@ -22,9 +22,9 @@ import planner.exception.InvalidJwtAuthenticationException;
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
-    @Value("${security.jwt.token.secret-key:secretWord}")
+    @Value("${security.jwt.token.secret-key:s3cr3tW0rd!}")
     private String secretKey;
-    @Value("${security.jwt.token.expiry-length:3600000}")
+    @Value("${security.jwt.token.expiry-length:1500000000}")
     private Long validityMilliseconds;
     private final UserDetailsService userDetailsService;
 

@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import planner.config.enums.UserRoleName;
 
 @Entity
 @Table(name = "roles")
@@ -25,13 +26,9 @@ public class Role {
 
     @Column(name = "role_name", unique = true, nullable = false)
     @Enumerated(EnumType.STRING)
-    private RoleName roleName;
+    private UserRoleName roleName;
 
-    public Role(RoleName roleName) {
+    public Role(UserRoleName roleName) {
         this.roleName = roleName;
-    }
-
-    public enum RoleName {
-        ADMIN, USER
     }
 }

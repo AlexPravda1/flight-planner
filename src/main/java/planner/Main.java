@@ -1,6 +1,5 @@
 package planner;
 
-import java.io.IOException;
 import planner.dao.LeonApiDao;
 import planner.dao.impl.LeonApiDaoImpl;
 import planner.model.Airline;

@@ -2,12 +2,12 @@
 <Configuration status="info">
     <Appenders>
         <Console name="LogToConsole" target="SYSTEM_OUT">
-            <PatternLayout   pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c:%L - %msg%n" />
+            <PatternLayout   pattern="%d{dd-MMM-yy HH:mm:ss}{GMT+0} UTC [%c{1}:%L] [%-5level] -- %msg%n"/>
         </Console>
 
         <File name="FileLogger" fileName="src/main/resources/JV-Logger.log">
             <PatternLayout>
-                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c:%L - %msg%n</pattern>
+                <pattern>%d{dd-MMM-yy HH:mm:ss}{GMT+0} UTC [%c{1}:%L] [%-5level] -- %msg%n</pattern>
             </PatternLayout>
         </File>
 

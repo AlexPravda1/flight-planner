@@ -1,35 +1,24 @@
 package planner;
 
-import java.util.List;
-import java.util.Set;
-import org.dozer.DozerBeanMapper;
-import org.dozer.Mapper;
-import planner.config.enums.UserRoleName;
-import planner.model.Role;
-import planner.model.User;
-import planner.model.dto.response.RoleResponseDto;
-import planner.model.dto.response.UserResponseDto;
+import java.io.IOException;
+import planner.dao.LeonApiDao;
+import planner.dao.impl.LeonApiDaoImpl;
+import planner.model.Airline;
 
 public class Main {
-    private static final Mapper mapper = new DozerBeanMapper();
-
     public static void main(String[] args) {
-        System.out.println("Hello");
 
-        User user = new User();
-        user.setId(1L);
-        user.setName("boba");
-        user.setSurname("boba");
-        user.setPassword("supaPasaward");
-        Role roleUser = new Role(UserRoleName.USER);
-        roleUser.setId(2L);
-        user.setRoles(Set.of(roleUser));
+        Airline volare = new Airline();
+        volare.setName("Volare Aviation");
+        volare.setLeonSubDomain("vlz");
+        volare.setLeonApiKey(
+                "ff0bd02c05f2d6916deeb8b9d022e03a388a7e0f48fb02e577faf41350d73cb32d47f6b0");
 
-        UserResponseDto responseDto = mapper.map(user, UserResponseDto.class);
-        System.out.println("UserDto " + responseDto);
-
-        List<RoleResponseDto> roles = responseDto.getRoles();
-        System.out.println("RR DTO " + roles);
-
+        LeonApiDao leonApi = new LeonApiDaoImpl();
+        System.out.println(leonApi.getAllByPeriod(volare, 10L));
+        System.out.println(leonApi.getAllByPeriod(volare, 3L));
+        System.out.println(leonApi.getAllActiveAircraft(volare));
+        System.out.println(leonApi.getAllActiveAircraft(volare));
+        System.out.println(leonApi.getAllActiveAircraft(volare));
     }
 }

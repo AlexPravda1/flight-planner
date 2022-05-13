@@ -1,0 +1,17 @@
+{"query":"
+
+query {
+  aircraftList (onlyActive:true)
+  {
+      isActive
+      aircraftNid 
+      registration
+      acftType{
+          acftTypeId
+          icao
+          isAircraft
+      }  
+  }
+}
+
+"}

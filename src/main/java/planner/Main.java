@@ -19,6 +19,7 @@ public class Main {
         LeonApiDao leonApi = new LeonApiDaoImpl(log);
         log.info(leonApi.getAllActiveAircraft(volare));
         log.info(leonApi.getAllFlightsByPeriod(volare, 1L));
+        log.info(leonApi.getAllFlightsByPeriodAndAircraftId(volare, 1L, 22249L));
         //log.info(leonApi.getAllFlightsByPeriod(volare, 2L));
         //log.info(leonApi.getAllFlightsByPeriod(volare, 3L));
     }

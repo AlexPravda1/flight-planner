@@ -68,6 +68,24 @@ public class LeonApiDaoImpl implements LeonApiDao {
         return LeonUtil.getValidatedResponse(fetchLeonResponse(url, query, accessToken));
     }
 
+    @Override
+    public String getAllFlightsByPeriodAndAircraftId(
+            Airline airline, long daysRange, Long aircraftId) {
+        log.debug("Object received " + airline.toString());
+        log.debug("AircraftId received " + aircraftId);
+
+        URL url = prepareQueryUrl(airline);
+        log.debug("URL prepared: " + url);
+
+        String query = LeonUtil.prepareQueryAllFlightsByPeriodAndAircraftId(daysRange, aircraftId);
+        log.debug("Query prepared: " + query);
+
+        String accessToken = getAccessToken(airline);
+        log.debug("Token received: " + accessToken);
+
+        return LeonUtil.getValidatedResponse(fetchLeonResponse(url, query, accessToken));
+    }
+
     private URL prepareQueryUrl(Airline airline) {
         try {
             return new URL(HTTP_PREFIX.value()

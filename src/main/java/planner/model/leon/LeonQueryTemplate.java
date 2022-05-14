@@ -1,21 +1,29 @@
 package planner.model.leon;
 
 public enum LeonQueryTemplate {
-
     QUERY_PREFIX("{\"query\":\"query { "),
     QUERY_POSTFIX("}\"} "),
     BODY_PREFIX("{ "),
     BODY_POSTFIX("} "),
     ERROR("error"),
-
+    DEFAULT_DAYS_RANGE("10"),
+    START_DAY("START_DAY"),
+    END_DAY("END_DAY"),
+    AIRCRAFT_ID("AIRCRAFT_ID"),
 
     FILTER_AIRCRAFT_CL30_WILDCARD("aircraftTypeList (wildcard: \\\"CL30\\\") "),
     FILTER_ALL_ACTIVE_AIRCRAFT("aircraftList (onlyActive:true) "),
-    FILTER_FLIGHT_LIST("flightList "),
+    FILTER_NAME_FLIGHT_LIST("flightList "),
 
     FILTER_CONDITIONS_FLIGHT_LIST_ALL_AIRCRAFT("(filter: {timeInterval: "
-            + "{start: \\\"START_DATE\\\" "
-            + "end: \\\"END_DATE\\\"} "
+            + "{start: \\\"" + START_DAY + "\\\" "
+            + "end: \\\"" + END_DAY + "\\\"} "
+            + "flightStatus: CONFIRMED}) "),
+
+    FILTER_CONDITIONS_FLIGHT_LIST_BY_AIRCRAFT("(filter: {timeInterval: "
+            + "{start: \\\"" + START_DAY + "\\\" "
+            + "end: \\\"" + END_DAY + "\\\"} "
+            + "aircraftNid: " + AIRCRAFT_ID
             + "flightStatus: CONFIRMED}) "),
 
     GENERAL_CONDITIONS_ALL("isCnl, icaoType, isCommercial, flightNo, "
@@ -45,7 +53,7 @@ public enum LeonQueryTemplate {
 
     PAX_CONTACTS("passengerList { passengerContactList { contact { name, surname }}} "),
 
-    CREW("crewList { position { occupation } contact { name, surname }} ");
+    CREW_LIST("crewList { position { occupation } contact { name, surname }} ");
 
     private final String value;
 

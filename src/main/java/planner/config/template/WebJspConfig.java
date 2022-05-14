@@ -1,4 +1,4 @@
-package planner.config.enums;
+package planner.config.template;
 
 public enum WebJspConfig {
     WEB_INF("/WEB-INF/jsp/"),

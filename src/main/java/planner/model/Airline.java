@@ -29,4 +29,11 @@ public class Airline {
 
     @Column(unique = true, nullable = false)
     private String leonApiKey;
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "("
+                + "name = " + name + ", "
+                + "leonSubDomain = " + leonSubDomain + ")";
+    }
 }

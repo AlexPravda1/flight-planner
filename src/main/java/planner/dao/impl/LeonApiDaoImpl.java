@@ -1,122 +1,161 @@
 package planner.dao.impl;
 
-import static planner.config.enums.HttpConnectionConfig.APPLICATION_JSON;
-import static planner.config.enums.HttpConnectionConfig.AUTHORIZATION;
-import static planner.config.enums.HttpConnectionConfig.BEARER;
-import static planner.config.enums.HttpConnectionConfig.CONTENT_TYPE;
-import static planner.config.enums.HttpConnectionConfig.HTTP_POST;
-import static planner.config.enums.HttpConnectionConfig.HTTP_PREFIX;
-import static planner.config.enums.LeonApiConfig.EMPTY_TOKEN;
-import static planner.config.enums.LeonApiConfig.QUERY_POSTFIX;
-import static planner.config.enums.LeonApiConfig.REFRESH_TOKEN;
-import static planner.config.enums.LeonApiConfig.TOKEN_POSTFIX;
-import static planner.config.enums.LeonApiConfig.TOKEN_VALIDITY;
-import static planner.config.enums.LeonQueryTemplate.ALL_ACTIVE_AIRCRAFT;
-import static planner.config.enums.LeonQueryTemplate.ALL_FLIGHTS_BY_PERIOD;
-import static planner.config.enums.LeonQueryTemplate.TEMPLATE_PATH;
+import static planner.config.template.HttpConnectionConfig.APPLICATION_JSON;
+import static planner.config.template.HttpConnectionConfig.AUTHORIZATION;
+import static planner.config.template.HttpConnectionConfig.BEARER;
+import static planner.config.template.HttpConnectionConfig.CONTENT_TYPE;
+import static planner.config.template.HttpConnectionConfig.HTTP_POST;
+import static planner.config.template.HttpConnectionConfig.HTTP_PREFIX;
+import static planner.config.template.LeonApiConfig.QUERY_URL_POSTFIX;
+import static planner.config.template.LeonApiConfig.REFRESH_TOKEN_HEADER;
+import static planner.config.template.LeonApiConfig.TOKEN_URL_POSTFIX;
+import static planner.config.template.LeonApiConfig.TOKEN_VALIDITY_MINUTES;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 import planner.dao.LeonApiDao;
+import planner.exception.LeonAccessException;
 import planner.model.Airline;
+import planner.model.leon.AccessToken;
+import planner.util.LeonUtil;
 
 @Repository
+@RequiredArgsConstructor
 public class LeonApiDaoImpl implements LeonApiDao {
-    private static final Map<String, LocalDateTime> tokenValidity = new HashMap<>();
-    private static final Map<String, String> tokenPool = new HashMap<>();
-
-    @Override
-    public String getAllByPeriod(Airline airline, long daysRange) {
-        String accessToken = getAccessToken(airline);
-        try {
-            Path queryPath = Path.of(TEMPLATE_PATH.value().concat(ALL_FLIGHTS_BY_PERIOD.value()));
-            String query = removeLineBreaks(Files.readString(queryPath));
-            query = query.replaceAll("START_DATE",
-                    LocalDate.now().minusDays(daysRange).toString());
-            query = query.replaceAll("END_DATE",
-                    LocalDate.now().plusDays(++daysRange).toString());
-            URL url = new URL(HTTP_PREFIX.value()
-                    + airline.getLeonSubDomain() + QUERY_POSTFIX.value());
-            return fetchLeonResponse(url, query, accessToken);
-        } catch (IOException e) {
-            throw new RuntimeException(ALL_FLIGHTS_BY_PERIOD.value() + " Query response is "
-                    + "failed for " + airline.getName() + " airline", e);
-        }
-    }
+    private static final Map<String, AccessToken> tokensPool = new HashMap<>();
+    private final Logger log;
 
     @Override
     public String getAllActiveAircraft(Airline airline) {
+        log.debug("Object received " + airline.toString());
+
+        URL url = prepareQueryUrl(airline);
+        log.debug("URL prepared: " + url);
+
+        String query = LeonUtil.prepareQueryAllActiveAircraft();
+        log.debug("Query prepared: " + query);
+
         String accessToken = getAccessToken(airline);
+        log.debug("Token received: " + accessToken);
+        return LeonUtil.getValidatedResponse(fetchLeonResponse(url, query, accessToken));
+    }
+
+    @Override
+    public String getAllFlightsByPeriod(Airline airline, long daysRange) {
+        log.debug("Object received " + airline.toString());
+
+        URL url = prepareQueryUrl(airline);
+        log.debug("URL prepared: " + url);
+
+        String query = LeonUtil.prepareQueryAllFlightsByPeriod(daysRange);
+        log.debug("Query prepared: " + query);
+
+        String accessToken = getAccessToken(airline);
+        log.debug("Token received: " + accessToken);
+
+        return LeonUtil.getValidatedResponse(fetchLeonResponse(url, query, accessToken));
+    }
+
+    private URL prepareQueryUrl(Airline airline) {
         try {
-            Path queryPath = Path.of(TEMPLATE_PATH.value().concat(ALL_ACTIVE_AIRCRAFT.value()));
-            String query = removeLineBreaks(Files.readString(queryPath));
-            URL url = new URL(HTTP_PREFIX.value()
-                    + airline.getLeonSubDomain() + QUERY_POSTFIX.value());
-            return fetchLeonResponse(url, query, accessToken);
-        } catch (IOException e) {
-            throw new RuntimeException(ALL_ACTIVE_AIRCRAFT.value() + " Query response is "
-                    + "failed for " + airline.getName() + " airline", e);
+            return new URL(HTTP_PREFIX.value()
+                    + airline.getLeonSubDomain() + QUERY_URL_POSTFIX.value());
+        } catch (MalformedURLException e) {
+            log.error("Failed to build Query URL for " + airline.getName(), e);
+            throw new LeonAccessException("Failed to build Query URL for " + airline.getName(), e);
         }
     }
 
-    private static String removeLineBreaks(String linesFromFile) {
-        return linesFromFile
-                .replaceAll("[\\r\\n]+", " ")
-                .replaceAll(System.lineSeparator(), " ");
+    private URL prepareTokenRefreshUrl(Airline airline) {
+        try {
+            return new URL(HTTP_PREFIX.value()
+                    + airline.getLeonSubDomain() + TOKEN_URL_POSTFIX.value());
+        } catch (MalformedURLException e) {
+            log.error("Failed to build Token Refresh URL for " + airline.getName(), e);
+            throw new LeonAccessException("Failed to build Token Refresh URL for "
+                    + airline.getName(), e);
+        }
+    }
+
+    private boolean isValidTokenByDuration(String airlineName) {
+        return tokensPool.get(airlineName).getValidityTime().isAfter(LocalDateTime.now());
+    }
+
+    private String putInTokenPoolMap(String airlineName, String accessToken) {
+        LocalDateTime validity = LocalDateTime.now()
+                .plusMinutes(Long.parseLong(TOKEN_VALIDITY_MINUTES.value()));
+        tokensPool.put(airlineName, new AccessToken(accessToken, validity));
+        return accessToken;
     }
 
     private String getAccessToken(Airline airline) {
-        String airlineName = airline.getName();
-        try {
-            if (!tokenValidity.containsKey(airlineName)
-                    || tokenValidity.get(airlineName)
-                    .plusMinutes(Long.parseLong(TOKEN_VALIDITY.value()))
-                    .isBefore(LocalDateTime.now())) {
-                URL url = new URL(HTTP_PREFIX.value()
-                        + airline.getLeonSubDomain() + TOKEN_POSTFIX.value());
-                String query = REFRESH_TOKEN.value() + airline.getLeonApiKey();
-                String accessToken = fetchLeonResponse(url, query, EMPTY_TOKEN.value());
-                tokenValidity.put(airlineName, LocalDateTime.now());
-                tokenPool.put(airlineName, accessToken);
-                return accessToken;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Access token cannot be taken. Query = "
-                    + "refresh_token=" + airline.getLeonApiKey() + "URL = "
-                    + HTTP_PREFIX.value() + airline.getLeonSubDomain() + TOKEN_POSTFIX.value(), e);
+        if (tokensPool.containsKey(airline.getName())
+                && isValidTokenByDuration(airline.getName())) {
+            return tokensPool.get(airline.getName()).getToken();
         }
-        return tokenPool.get(airlineName);
+        URL url = prepareTokenRefreshUrl(airline);
+        String query = REFRESH_TOKEN_HEADER.value() + airline.getLeonApiKey();
+        String accessToken = fetchLeonResponse(url, query, StringUtils.EMPTY);
+        return putInTokenPoolMap(airline.getName(), accessToken);
     }
 
-    private String fetchLeonResponse(URL url, String query, String accessToken)
-            throws IOException {
-        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
-        httpConn.setRequestMethod(HTTP_POST.value());
-        if (!accessToken.equals(EMPTY_TOKEN.value())) {
-            httpConn.setRequestProperty(CONTENT_TYPE.value(), APPLICATION_JSON.value());
-            httpConn.setRequestProperty(AUTHORIZATION.value(), BEARER.value() + accessToken);
+    private HttpURLConnection prepareHttpConnection(URL url, String accessToken) {
+        try {
+            HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+            httpConn.setRequestMethod(HTTP_POST.value());
+            if (!accessToken.isBlank()) {
+                httpConn.setRequestProperty(CONTENT_TYPE.value(), APPLICATION_JSON.value());
+                httpConn.setRequestProperty(AUTHORIZATION.value(), BEARER.value() + accessToken);
+            }
+            httpConn.setDoOutput(true);
+            return httpConn;
+        } catch (IOException e) {
+            log.error("Cannot prepare HTTP connection for " + url + "and token " + accessToken, e);
+            throw new LeonAccessException("Cannot prepare HTTP connection for " + url, e);
         }
-        httpConn.setDoOutput(true);
-        OutputStreamWriter writer = new OutputStreamWriter(httpConn.getOutputStream());
-        writer.write(query);
-        writer.flush();
-        writer.close();
-        httpConn.getOutputStream().close();
-        InputStream responseStream = httpConn.getResponseCode() / 100 == 2
-                ? httpConn.getInputStream()
-                : httpConn.getErrorStream();
-        Scanner s = new Scanner(responseStream).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
+    }
+
+    private void writeLeonQueryToHttpConnection(HttpURLConnection httpConn, String query) {
+        try {
+            OutputStreamWriter writer = new OutputStreamWriter(httpConn.getOutputStream());
+            writer.write(query);
+            writer.flush();
+            writer.close();
+            httpConn.getOutputStream().close();
+        } catch (IOException e) {
+            log.error("Cannot write query to HTTP connection " + query, e);
+            throw new LeonAccessException("Cannot write query to HTTP connection " + query, e);
+        }
+    }
+
+    private String parseLeonQueryHttpResponse(HttpURLConnection httpConn) {
+        try {
+            InputStream responseStream = httpConn.getResponseCode() / 100 == 2
+                    ? httpConn.getInputStream()
+                    : httpConn.getErrorStream();
+            Scanner s = new Scanner(responseStream).useDelimiter("\\A");
+            return s.hasNext() ? s.next() : StringUtils.EMPTY;
+        } catch (IOException e) {
+            log.error("Cannot parse Leon HTTP Response", e);
+            throw new LeonAccessException("Cannot parse Leon HTTP Response");
+        }
+    }
+
+    private String fetchLeonResponse(URL url, String query, String accessToken) {
+        HttpURLConnection httpConnection = prepareHttpConnection(url, accessToken);
+        writeLeonQueryToHttpConnection(httpConnection, query);
+        return parseLeonQueryHttpResponse(httpConnection);
     }
 }

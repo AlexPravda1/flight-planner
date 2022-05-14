@@ -1,20 +1,22 @@
 package planner.config;
 
-import static planner.config.enums.DataSourceBeanConfig.DB_DRIVER;
-import static planner.config.enums.DataSourceBeanConfig.DB_PASSWORD;
-import static planner.config.enums.DataSourceBeanConfig.DB_URL;
-import static planner.config.enums.DataSourceBeanConfig.DB_USERNAME;
-import static planner.config.enums.SessionFactoryBeanConfig.HIBERNATE_DIALECT;
-import static planner.config.enums.SessionFactoryBeanConfig.HIBERNATE_HBM2DDL;
-import static planner.config.enums.SessionFactoryBeanConfig.PACKAGES_TO_SCAN;
-import static planner.config.enums.SessionFactoryBeanConfig.SHOW_SQL;
-import static planner.config.enums.WebJspConfig.PAGE_SUFFIX;
-import static planner.config.enums.WebJspConfig.WEB_INF;
+import static planner.config.template.DataSourceBeanConfig.DB_DRIVER;
+import static planner.config.template.DataSourceBeanConfig.DB_PASSWORD;
+import static planner.config.template.DataSourceBeanConfig.DB_URL;
+import static planner.config.template.DataSourceBeanConfig.DB_USERNAME;
+import static planner.config.template.SessionFactoryBeanConfig.HIBERNATE_DIALECT;
+import static planner.config.template.SessionFactoryBeanConfig.HIBERNATE_HBM2DDL;
+import static planner.config.template.SessionFactoryBeanConfig.PACKAGES_TO_SCAN;
+import static planner.config.template.SessionFactoryBeanConfig.SHOW_SQL;
+import static planner.config.template.WebJspConfig.PAGE_SUFFIX;
+import static planner.config.template.WebJspConfig.WEB_INF;
 
 import java.util.Properties;
 import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 import org.springframework.context.annotation.Bean;
@@ -71,8 +73,13 @@ public class AppConfig {
     }
 
     @Bean
-    Mapper getMapper() {
+    public Mapper getMapper() {
         return new DozerBeanMapper();
+    }
+
+    @Bean
+    public Logger getLogger() {
+        return LogManager.getLogger();
     }
 
     @Bean

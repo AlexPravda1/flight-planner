@@ -1,6 +1,6 @@
 package planner.security;
 
-import static planner.config.enums.UserRoleName.USER;
+import static planner.config.template.UserRoleName.USER;
 
 import java.util.Optional;
 import java.util.Set;

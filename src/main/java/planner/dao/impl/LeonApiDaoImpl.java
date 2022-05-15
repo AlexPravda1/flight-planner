@@ -6,6 +6,8 @@ import static planner.config.template.HttpConnectionConfig.BEARER;
 import static planner.config.template.HttpConnectionConfig.CONTENT_TYPE;
 import static planner.config.template.HttpConnectionConfig.HTTP_POST;
 import static planner.config.template.HttpConnectionConfig.HTTP_PREFIX;
+import static planner.config.template.LeonApiConfig.GENERATE_TOKEN_REFRESH_REQUEST;
+import static planner.config.template.LeonApiConfig.GENERATE_URL_REQUEST;
 import static planner.config.template.LeonApiConfig.QUERY_URL_POSTFIX;
 import static planner.config.template.LeonApiConfig.REFRESH_TOKEN_HEADER;
 import static planner.config.template.LeonApiConfig.TOKEN_URL_POSTFIX;
@@ -24,6 +26,7 @@ import java.util.Scanner;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
+import planner.config.template.LeonApiConfig;
 import planner.dao.LeonApiDao;
 import planner.exception.LeonAccessException;
 import planner.model.Airline;
@@ -36,72 +39,70 @@ public class LeonApiDaoImpl implements LeonApiDao {
     private static final Map<String, AccessToken> tokensPool = new HashMap<>();
 
     @Override
-    public String getAllActiveAircraft(Airline airline) {
-        log.debug("Object received " + airline.toString());
-
+    public String getAllAircraft(Airline airline) {
         URL url = prepareQueryUrl(airline);
-        log.debug("URL prepared: " + url);
-
-        String query = LeonUtil.prepareQueryAllActiveAircraft();
-        log.debug("Query prepared: " + query);
-
+        logCurrentActionDebugLevel(airline);
+        String query = LeonUtil.prepareQueryAllAircraft();
         String accessToken = getAccessToken(airline);
-        log.debug("Token received: " + accessToken);
+        logCurrentActionDebugLevel(url);
+        logCurrentActionDebugLevel(query);
+        logCurrentActionDebugLevel(accessToken);
         return fetchLeonResponse(url, query, accessToken);
     }
 
     @Override
     public String getAllFlightsByPeriod(Airline airline, long daysRange) {
-        log.debug("Object received " + airline.toString());
-
+        logCurrentActionDebugLevel(airline);
+        logCurrentActionDebugLevel(daysRange);
         URL url = prepareQueryUrl(airline);
-        log.debug("URL prepared: " + url);
-
         String query = LeonUtil.prepareQueryAllFlightsByPeriod(daysRange);
-        log.debug("Query prepared: " + query);
-
         String accessToken = getAccessToken(airline);
-        log.debug("Token received: " + accessToken);
-
+        logCurrentActionDebugLevel(url);
+        logCurrentActionDebugLevel(query);
+        logCurrentActionDebugLevel(accessToken);
         return fetchLeonResponse(url, query, accessToken);
     }
 
     @Override
     public String getAllFlightsByPeriodAndAircraftId(
             Airline airline, long daysRange, Long aircraftId) {
-        log.debug("Object received " + airline.toString());
-        log.debug("AircraftId received " + aircraftId);
-
+        logCurrentActionDebugLevel(airline);
+        logCurrentActionDebugLevel(daysRange);
         URL url = prepareQueryUrl(airline);
-        log.debug("URL prepared: " + url);
-
         String query = LeonUtil.prepareQueryAllFlightsByPeriodAndAircraftId(daysRange, aircraftId);
-        log.debug("Query prepared: " + query);
-
         String accessToken = getAccessToken(airline);
-        log.debug("Token received: " + accessToken);
-
+        logCurrentActionDebugLevel(url);
+        logCurrentActionDebugLevel(query);
+        logCurrentActionDebugLevel(accessToken);
         return fetchLeonResponse(url, query, accessToken);
     }
 
     private URL prepareQueryUrl(Airline airline) {
-        try {
-            return new URL(HTTP_PREFIX.value()
-                    + airline.getLeonSubDomain() + QUERY_URL_POSTFIX.value());
-        } catch (MalformedURLException e) {
-            log.error("Failed to build Query URL for " + airline.getName(), e);
-            throw new LeonAccessException("Failed to build Query URL for " + airline.getName(), e);
-        }
+        return generateLeonUrl(GENERATE_URL_REQUEST, airline);
     }
 
     private URL prepareTokenRefreshUrl(Airline airline) {
+        return generateLeonUrl(GENERATE_TOKEN_REFRESH_REQUEST, airline);
+    }
+
+    private URL generateLeonUrl(LeonApiConfig urlTypeRequest, Airline airline) {
         try {
-            return new URL(HTTP_PREFIX.value()
-                    + airline.getLeonSubDomain() + TOKEN_URL_POSTFIX.value());
+            switch (urlTypeRequest) {
+                case GENERATE_URL_REQUEST:
+                    return new URL(HTTP_PREFIX.value()
+                        + airline.getLeonSubDomain() + QUERY_URL_POSTFIX.value());
+                case GENERATE_TOKEN_REFRESH_REQUEST:
+                    return new URL(HTTP_PREFIX.value()
+                        + airline.getLeonSubDomain() + TOKEN_URL_POSTFIX.value());
+                default:
+                    throw new MalformedURLException("No such case exist for URL type: "
+                        + urlTypeRequest);
+            }
         } catch (MalformedURLException e) {
-            log.error("Failed to build Token Refresh URL for " + airline.getName(), e);
-            throw new LeonAccessException("Failed to build Token Refresh URL for "
-                    + airline.getName(), e);
+            String message = String.format("Failed to build %s URL for %s",
+                    urlTypeRequest, airline.getName());
+            log.error(message, e);
+            throw new LeonAccessException(message, e);
         }
     }
 
@@ -172,5 +173,11 @@ public class LeonApiDaoImpl implements LeonApiDao {
         HttpURLConnection httpConnection = prepareHttpConnection(url, accessToken);
         writeLeonQueryToHttpConnection(httpConnection, query);
         return parseLeonQueryHttpResponse(httpConnection);
+    }
+
+    private void logCurrentActionDebugLevel(Object object) {
+        String message = String.format("Processing: %s. Value: %s",
+                object.getClass().getSimpleName(), object);
+        log.debug(message);
     }
 }

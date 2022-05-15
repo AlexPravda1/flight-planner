@@ -20,7 +20,7 @@ public class LeonApiServiceImpl implements LeonApiService {
 
     @Override
     public String getAllActiveAircraft(Airline airline) {
-        String response = leonApiDao.getAllActiveAircraft(airline);
+        String response = leonApiDao.getAllAircraft(airline);
         return LeonUtil.getValidatedResponse(response);
     }
 

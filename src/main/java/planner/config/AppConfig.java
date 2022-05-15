@@ -15,8 +15,6 @@ import java.util.Properties;
 import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.dozer.DozerBeanMapper;
-import org.dozer.Mapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -68,11 +66,6 @@ public class AppConfig {
     @Bean
     public PasswordEncoder getEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public Mapper getMapper() {
-        return new DozerBeanMapper();
     }
 
     @Bean

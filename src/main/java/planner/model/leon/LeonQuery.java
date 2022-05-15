@@ -1,9 +1,9 @@
 package planner.model.leon;
 
-import static planner.model.leon.LeonQueryTemplate.BODY_POSTFIX;
-import static planner.model.leon.LeonQueryTemplate.BODY_PREFIX;
-import static planner.model.leon.LeonQueryTemplate.QUERY_POSTFIX;
-import static planner.model.leon.LeonQueryTemplate.QUERY_PREFIX;
+import static planner.model.leon.LeonQueryTemplateBuilder.BODY_POSTFIX;
+import static planner.model.leon.LeonQueryTemplateBuilder.BODY_PREFIX;
+import static planner.model.leon.LeonQueryTemplateBuilder.QUERY_POSTFIX;
+import static planner.model.leon.LeonQueryTemplateBuilder.QUERY_PREFIX;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 
 @Builder
 @Getter
-public class LeonQueryBuilder {
+public class LeonQuery {
     @Builder.Default
     private String queryPrefix = QUERY_PREFIX.value();
 
@@ -70,6 +70,8 @@ public class LeonQueryBuilder {
                 + passengerList
                 + crewList
                 + bodyPostfix
-                + queryPostfix;
+                + queryPostfix
+                .replaceAll("[\\r\\n]+", StringUtils.SPACE)
+                .replaceAll(System.lineSeparator(), StringUtils.SPACE);
     }
 }

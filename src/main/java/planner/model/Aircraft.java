@@ -30,9 +30,15 @@ public class Aircraft {
     @JoinColumn(nullable = false)
     private Airline airline;
 
-    @Column(nullable = false)
     private boolean isActive;
 
-    @Column(nullable = false)
     private boolean isAircraft;
+
+    public void setIsAircraft(boolean isAircraft) {
+        this.isAircraft = isAircraft;
+    }
+
+    public boolean getIsAircraft() {
+        return isAircraft;
+    }
 }

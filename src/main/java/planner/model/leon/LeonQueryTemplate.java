@@ -11,9 +11,9 @@ public enum LeonQueryTemplate {
     END_DAY("END_DAY"),
     AIRCRAFT_ID("AIRCRAFT_ID"),
 
-    FILTER_AIRCRAFT_CL30_WILDCARD("aircraftTypeList (wildcard: \\\"CL30\\\") "),
-    FILTER_ALL_ACTIVE_AIRCRAFT("aircraftList (onlyActive:true) "),
-    FILTER_NAME_FLIGHT_LIST("flightList "),
+    FILTER_TYPE_AIRCRAFT_CL30_WILDCARD("aircraftTypeList (wildcard: \\\"CL30\\\") "),
+    FILTER_TYPE_ALL_ACTIVE_AIRCRAFT("aircraftList (onlyActive:true) "),
+    FILTER_TYPE_FLIGHT_LIST("flightList "),
 
     FILTER_CONDITIONS_FLIGHT_LIST_ALL_AIRCRAFT("(filter: {timeInterval: "
             + "{start: \\\"" + START_DAY + "\\\" "
@@ -29,7 +29,7 @@ public enum LeonQueryTemplate {
     GENERAL_CONDITIONS_ALL("isCnl, icaoType, isCommercial, flightNo, "
             + "flightType, startTimeUTC, endTimeUTC "),
 
-    GENERAL_CONDITIONS_ALL_AIRCRAFT_LIST("isActive, aircraftNid, registration, "
+    GENERAL_CONDITIONS_ALL_ACTIVE_AIRCRAFT_LIST("isActive, aircraftNid, registration, "
             + "acftType { acftTypeId, icao, isAircraft } "),
 
     FLIGHT_WATCH("flightWatch{ atd, ata, paxCount } "),

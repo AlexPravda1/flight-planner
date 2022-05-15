@@ -15,8 +15,6 @@ import java.util.Properties;
 import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 import org.springframework.context.annotation.Bean;
@@ -75,11 +73,6 @@ public class AppConfig {
     @Bean
     public Mapper getMapper() {
         return new DozerBeanMapper();
-    }
-
-    @Bean
-    public Logger getLogger() {
-        return LogManager.getLogger();
     }
 
     @Bean

@@ -21,9 +21,8 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 import planner.dao.LeonApiDao;
 import planner.exception.LeonAccessException;
@@ -32,10 +31,9 @@ import planner.model.leon.AccessToken;
 import planner.util.LeonUtil;
 
 @Repository
-@RequiredArgsConstructor
+@Log4j2
 public class LeonApiDaoImpl implements LeonApiDao {
     private static final Map<String, AccessToken> tokensPool = new HashMap<>();
-    private final Logger log;
 
     @Override
     public String getAllActiveAircraft(Airline airline) {
@@ -49,7 +47,7 @@ public class LeonApiDaoImpl implements LeonApiDao {
 
         String accessToken = getAccessToken(airline);
         log.debug("Token received: " + accessToken);
-        return LeonUtil.getValidatedResponse(fetchLeonResponse(url, query, accessToken));
+        return fetchLeonResponse(url, query, accessToken);
     }
 
     @Override
@@ -65,7 +63,7 @@ public class LeonApiDaoImpl implements LeonApiDao {
         String accessToken = getAccessToken(airline);
         log.debug("Token received: " + accessToken);
 
-        return LeonUtil.getValidatedResponse(fetchLeonResponse(url, query, accessToken));
+        return fetchLeonResponse(url, query, accessToken);
     }
 
     @Override
@@ -83,7 +81,7 @@ public class LeonApiDaoImpl implements LeonApiDao {
         String accessToken = getAccessToken(airline);
         log.debug("Token received: " + accessToken);
 
-        return LeonUtil.getValidatedResponse(fetchLeonResponse(url, query, accessToken));
+        return fetchLeonResponse(url, query, accessToken);
     }
 
     private URL prepareQueryUrl(Airline airline) {
@@ -108,25 +106,25 @@ public class LeonApiDaoImpl implements LeonApiDao {
     }
 
     private boolean isValidTokenByDuration(String airlineName) {
-        return tokensPool.get(airlineName).getValidityTime().isAfter(LocalDateTime.now());
+        return tokensPool.containsKey(airlineName)
+                && tokensPool.get(airlineName).getValidityTime().isAfter(LocalDateTime.now());
     }
 
-    private String putInTokenPoolMap(String airlineName, String accessToken) {
+    private String putInTokenPoolMap(String airlineName, String fetchedToken) {
         LocalDateTime validity = LocalDateTime.now()
                 .plusMinutes(Long.parseLong(TOKEN_VALIDITY_MINUTES.value()));
-        tokensPool.put(airlineName, new AccessToken(accessToken, validity));
-        return accessToken;
+        tokensPool.put(airlineName, new AccessToken(fetchedToken, validity));
+        return fetchedToken;
     }
 
     private String getAccessToken(Airline airline) {
-        if (tokensPool.containsKey(airline.getName())
-                && isValidTokenByDuration(airline.getName())) {
+        if (isValidTokenByDuration(airline.getName())) {
             return tokensPool.get(airline.getName()).getToken();
         }
         URL url = prepareTokenRefreshUrl(airline);
         String query = REFRESH_TOKEN_HEADER.value() + airline.getLeonApiKey();
-        String accessToken = fetchLeonResponse(url, query, StringUtils.EMPTY);
-        return putInTokenPoolMap(airline.getName(), accessToken);
+        String fetchedToken = fetchLeonResponse(url, query, StringUtils.EMPTY);
+        return putInTokenPoolMap(airline.getName(), fetchedToken);
     }
 
     private HttpURLConnection prepareHttpConnection(URL url, String accessToken) {
@@ -146,8 +144,7 @@ public class LeonApiDaoImpl implements LeonApiDao {
     }
 
     private void writeLeonQueryToHttpConnection(HttpURLConnection httpConn, String query) {
-        try {
-            OutputStreamWriter writer = new OutputStreamWriter(httpConn.getOutputStream());
+        try (OutputStreamWriter writer = new OutputStreamWriter(httpConn.getOutputStream())) {
             writer.write(query);
             writer.flush();
             writer.close();

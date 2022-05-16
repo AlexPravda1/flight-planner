@@ -1,9 +1,9 @@
 package planner.model.leon;
 
-import static planner.model.leon.LeonQueryTemplateBuilder.BODY_POSTFIX;
-import static planner.model.leon.LeonQueryTemplateBuilder.BODY_PREFIX;
-import static planner.model.leon.LeonQueryTemplateBuilder.QUERY_POSTFIX;
-import static planner.model.leon.LeonQueryTemplateBuilder.QUERY_PREFIX;
+import static planner.model.leon.LeonQueryTemplateBuilderConfig.BODY_POSTFIX;
+import static planner.model.leon.LeonQueryTemplateBuilderConfig.BODY_PREFIX;
+import static planner.model.leon.LeonQueryTemplateBuilderConfig.QUERY_POSTFIX;
+import static planner.model.leon.LeonQueryTemplateBuilderConfig.QUERY_PREFIX;
 
 import lombok.Builder;
 import lombok.Getter;

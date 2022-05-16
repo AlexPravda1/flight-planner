@@ -1,6 +1,6 @@
 package planner.model.leon;
 
-public enum LeonQueryTemplateBuilder {
+public enum LeonQueryTemplateBuilderConfig {
     QUERY_PREFIX("{\"query\":\"query { "),
     QUERY_POSTFIX("}\"} "),
     BODY_PREFIX("{ "),
@@ -9,7 +9,7 @@ public enum LeonQueryTemplateBuilder {
 
     private final String value;
 
-    LeonQueryTemplateBuilder(String value) {
+    LeonQueryTemplateBuilderConfig(String value) {
         this.value = value;
     }
 

@@ -3,15 +3,16 @@ package planner;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import lombok.extern.log4j.Log4j2;
-import org.dozer.DozerBeanMapper;
 import planner.dao.LeonApiDao;
 import planner.dao.impl.LeonApiDaoImpl;
 import planner.model.Airline;
+import planner.model.json.Root;
 import planner.service.LeonApiService;
 import planner.service.impl.LeonApiServiceImpl;
 
 @Log4j2
 public class Main {
+
     public static void main(String[] args) throws IOException {
 
         Airline volare = new Airline();
@@ -23,7 +24,7 @@ public class Main {
 
         LeonApiDao leonApiDao = new LeonApiDaoImpl();
         ObjectMapper objectMapper = new ObjectMapper();
-        DozerBeanMapper mapper = new DozerBeanMapper();
+        //DozerBeanMapper mapper = new DozerBeanMapper();
         LeonApiService leonApiService = new LeonApiServiceImpl(leonApiDao);
         String allActiveAircraftJson = leonApiService.getAllActiveAircraft(volare);
         log.info(allActiveAircraftJson);
@@ -37,10 +38,9 @@ public class Main {
         //log.info(leonApi.getAllFlightsByPeriod(volare, 2L));
         //log.info(leonApi.getAllFlightsByPeriod(volare, 3L));
 
-        /*
         Root root = objectMapper.readValue(allActiveAircraftJson, Root.class);
         System.out.println(root);
-
+        /*
         BeanMappingBuilder aircraftMapBuilder = new BeanMappingBuilder() {
             protected void configure() {
                 mapping(AircraftList.class, Aircraft.class)
@@ -53,6 +53,9 @@ public class Main {
         mapper.addMapping(aircraftMapBuilder);
 
         Aircraft aircraft = mapper.map(root.getData().getAircraftList().get(7), Aircraft.class);
-        System.out.println(aircraft.toString());*/
+
+        System.out.println(aircraft.toString());
+        */
     }
+
 }

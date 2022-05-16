@@ -6,8 +6,6 @@ import static planner.config.template.HttpConnectionConfig.BEARER;
 import static planner.config.template.HttpConnectionConfig.CONTENT_TYPE;
 import static planner.config.template.HttpConnectionConfig.HTTP_POST;
 import static planner.config.template.HttpConnectionConfig.HTTP_PREFIX;
-import static planner.config.template.LeonApiConfig.GENERATE_TOKEN_REFRESH_REQUEST;
-import static planner.config.template.LeonApiConfig.GENERATE_URL_REQUEST;
 import static planner.config.template.LeonApiConfig.QUERY_URL_POSTFIX;
 import static planner.config.template.LeonApiConfig.REFRESH_TOKEN_HEADER;
 import static planner.config.template.LeonApiConfig.TOKEN_URL_POSTFIX;
@@ -40,67 +38,39 @@ public class LeonApiDaoImpl implements LeonApiDao {
 
     @Override
     public String getAllAircraft(Airline airline) {
-        URL url = prepareQueryUrl(airline);
-        logCurrentActionDebugLevel(airline);
+        URL url = generateUrl(QUERY_URL_POSTFIX, airline);
         String query = LeonUtil.prepareQueryAllAircraft();
         String accessToken = getAccessToken(airline);
-        logCurrentActionDebugLevel(url);
-        logCurrentActionDebugLevel(query);
-        logCurrentActionDebugLevel(accessToken);
+        log.info(String.format("Processing %s, %s", url, query));
         return fetchLeonResponse(url, query, accessToken);
     }
 
     @Override
     public String getAllFlightsByPeriod(Airline airline, long daysRange) {
-        logCurrentActionDebugLevel(airline);
-        logCurrentActionDebugLevel(daysRange);
-        URL url = prepareQueryUrl(airline);
+        URL url = generateUrl(QUERY_URL_POSTFIX, airline);
         String query = LeonUtil.prepareQueryAllFlightsByPeriod(daysRange);
         String accessToken = getAccessToken(airline);
-        logCurrentActionDebugLevel(url);
-        logCurrentActionDebugLevel(query);
-        logCurrentActionDebugLevel(accessToken);
+        log.info(String.format("Processing %s, %s", url, query));
         return fetchLeonResponse(url, query, accessToken);
     }
 
     @Override
     public String getAllFlightsByPeriodAndAircraftId(
             Airline airline, long daysRange, Long aircraftId) {
-        logCurrentActionDebugLevel(airline);
-        logCurrentActionDebugLevel(daysRange);
-        URL url = prepareQueryUrl(airline);
+        URL url = generateUrl(QUERY_URL_POSTFIX, airline);
         String query = LeonUtil.prepareQueryAllFlightsByPeriodAndAircraftId(daysRange, aircraftId);
         String accessToken = getAccessToken(airline);
-        logCurrentActionDebugLevel(url);
-        logCurrentActionDebugLevel(query);
-        logCurrentActionDebugLevel(accessToken);
+        log.info(String.format("Processing %s, %s", url, query));
         return fetchLeonResponse(url, query, accessToken);
     }
 
-    private URL prepareQueryUrl(Airline airline) {
-        return generateLeonUrl(GENERATE_URL_REQUEST, airline);
-    }
-
-    private URL prepareTokenRefreshUrl(Airline airline) {
-        return generateLeonUrl(GENERATE_TOKEN_REFRESH_REQUEST, airline);
-    }
-
-    private URL generateLeonUrl(LeonApiConfig urlTypeRequest, Airline airline) {
+    private URL generateUrl(LeonApiConfig urlType, Airline airline) {
         try {
-            switch (urlTypeRequest) {
-                case GENERATE_URL_REQUEST:
-                    return new URL(HTTP_PREFIX.value()
-                        + airline.getLeonSubDomain() + QUERY_URL_POSTFIX.value());
-                case GENERATE_TOKEN_REFRESH_REQUEST:
-                    return new URL(HTTP_PREFIX.value()
-                        + airline.getLeonSubDomain() + TOKEN_URL_POSTFIX.value());
-                default:
-                    throw new MalformedURLException("No such case exist for URL type: "
-                        + urlTypeRequest);
-            }
+            return new URL(HTTP_PREFIX.value()
+                    + airline.getLeonSubDomain() + urlType.value());
         } catch (MalformedURLException e) {
             String message = String.format("Failed to build %s URL for %s",
-                    urlTypeRequest, airline.getName());
+                    urlType.name(), airline.getName());
             log.error(message, e);
             throw new LeonAccessException(message, e);
         }
@@ -120,11 +90,13 @@ public class LeonApiDaoImpl implements LeonApiDao {
 
     private String getAccessToken(Airline airline) {
         if (isValidTokenByDuration(airline.getName())) {
+            log.info(String.format("Returned existing Token for: %s", airline.getName()));
             return tokensPool.get(airline.getName()).getToken();
         }
-        URL url = prepareTokenRefreshUrl(airline);
+        URL url = generateUrl(TOKEN_URL_POSTFIX, airline);
         String query = REFRESH_TOKEN_HEADER.value() + airline.getLeonApiKey();
         String fetchedToken = fetchLeonResponse(url, query, StringUtils.EMPTY);
+        log.info(String.format("Generated new Token %s for: %s", fetchedToken, airline.getName()));
         return putInTokenPoolMap(airline.getName(), fetchedToken);
     }
 
@@ -148,8 +120,6 @@ public class LeonApiDaoImpl implements LeonApiDao {
         try (OutputStreamWriter writer = new OutputStreamWriter(httpConn.getOutputStream())) {
             writer.write(query);
             writer.flush();
-            writer.close();
-            httpConn.getOutputStream().close();
         } catch (IOException e) {
             log.error("Cannot write query to HTTP connection " + query, e);
             throw new LeonAccessException("Cannot write query to HTTP connection " + query, e);
@@ -173,11 +143,5 @@ public class LeonApiDaoImpl implements LeonApiDao {
         HttpURLConnection httpConnection = prepareHttpConnection(url, accessToken);
         writeLeonQueryToHttpConnection(httpConnection, query);
         return parseLeonQueryHttpResponse(httpConnection);
-    }
-
-    private void logCurrentActionDebugLevel(Object object) {
-        String message = String.format("Processing: %s. Value: %s",
-                object.getClass().getSimpleName(), object);
-        log.debug(message);
     }
 }

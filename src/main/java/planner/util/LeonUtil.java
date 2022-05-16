@@ -1,6 +1,6 @@
 package planner.util;
 
-import static planner.model.leon.LeonQueryTemplateBuilder.ERROR;
+import static planner.model.leon.LeonQueryTemplateBuilderConfig.ERROR;
 import static planner.model.leon.LeonQueryTemplateFilterConditions.AIRCRAFT_ID;
 import static planner.model.leon.LeonQueryTemplateFilterConditions.CONDITIONS_FLIGHT_LIST_ALL_AIRCRAFT;
 import static planner.model.leon.LeonQueryTemplateFilterConditions.CONDITIONS_FLIGHT_LIST_BY_AIRCRAFT;
@@ -22,11 +22,11 @@ import planner.model.leon.LeonQuery;
 import planner.model.leon.LeonQueryTemplateFilterConditions;
 
 public final class LeonUtil {
-    public static String getValidatedResponse(String response) {
+    public static void validateJsonLeonResponse(String response) {
         if (response.contains(ERROR.value())) {
-            throw new LeonAccessException("Check your Query, response contains error: " + response);
+            throw new LeonAccessException("Check your Query, response contains error: "
+                    + response);
         }
-        return response;
     }
 
     public static String prepareQueryAllAircraft() {
@@ -34,7 +34,8 @@ public final class LeonUtil {
                 .filterName(FILTER_TYPE_ALL_AIRCRAFT.value())
                 .generalConditions(GENERAL_CONDITIONS_ALL_ACTIVE_AIRCRAFT_LIST.value())
                 .build();
-        return getValidatedQueryString(queryBuilder);
+        validateQueryBuilder(queryBuilder);
+        return queryBuilder.toString();
     }
 
     public static String prepareQueryAllFlightsByPeriodAndAircraftId(
@@ -51,7 +52,8 @@ public final class LeonUtil {
                 .aircraft(AIRCRAFT.value())
                 .crewList(CREW_LIST.value())
                 .build();
-        return getValidatedQueryString(queryBuilder);
+        validateQueryBuilder(queryBuilder);
+        return queryBuilder.toString();
     }
 
     public static String prepareQueryAllFlightsByPeriod(Long daysRange) {
@@ -65,14 +67,14 @@ public final class LeonUtil {
                 .endAirport(END_AIRPORT.value())
                 .aircraft(AIRCRAFT.value())
                 .build();
-        return getValidatedQueryString(queryBuilder);
+        validateQueryBuilder(queryBuilder);
+        return queryBuilder.toString();
     }
 
-    private static String getValidatedQueryString(LeonQuery queryBuilder) {
+    private static void validateQueryBuilder(LeonQuery queryBuilder) {
         if (queryBuilder.getFilterName() == null || queryBuilder.getFilterName().isBlank()) {
             throw new LeonAccessException("Query must include filter to Leon DB");
         }
-        return queryBuilder.toString();
     }
 
     private static String getFilterAllAircraftFromCurrentDatePlusRange(Long daysRange) {

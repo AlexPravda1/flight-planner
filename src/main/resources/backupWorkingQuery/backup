@@ -1,0 +1,106 @@
+{"query":"
+
+query {
+  flightList
+  (filter: {
+    timeInterval: {
+      start: \"START_DATE\"
+      end: \"END_DATE\"
+    }
+    flightStatus: CONFIRMED
+  })
+
+  {
+    isCnl
+    icaoType
+    isCommercial
+    flightNo
+    flightType
+    startTimeUTC
+    endTimeUTC
+    flightWatch{
+        atd
+        ata
+        paxCount
+    }
+
+    acft {
+      aircraftNid
+      registration
+      acftType {
+          icao
+      }
+    }
+
+    startAirport {
+    code {
+        icao
+      }
+      city
+      country
+    }
+        endAirport {
+    code {
+        icao
+      }
+      city
+      country
+    }
+
+    legHandling {
+        adepHandler {
+            name
+            email
+            telephone
+            telephoneAfterHours
+        }
+        adesHandler {
+            name
+            email
+            telephone
+            telephoneAfterHours
+        }
+    }
+
+    checklist {
+        allItems {
+        definition {
+            label
+            section
+        }
+        status {
+            status
+            caption
+            color
+        }
+        comment
+        files {
+            fileName
+            signedUrl (expireMinutes: 30)
+        }
+      }
+    }
+    passengerList{
+        countExcludingAnimals
+    }
+    passengerList{
+        passengerContactList{
+            contact{
+                name
+                surname
+            }
+        }
+    }
+    crewList {
+      position {
+        occupation
+      }
+      contact {
+        name
+        surname
+      }
+    }
+  }
+}
+
+"}

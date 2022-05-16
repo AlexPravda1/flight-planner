@@ -1,4 +1,4 @@
-package planner.config.enums;
+package planner.config.template;
 
 public enum SessionFactoryBeanConfig {
     SHOW_SQL("hibernate.show_sql"),

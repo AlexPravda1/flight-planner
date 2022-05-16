@@ -4,7 +4,7 @@ import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
-import planner.config.enums.UserRoleName;
+import planner.config.template.UserRoleName;
 import planner.dao.RoleDao;
 import planner.exception.DataProcessingException;
 import planner.model.Role;

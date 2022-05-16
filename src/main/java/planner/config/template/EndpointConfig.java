@@ -1,10 +1,11 @@
-package planner.config.enums;
+package planner.config.template;
 
 public enum EndpointConfig {
     INDEX("/index/**"),
     TEST("/test/**"),
     LOGIN("/login/**"),
-    REGISTER("/register/**");
+    REGISTER("/register/**"),
+    WELCOME("/welcome/**");
 
     private final String value;
 

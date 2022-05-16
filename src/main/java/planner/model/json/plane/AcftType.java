@@ -1,10 +1,8 @@
-package planner.model.json;
+package planner.model.json.plane;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class AcftType {
     private String acftTypeId;
     private String icao;

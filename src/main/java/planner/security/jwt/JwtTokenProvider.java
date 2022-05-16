@@ -7,7 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Base64;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class JwtTokenProvider {
     @Value("${security.jwt.token.secret-key:s3cr3tW0rd!}")
     private String secretKey;
     @Value("${security.jwt.token.expiry-length:1500000000}")
-    private Long validityMilliseconds;
+    private long validityInMilliseconds;
     private final UserDetailsService userDetailsService;
 
     @PostConstruct
@@ -33,11 +33,11 @@ public class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(String login, Set<String> roles) {
+    public String createToken(String login, List<String> roles) {
         Claims claims = Jwts.claims().setSubject(login);
         claims.put("roles", roles);
         Date now = new Date();
-        Date validity = new Date(now.getTime() + validityMilliseconds);
+        Date validity = new Date(now.getTime() + validityInMilliseconds);
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)

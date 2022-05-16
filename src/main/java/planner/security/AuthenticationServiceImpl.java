@@ -1,6 +1,6 @@
 package planner.security;
 
-import static planner.config.template.UserRoleName.USER;
+import static planner.model.UserRoleName.USER;
 
 import java.util.Optional;
 import java.util.Set;
@@ -34,9 +34,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public User login(String login, String password) throws AuthenticationException {
         Optional<User> user = userService.findByEmail(login);
-        String encodedPassword = passwordEncoder.encode(password);
-        if (user.isEmpty() || user.get().getPassword().equals(encodedPassword)) {
-            throw new AuthenticationException("Incorrect username or password!");
+        if (user.isEmpty() || !passwordEncoder.matches(password, user.get().getPassword())) {
+            throw new AuthenticationException("Incorrect username or password!!!");
         }
         return user.get();
     }

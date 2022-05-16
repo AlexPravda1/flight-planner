@@ -5,8 +5,8 @@ import static planner.config.template.EndpointConfig.LOGIN;
 import static planner.config.template.EndpointConfig.REGISTER;
 import static planner.config.template.EndpointConfig.TEST;
 import static planner.config.template.EndpointConfig.WELCOME;
-import static planner.config.template.UserRoleName.ADMIN;
-import static planner.config.template.UserRoleName.USER;
+import static planner.model.UserRoleName.ADMIN;
+import static planner.model.UserRoleName.USER;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;

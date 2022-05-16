@@ -42,7 +42,7 @@ public class AuthenticationController {
         String token = jwtTokenProvider.createToken(user.getEmail(),
                 user.getRoles().stream()
                         .map(r -> r.getRoleName().name())
-                        .collect(Collectors.toSet()));
+                        .collect(Collectors.toList()));
         return new ResponseEntity<>(Map.of("token", token), HttpStatus.OK);
     }
 }

@@ -1,6 +1,8 @@
 package planner.util;
 
 import static planner.model.leon.LeonQueryTemplateBuilderConfig.ERROR;
+import static planner.model.leon.LeonQueryTemplateBuilderConfig.RESPONSE_FIX_UTC_CAMEL_CASE;
+import static planner.model.leon.LeonQueryTemplateBuilderConfig.RESPONSE_UTC_CAPITAL;
 import static planner.model.leon.LeonQueryTemplateFilterConditions.AIRCRAFT_ID;
 import static planner.model.leon.LeonQueryTemplateFilterConditions.CONDITIONS_FLIGHT_LIST_ALL_AIRCRAFT;
 import static planner.model.leon.LeonQueryTemplateFilterConditions.CONDITIONS_FLIGHT_LIST_BY_AIRCRAFT;
@@ -22,11 +24,16 @@ import planner.model.leon.LeonQuery;
 import planner.model.leon.LeonQueryTemplateFilterConditions;
 
 public final class LeonUtil {
-    public static void validateJsonLeonResponse(String response) {
+    public static void validateJsonResponse(String response) {
         if (response.contains(ERROR.value())) {
             throw new LeonAccessException("Check your Query, response contains error: "
                     + response);
         }
+    }
+
+    public static String fixJsonForMappers(String response) {
+        return response
+                .replaceAll(RESPONSE_UTC_CAPITAL.value(), RESPONSE_FIX_UTC_CAMEL_CASE.value());
     }
 
     public static String prepareQueryAllAircraft() {

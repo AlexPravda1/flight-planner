@@ -1,7 +1,7 @@
 package planner.config;
 
-import static planner.config.template.UserRoleName.ADMIN;
-import static planner.config.template.UserRoleName.USER;
+import static planner.model.UserRoleName.ADMIN;
+import static planner.model.UserRoleName.USER;
 
 import java.util.HashSet;
 import java.util.List;

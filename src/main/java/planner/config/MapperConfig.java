@@ -1,11 +1,19 @@
 package planner.config;
 
-import static planner.config.template.MapperFieldsConfig.JSON_AIRCRAFT_ID;
-import static planner.config.template.MapperFieldsConfig.JSON_AIRCRAFT_TYPE;
-import static planner.config.template.MapperFieldsConfig.JSON_IS_AIRCRAFT;
-import static planner.config.template.MapperFieldsConfig.MODEL_AIRCRAFT_ID;
-import static planner.config.template.MapperFieldsConfig.MODEL_IS_AIRCRAFT;
-import static planner.config.template.MapperFieldsConfig.MODE_AIRCRAFT_TYPE;
+import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_AIRCRAFT_ID;
+import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_AIRCRAFT_TYPE;
+import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_AIRLINE_ID;
+import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_AIRLINE_LEON_SUBDOMAIN;
+import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_AIRLINE_NAME;
+import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_IS_ACTIVE;
+import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_IS_AIRCRAFT;
+import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_AIRCRAFT_ID;
+import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_AIRCRAFT_TYPE;
+import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_AIRLINE_ID;
+import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_AIRLINE_LEON_SUBDOMAIN;
+import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_AIRLINE_NAME;
+import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_IS_ACTIVE;
+import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_IS_AIRCRAFT;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,14 +24,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import planner.model.Aircraft;
-import planner.model.json.AircraftList;
+import planner.model.json.plane.AircraftList;
 
 @Configuration
 @ComponentScan(basePackages = "planner")
 @RequiredArgsConstructor
 public class MapperConfig {
     @Bean
-    public Mapper getPojoModelMapper() {
+    public ObjectMapper getJsonMapper() {
+        return new ObjectMapper();
+    }
+
+    @Bean
+    public Mapper getEntityMapper() {
         DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();
         dozerBeanMapper.addMapping(aircraftMapperBuilder());
         return dozerBeanMapper;
@@ -37,13 +50,14 @@ public class MapperConfig {
                 mapping(AircraftList.class, Aircraft.class)
                         .fields(JSON_AIRCRAFT_ID.value(), MODEL_AIRCRAFT_ID.value())
                         .fields(JSON_IS_AIRCRAFT.value(), MODEL_IS_AIRCRAFT.value())
-                        .fields(JSON_AIRCRAFT_TYPE.value(), MODE_AIRCRAFT_TYPE.value());
+                        .fields(JSON_AIRCRAFT_TYPE.value(), MODEL_AIRCRAFT_TYPE.value())
+                        .fields(JSON_AIRLINE_NAME.value(), MODEL_AIRLINE_NAME.value())
+                        .fields(JSON_AIRLINE_ID.value(), MODEL_AIRLINE_ID.value())
+                        .fields(JSON_AIRLINE_LEON_SUBDOMAIN.value(),
+                                MODEL_AIRLINE_LEON_SUBDOMAIN.value())
+                        .fields(field(JSON_IS_ACTIVE.value()).accessible(),
+                                field(MODEL_IS_ACTIVE.value()).accessible());
             }
         };
-    }
-
-    @Bean
-    public ObjectMapper getJsonJavaMapper() {
-        return new ObjectMapper();
     }
 }

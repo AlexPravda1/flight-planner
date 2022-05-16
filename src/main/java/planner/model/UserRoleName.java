@@ -1,4 +1,4 @@
-package planner.config.template;
+package planner.model;
 
 public enum UserRoleName {
     ADMIN("ADMIN"),

@@ -4,10 +4,10 @@ import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
-import planner.config.template.UserRoleName;
 import planner.dao.RoleDao;
 import planner.exception.DataProcessingException;
 import planner.model.Role;
+import planner.model.UserRoleName;
 
 @Repository
 public class RoleDaoImpl extends AbstractDao<Role, Long> implements RoleDao {
@@ -18,8 +18,7 @@ public class RoleDaoImpl extends AbstractDao<Role, Long> implements RoleDao {
     @Override
     public Optional<Role> getRoleByName(String roleName) {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("select r from Role r "
-                            + "where r.roleName = :roleName", Role.class)
+            return session.createQuery("from Role r where r.roleName = :roleName", Role.class)
                     .setParameter("roleName", UserRoleName.valueOf(roleName))
                     .uniqueResultOptional();
         } catch (Exception e) {

@@ -12,12 +12,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.extern.log4j.Log4j2;
 import org.dozer.Mapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import planner.config.MapperConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import planner.AbstractTest;
 import planner.dao.LeonApiDao;
 import planner.model.Aircraft;
 import planner.model.Airline;
@@ -25,19 +25,17 @@ import planner.model.json.flight.list.FlightList;
 import planner.model.json.plane.AircraftList;
 import planner.model.json.root.Root;
 
-@Log4j2
-class LeonApiDaoImplTest {
+class LeonApiDaoImplTest extends AbstractTest {
     private Airline airline;
+    @Autowired
     private LeonApiDao leonApiDao;
+    @Autowired
     private Mapper entityMapper;
+    @Autowired
     private ObjectMapper jsonMapper;
 
     @BeforeEach
     void setUp() {
-        leonApiDao = new LeonApiDaoImpl();
-        jsonMapper = new MapperConfig().getJsonMapper();
-        entityMapper = new MapperConfig().getEntityMapper();
-
         airline = new Airline();
         airline.setId(1L);
         airline.setName("Volare Aviation");

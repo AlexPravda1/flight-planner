@@ -6,16 +6,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import planner.AbstractTest;
 import planner.dao.RoleDao;
 import planner.model.Role;
 import planner.model.UserRoleName;
 import planner.service.RoleService;
 
-//@ContextConfiguration (classes = AppConfig.class)
-//@ExtendWith(SpringExtension.class)
-//@ExtendWith(MockitoExtension.class)
-//@PropertySource("classpath:application.properties")
-class RoleServiceImplTest {
+class RoleServiceImplTest extends AbstractTest {
     @Autowired
     private RoleDao roleDao;
 

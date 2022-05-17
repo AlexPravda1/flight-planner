@@ -5,26 +5,28 @@ import java.util.Set;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import planner.AbstractTest;
 import planner.model.Role;
 import planner.model.User;
 import planner.model.UserRoleName;
 import planner.service.UserService;
 
-class CustomUserDetailsServiceTest {
+class CustomUserDetailsServiceTest extends AbstractTest {
     private String userEmail;
     private String userPassword;
+    @Mock
     private UserService userService;
-    private UserDetailsService userDetailsService;
+    @InjectMocks
+    private CustomUserDetailsService userDetailsService;
     private User user;
 
     @BeforeEach
     void setUp() {
-        userService = Mockito.mock(UserService.class);
-        userDetailsService = new CustomUserDetailsService(userService);
         userEmail = "user@gmail.com";
         userPassword = "12345";
         user = new User();

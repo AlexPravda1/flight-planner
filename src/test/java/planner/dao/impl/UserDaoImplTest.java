@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import planner.AbstractTest;
 import planner.dao.RoleDao;
 import planner.dao.UserDao;
@@ -21,19 +22,14 @@ class UserDaoImplTest extends AbstractTest {
     private String userEmail;
     private String name;
     private String surname;
+    @Autowired
     private UserDao userDao;
+    @Autowired
     private RoleDao roleDao;
     private User user;
 
-    @Override
-    protected Class<?>[] entities() {
-        return new Class[] {User.class, Role.class, UserRoleName.class};
-    }
-
     @BeforeEach
     void setUp() {
-        userDao = new UserDaoImpl(getSessionFactory());
-        roleDao = new RoleDaoImpl(getSessionFactory());
         userEmail = "user@gmail.com";
         name = "John";
         surname = "Terris";
@@ -47,13 +43,14 @@ class UserDaoImplTest extends AbstractTest {
 
     @Test
     void save_validUserData_thenCorrect() {
-        Long userId = 1L;
+        //Long userId = 1L;
         User actual = userDao.save(user);
         assertNotNull(actual);
-        assertEquals(userId, actual.getId());
+        //assertEquals(userId, actual.getId());
         assertEquals(userEmail, actual.getEmail());
         assertEquals(name, actual.getName());
         assertEquals(surname, actual.getSurname());
+        userDao.delete(actual.getId());
     }
 
     @Test
@@ -62,6 +59,7 @@ class UserDaoImplTest extends AbstractTest {
         assertNotNull(actual);
         assertThrows(DataProcessingException.class, () -> userDao.save(user),
                 "Expected DataProcessingException when saving User which already exist in DB");
+        userDao.delete(actual.getId());
     }
 
     @Test
@@ -76,6 +74,7 @@ class UserDaoImplTest extends AbstractTest {
         assertEquals(userFromDb.getId(), actual.get().getId());
         assertEquals(userFromDb.getEmail(), actual.get().getEmail());
         assertEquals(userFromDb.getRoles().size(), actual.get().getRoles().size());
+        userDao.delete(userFromDb.getId());
     }
 
     @Test
@@ -85,5 +84,6 @@ class UserDaoImplTest extends AbstractTest {
         Optional<User> actual = userDao.findByEmail(userEmail);
         assertNotNull(actual);
         assertTrue(actual.isEmpty());
+        userDao.delete(userFromDb.getId());
     }
 }

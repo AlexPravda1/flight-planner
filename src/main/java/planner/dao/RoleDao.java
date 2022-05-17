@@ -10,4 +10,6 @@ public interface RoleDao {
     Optional<Role> getRoleByName(String roleName);
 
     List<Role> findAll();
+
+    void delete(Long id);
 }

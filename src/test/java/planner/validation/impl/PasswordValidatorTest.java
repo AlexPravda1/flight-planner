@@ -4,13 +4,16 @@ import javax.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import planner.AbstractTest;
 import planner.model.dto.request.UserRegistrationDto;
 import planner.validation.Password;
 
-class PasswordValidatorTest {
+class PasswordValidatorTest extends AbstractTest {
     private String userEmail;
     private String userPassword;
+    @Mock
     private ConstraintValidatorContext constraintValidatorContext;
     private UserRegistrationDto registrationDto;
     private PasswordValidator passwordValidator;
@@ -18,7 +21,6 @@ class PasswordValidatorTest {
 
     @BeforeEach
     void setUp() {
-        constraintValidatorContext = Mockito.mock(ConstraintValidatorContext.class);
         passwordValidator = new PasswordValidator();
         registrationDto = new UserRegistrationDto();
         userPassword = "12345";

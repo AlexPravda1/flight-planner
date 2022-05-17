@@ -6,26 +6,28 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import planner.AbstractTest;
 import planner.dao.UserDao;
 import planner.model.User;
-import planner.service.UserService;
 
-class UserServiceImplTest {
+class UserServiceImplTest extends AbstractTest {
     private String userEmail;
     private String userPassword;
     private Long userId;
+    @Mock
     private UserDao userDao;
+    @Mock
     private PasswordEncoder passwordEncoder;
     private User user;
-    private UserService userService;
+    @InjectMocks
+    private UserServiceImpl userService;
 
     @BeforeEach
     void setUp() {
-        userDao = Mockito.mock(UserDao.class);
-        passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        userService = new UserServiceImpl(userDao, passwordEncoder);
         userEmail = "user@gmail.com";
         userPassword = "12345";
         userId = 1L;

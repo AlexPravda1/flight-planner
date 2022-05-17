@@ -7,8 +7,11 @@ import java.util.Set;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import planner.AbstractTest;
 import planner.exception.AuthenticationException;
 import planner.model.Role;
 import planner.model.User;
@@ -16,25 +19,23 @@ import planner.model.UserRoleName;
 import planner.service.RoleService;
 import planner.service.UserService;
 
-class AuthenticationServiceImplTest {
+class AuthenticationServiceImplTest extends AbstractTest {
     private String email;
     private String password;
     private String name;
     private String surname;
-    private AuthenticationService authenticationService;
+    @InjectMocks
+    private AuthenticationServiceImpl authenticationService;
+    @Mock
     private UserService userService;
+    @Mock
     private PasswordEncoder passwordEncoder;
+    @Mock
     private RoleService roleService;
     private User user;
 
     @BeforeEach
     void setUp() {
-        userService = Mockito.mock(UserService.class);
-        passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        roleService = Mockito.mock(RoleService.class);
-        authenticationService = new AuthenticationServiceImpl(userService,
-                roleService,
-                passwordEncoder);
         email = "user@gmail.com";
         name = "John";
         surname = "Terris";

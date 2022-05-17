@@ -7,28 +7,31 @@ import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.util.ReflectionTestUtils;
+import planner.AbstractTest;
 
-class JwtTokenProviderTest {
+class JwtTokenProviderTest extends AbstractTest {
     private static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyQGdtYW"
             + "lsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNjUyNzA4ODgxLCJleHAiOjE2NTQ4NTYzNjV"
             + "9.CT7cPAcYsbGxfPXJYNvflYFoyAmBE49f3KJ37xx8a7I";
     private String userEmail;
     private String userPassword;
+    @Mock
     private UserDetailsService userDetailsService;
+    @InjectMocks
     private JwtTokenProvider jwtTokenProvider;
 
     @BeforeEach
     void setUp() {
         userEmail = "user@gmail.com";
         userPassword = "12345";
-        userDetailsService = Mockito.mock(UserDetailsService.class);
-        jwtTokenProvider = new JwtTokenProvider(userDetailsService);
         ReflectionTestUtils.setField(jwtTokenProvider, "secretKey", "secretTestKey");
         ReflectionTestUtils.setField(jwtTokenProvider, "validityInMilliseconds", Integer.MAX_VALUE);
     }

@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.dozer.Mapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import planner.config.MapperConfig;
 import planner.dao.LeonApiDao;
@@ -77,6 +78,7 @@ class LeonApiDaoImplTest {
     }
 
     @Test
+    @Disabled("To be implemented")
     void getAllFlightsByPeriod_validData_thenCorrect() {
         //PH
         assertTrue(true);

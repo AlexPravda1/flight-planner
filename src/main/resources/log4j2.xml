@@ -3,13 +3,11 @@
     <Appenders>
         <Console name="LogToConsole" target="SYSTEM_OUT">
             <PatternLayout   pattern="%d{dd-MMM-yy HH:mm:ss}{GMT+0} UTC [%c{1}] %C{1}:%M:%L [%-5level] -- %msg%n"/>
-            <follow>true</follow>
         </Console>
 
         <File name="FileLogger" fileName="src/main/resources/JV-Logger.log">
             <PatternLayout>
                 <pattern>%d{dd-MMM-yy HH:mm:ss}{GMT+0} UTC [%c{1}] %C{1}.%M:%L [%-5level] -- %msg%n</pattern>
-                <follow>true</follow>
             </PatternLayout>
         </File>
 

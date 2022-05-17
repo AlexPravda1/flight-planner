@@ -5,21 +5,29 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import planner.dao.RoleDao;
 import planner.model.Role;
 import planner.model.UserRoleName;
 import planner.service.RoleService;
 
+//@ContextConfiguration (classes = AppConfig.class)
+//@ExtendWith(SpringExtension.class)
+//@ExtendWith(MockitoExtension.class)
+//@PropertySource("classpath:application.properties")
 class RoleServiceImplTest {
+    @Autowired
     private RoleDao roleDao;
+
+    @Autowired
     private RoleService roleService;
     private Role role;
 
     @BeforeEach
     void setUp() {
+        role = new Role(UserRoleName.USER);
         roleDao = Mockito.mock(RoleDao.class);
         roleService = new RoleServiceImpl(roleDao);
-        role = new Role(UserRoleName.USER);
     }
 
     @Test
@@ -39,3 +47,5 @@ class RoleServiceImplTest {
         Assertions.assertEquals(role.getRoleName(), actual.getRoleName());
     }
 }
+
+

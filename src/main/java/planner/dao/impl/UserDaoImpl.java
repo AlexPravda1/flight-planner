@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import planner.dao.UserDao;
 import planner.exception.DataProcessingException;
@@ -13,6 +14,7 @@ import planner.model.User;
 public class UserDaoImpl extends AbstractDao<User, Long> implements UserDao {
     private static final String MESSAGE = "Can't perform action on Entity: %S";
 
+    @Autowired
     public UserDaoImpl(SessionFactory sessionFactory) {
         super(sessionFactory, User.class);
     }

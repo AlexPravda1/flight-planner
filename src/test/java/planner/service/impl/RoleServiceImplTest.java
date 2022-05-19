@@ -1,30 +1,29 @@
 package planner.service.impl;
 
-import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import planner.AbstractTest;
 import planner.dao.RoleDao;
 import planner.model.Role;
 import planner.model.UserRoleName;
-import planner.service.RoleService;
+
+import java.util.Optional;
 
 class RoleServiceImplTest extends AbstractTest {
-    @Autowired
+    @Mock
     private RoleDao roleDao;
 
-    @Autowired
-    private RoleService roleService;
+    @InjectMocks
+    private RoleServiceImpl roleService;
     private Role role;
 
     @BeforeEach
     void setUp() {
         role = new Role(UserRoleName.USER);
-        roleDao = Mockito.mock(RoleDao.class);
-        roleService = new RoleServiceImpl(roleDao);
     }
 
     @Test

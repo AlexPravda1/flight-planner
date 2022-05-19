@@ -1,31 +1,6 @@
 package planner.config;
 
-import static planner.config.template.DataSourceBeanConfig.DB_DRIVER;
-import static planner.config.template.DataSourceBeanConfig.DB_PASSWORD;
-import static planner.config.template.DataSourceBeanConfig.DB_URL;
-import static planner.config.template.DataSourceBeanConfig.DB_USERNAME;
-import static planner.config.template.SessionFactoryBeanConfig.HIBERNATE_DIALECT;
-import static planner.config.template.SessionFactoryBeanConfig.HIBERNATE_HBM2DDL;
-import static planner.config.template.SessionFactoryBeanConfig.PACKAGES_TO_SCAN;
-import static planner.config.template.SessionFactoryBeanConfig.SHOW_SQL;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_AIRCRAFT_ID;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_AIRCRAFT_TYPE;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_AIRLINE_ID;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_AIRLINE_LEON_SUBDOMAIN;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_AIRLINE_NAME;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_IS_ACTIVE;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_IS_AIRCRAFT;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_AIRCRAFT_ID;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_AIRCRAFT_TYPE;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_AIRLINE_ID;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_AIRLINE_LEON_SUBDOMAIN;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_AIRLINE_NAME;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_IS_ACTIVE;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_IS_AIRCRAFT;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Properties;
-import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.dozer.DozerBeanMapper;
@@ -41,6 +16,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import planner.model.Aircraft;
 import planner.model.json.plane.AircraftList;
+
+import javax.sql.DataSource;
+import java.util.Properties;
+
+import static planner.config.template.DataSourceBeanConfig.*;
+import static planner.config.template.SessionFactoryBeanConfig.*;
+import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.*;
 
 @Configuration
 @ComponentScan(value = { "planner.dao.impl", "planner.security", "planner.service" })
@@ -101,9 +83,7 @@ public class TestConfig {
                         .fields(JSON_AIRLINE_NAME.value(), MODEL_AIRLINE_NAME.value())
                         .fields(JSON_AIRLINE_ID.value(), MODEL_AIRLINE_ID.value())
                         .fields(JSON_AIRLINE_LEON_SUBDOMAIN.value(),
-                                MODEL_AIRLINE_LEON_SUBDOMAIN.value())
-                        .fields(field(JSON_IS_ACTIVE.value()).accessible(),
-                                field(MODEL_IS_ACTIVE.value()).accessible());
+                                MODEL_AIRLINE_LEON_SUBDOMAIN.value());
             }
         };
     }

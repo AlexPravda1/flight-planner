@@ -1,12 +1,5 @@
 package planner.dao.impl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.Optional;
-import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +10,11 @@ import planner.exception.DataProcessingException;
 import planner.model.Role;
 import planner.model.User;
 import planner.model.UserRoleName;
+
+import java.util.Optional;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class UserDaoImplTest extends AbstractTest {
     private String userEmail;
@@ -75,6 +73,7 @@ class UserDaoImplTest extends AbstractTest {
         assertEquals(userFromDb.getEmail(), actual.get().getEmail());
         assertEquals(userFromDb.getRoles().size(), actual.get().getRoles().size());
         userDao.delete(userFromDb.getId());
+        roleDao.delete(roleFromDb.getId());
     }
 
     @Test

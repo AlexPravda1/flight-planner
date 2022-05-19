@@ -1,20 +1,5 @@
 package planner.config;
 
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_AIRCRAFT_ID;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_AIRCRAFT_TYPE;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_AIRLINE_ID;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_AIRLINE_LEON_SUBDOMAIN;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_AIRLINE_NAME;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_IS_ACTIVE;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.JSON_IS_AIRCRAFT;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_AIRCRAFT_ID;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_AIRCRAFT_TYPE;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_AIRLINE_ID;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_AIRLINE_LEON_SUBDOMAIN;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_AIRLINE_NAME;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_IS_ACTIVE;
-import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.MODEL_IS_AIRCRAFT;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.dozer.DozerBeanMapper;
@@ -25,6 +10,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import planner.model.Aircraft;
 import planner.model.json.plane.AircraftList;
+
+import static planner.config.template.mapper.config.JsonMapperAircraftFieldsConfig.*;
 
 @Configuration
 @ComponentScan(basePackages = "planner")
@@ -54,9 +41,7 @@ public class MapperConfig {
                         .fields(JSON_AIRLINE_NAME.value(), MODEL_AIRLINE_NAME.value())
                         .fields(JSON_AIRLINE_ID.value(), MODEL_AIRLINE_ID.value())
                         .fields(JSON_AIRLINE_LEON_SUBDOMAIN.value(),
-                                MODEL_AIRLINE_LEON_SUBDOMAIN.value())
-                        .fields(field(JSON_IS_ACTIVE.value()).accessible(),
-                                field(MODEL_IS_ACTIVE.value()).accessible());
+                                MODEL_AIRLINE_LEON_SUBDOMAIN.value());
             }
         };
     }

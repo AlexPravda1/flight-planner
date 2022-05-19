@@ -1,17 +1,7 @@
 package planner.dao.impl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static planner.model.leon.LeonQueryTemplateBuilderConfig.RESPONSE_FIX_UTC_CAMEL_CASE;
-import static planner.model.leon.LeonQueryTemplateBuilderConfig.RESPONSE_UTC_CAPITAL;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.dozer.Mapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -24,6 +14,14 @@ import planner.model.Airline;
 import planner.model.json.flight.list.FlightList;
 import planner.model.json.plane.AircraftList;
 import planner.model.json.root.Root;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static planner.model.leon.LeonQueryTemplateBuilderConfig.RESPONSE_FIX_UTC_CAMEL_CASE;
+import static planner.model.leon.LeonQueryTemplateBuilderConfig.RESPONSE_UTC_CAPITAL;
 
 class LeonApiDaoImplTest extends AbstractTest {
     private Airline airline;
@@ -58,7 +56,7 @@ class LeonApiDaoImplTest extends AbstractTest {
         assertNotEquals(allActiveAicraft, Collections.EMPTY_LIST);
 
         for (Aircraft aircraft : allActiveAicraft) {
-            assertTrue(aircraft.isActive());
+            assertTrue(aircraft.getIsActive());
             assertEquals(Aircraft.class, aircraft.getClass());
         }
 
@@ -70,7 +68,7 @@ class LeonApiDaoImplTest extends AbstractTest {
 
         assertNotEquals(allInactiveAicraft, Collections.EMPTY_LIST);
         for (Aircraft aircraft : allInactiveAicraft) {
-            assertFalse(aircraft.isActive());
+            assertFalse(aircraft.getIsActive());
             assertTrue(aircraft.getIsAircraft());
         }
     }
@@ -87,7 +85,7 @@ class LeonApiDaoImplTest extends AbstractTest {
         //log.info(leonApiDao.getAllFlightsByPeriodAndAircraftId(airline, 2L, 22249L));
         String jsonResponse = leonApiDao.getAllFlightsByPeriodAndAircraftId(airline, 0, 17038L);
 
-        // Temporary! Mappers should be tested separatetely?
+        // Temporary! Mappers should be tested separately?
         // "Replace" implemented on Service layer
         String jsonResponseFix = jsonResponse.replaceAll(RESPONSE_UTC_CAPITAL.value(),
                 RESPONSE_FIX_UTC_CAMEL_CASE.value());

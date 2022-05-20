@@ -1,9 +1,14 @@
 package planner.dao.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.util.Optional;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import planner.AbstractTest;
 import planner.dao.RoleDao;
@@ -11,50 +16,46 @@ import planner.exception.DataProcessingException;
 import planner.model.Role;
 import planner.model.UserRoleName;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RoleDaoImplTest extends AbstractTest {
     @Autowired
     private RoleDao roleDao;
     private Role role;
+    private Role actual;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    void beforeAll() {
         role = new Role(UserRoleName.USER);
+        actual = roleDao.save(role);
     }
 
     @Test
-    void save_validData_thenCorrect() {
-        Role actual = roleDao.save(role);
-        Assertions.assertNotNull(actual);
-        Assertions.assertEquals(role.getRoleName(), actual.getRoleName());
-        roleDao.delete(actual.getId());
+    void saveToDb_givenValidData_thenSuccess() {
+        assertNotNull(actual);
+        assertEquals(role.getRoleName(), actual.getRoleName());
     }
 
     @Test
-    void get_duplicatedRole_thenException() {
-        Role actual = roleDao.save(role);
-        Assertions.assertNotNull(actual);
-        Assertions.assertEquals(role.getRoleName(), actual.getRoleName());
-        Assertions.assertThrows(DataProcessingException.class, () -> roleDao.save(role),
+    void getFromDb_givenDuplicatedData_thenFail() {
+        assertThrows(DataProcessingException.class, () -> roleDao.save(role),
                 "Expected DataProcessingException when saving Role which already exist in DB");
-        roleDao.delete(actual.getId());
     }
 
     @Test
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    void getRoleByName_validData_thenCorrect() {
-        Role savedRole = roleDao.save(role);
-        Optional<Role> actual = roleDao.getRoleByName(role.getRoleName().name());
-        Assertions.assertNotNull(actual);
-        Assertions.assertEquals(savedRole.getRoleName(), actual.get().getRoleName());
-        roleDao.delete(savedRole.getId());
+    void getRoleByNameFromDb_givenValidData_thenSuccess() {
+        Role roleFromDb = roleDao.getRoleByName(role.getRoleName().name()).orElse(null);
+        assertNotNull(roleFromDb);
+        assertEquals(roleFromDb.getRoleName(), actual.getRoleName());
     }
 
     @Test
-    void getRoleByName_nonExistentRole_thenException() {
-        Role savedRole = roleDao.save(role);
-        Optional<Role> actual = roleDao.getRoleByName(UserRoleName.ADMIN.name());
-        Assertions.assertNotNull(actual);
-        Assertions.assertTrue(actual.isEmpty());
-        roleDao.delete(savedRole.getId());
+    void getRoleByName_givenWrongData_thenFail() {
+        Optional<Role> roleFromDb = roleDao.getRoleByName(UserRoleName.ADMIN.name());
+        assertEquals(Optional.empty(), roleFromDb);
+    }
+
+    @AfterAll
+    void afterAll() {
+        roleDao.delete(role.getId());
     }
 }

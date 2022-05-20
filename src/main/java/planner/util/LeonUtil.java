@@ -1,13 +1,16 @@
 package planner.util;
 
-import planner.exception.LeonAccessException;
-import planner.model.leon.LeonQuery;
-import planner.model.leon.LeonQueryTemplateFilterConditions;
-
-import java.time.LocalDate;
-
-import static planner.model.leon.LeonQueryTemplateBuilderConfig.*;
-import static planner.model.leon.LeonQueryTemplateFilterConditions.*;
+import static planner.model.leon.LeonQueryTemplateBuilderConfig.ERROR;
+import static planner.model.leon.LeonQueryTemplateBuilderConfig.RESPONSE_FIX_UTC_CAMEL_CASE;
+import static planner.model.leon.LeonQueryTemplateBuilderConfig.RESPONSE_UTC_CAPITAL;
+import static planner.model.leon.LeonQueryTemplateFilterConditions.AIRCRAFT_ID;
+import static planner.model.leon.LeonQueryTemplateFilterConditions.CONDITIONS_FLIGHT_LIST_ALL_AIRCRAFT;
+import static planner.model.leon.LeonQueryTemplateFilterConditions.CONDITIONS_FLIGHT_LIST_BY_AIRCRAFT;
+import static planner.model.leon.LeonQueryTemplateFilterConditions.DEFAULT_DAYS_RANGE;
+import static planner.model.leon.LeonQueryTemplateFilterConditions.END_DAY;
+import static planner.model.leon.LeonQueryTemplateFilterConditions.GENERAL_CONDITIONS_ALL;
+import static planner.model.leon.LeonQueryTemplateFilterConditions.GENERAL_CONDITIONS_ALL_ACTIVE_AIRCRAFT_LIST;
+import static planner.model.leon.LeonQueryTemplateFilterConditions.START_DAY;
 import static planner.model.leon.LeonQueryTemplateFilterType.FILTER_TYPE_ALL_AIRCRAFT;
 import static planner.model.leon.LeonQueryTemplateFilterType.FILTER_TYPE_FLIGHT_LIST;
 import static planner.model.leon.LeonQueryTemplateRequestAircraft.AIRCRAFT;
@@ -15,6 +18,11 @@ import static planner.model.leon.LeonQueryTemplateRequestAirport.END_AIRPORT;
 import static planner.model.leon.LeonQueryTemplateRequestAirport.START_AIRPORT;
 import static planner.model.leon.LeonQueryTemplateRequestChecklist.CHECKLIST_ALL;
 import static planner.model.leon.LeonQueryTemplateRequestCrew.CREW_LIST;
+
+import java.time.LocalDate;
+import planner.exception.LeonAccessException;
+import planner.model.leon.LeonQuery;
+import planner.model.leon.LeonQueryTemplateFilterConditions;
 
 public final class LeonUtil {
     public static void validateJsonResponse(String response) {

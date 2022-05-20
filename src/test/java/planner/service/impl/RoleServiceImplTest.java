@@ -1,5 +1,6 @@
 package planner.service.impl;
 
+import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,8 +11,6 @@ import planner.AbstractTest;
 import planner.dao.RoleDao;
 import planner.model.Role;
 import planner.model.UserRoleName;
-
-import java.util.Optional;
 
 class RoleServiceImplTest extends AbstractTest {
     @Mock

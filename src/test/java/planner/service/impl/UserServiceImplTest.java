@@ -1,6 +1,7 @@
 package planner.service.impl;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
@@ -8,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import planner.AbstractTest;
 import planner.dao.UserDao;
@@ -39,8 +39,8 @@ class UserServiceImplTest extends AbstractTest {
 
     @Test
     void save_validData_thenCorrect() {
-        Mockito.when(userDao.save(user)).thenReturn(user);
-        Mockito.when(passwordEncoder.encode(any())).thenReturn(user.getPassword());
+        when(userDao.save(user)).thenReturn(user);
+        when(passwordEncoder.encode(any())).thenReturn(user.getPassword());
         User actual = userService.save(user);
         Assertions.assertNotNull(actual);
         Assertions.assertEquals(userEmail, actual.getEmail());
@@ -51,7 +51,7 @@ class UserServiceImplTest extends AbstractTest {
     @Test
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     void findById_validData_thenCorrect() {
-        Mockito.when(userDao.findById(any())).thenReturn(Optional.of(user));
+        when(userDao.findById(any())).thenReturn(Optional.of(user));
         Optional<User> actual = userService.findById(userId);
         Assertions.assertNotNull(actual);
         Assertions.assertEquals(user.getClass(), actual.get().getClass());
@@ -60,7 +60,7 @@ class UserServiceImplTest extends AbstractTest {
     @Test
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     void findByEmail_validData_thenCorrect() {
-        Mockito.when(userDao.findByEmail(userEmail)).thenReturn(Optional.of(user));
+        when(userDao.findByEmail(userEmail)).thenReturn(Optional.of(user));
         Optional<User> actual = userService.findByEmail(userEmail);
         Assertions.assertNotNull(actual);
         Assertions.assertEquals(user.getClass(), actual.get().getClass());

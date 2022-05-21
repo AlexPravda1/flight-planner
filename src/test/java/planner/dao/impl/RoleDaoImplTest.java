@@ -1,8 +1,11 @@
 package planner.dao.impl;
 
+import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static planner.model.UserRoleName.ADMIN;
+import static planner.model.UserRoleName.USER;
 
 import java.util.Optional;
 import org.junit.jupiter.api.AfterAll;
@@ -14,48 +17,57 @@ import planner.AbstractTest;
 import planner.dao.RoleDao;
 import planner.exception.DataProcessingException;
 import planner.model.Role;
-import planner.model.UserRoleName;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RoleDaoImplTest extends AbstractTest {
     @Autowired
     private RoleDao roleDao;
-    private Role role;
-    private Role actual;
+    private Role expectedRole;
+    private Role roleFromDb;
 
     @BeforeAll
     void beforeAll() {
-        role = new Role(UserRoleName.USER);
-        actual = roleDao.save(role);
+        expectedRole = new Role(USER);
+        roleFromDb = roleDao.save(expectedRole);
     }
 
     @Test
-    void saveToDb_givenValidData_thenSuccess() {
-        assertNotNull(actual);
-        assertEquals(role.getRoleName(), actual.getRoleName());
+    void saveRoleToDb_givenValidRole_thenSuccess() {
+        validateRoles(expectedRole, roleFromDb);
     }
 
     @Test
-    void getFromDb_givenDuplicatedData_thenFail() {
-        assertThrows(DataProcessingException.class, () -> roleDao.save(role),
+    void saveRoleToDb_givenDuplicatedRole_thenFail() {
+        assertThrows(DataProcessingException.class, () -> roleDao.save(expectedRole),
                 "Expected DataProcessingException when saving Role which already exist in DB");
     }
 
     @Test
-    void getRoleByNameFromDb_givenValidData_thenSuccess() {
-        Role roleFromDb = roleDao.getRoleByName(role.getRoleName().name()).orElse(null);
-        assertNotNull(roleFromDb);
-        assertEquals(roleFromDb.getRoleName(), actual.getRoleName());
+    void getRoleByNameFromDb_givenExistingRole_thenSuccess() {
+        Role actual = roleDao.getRoleByName(expectedRole.getRoleName().name()).orElse(null);
+        validateRoles(expectedRole, actual);
     }
 
     @Test
-    void getRoleByName_givenWrongData_thenFail() {
-        Optional<Role> roleFromDb = roleDao.getRoleByName(UserRoleName.ADMIN.name());
-        assertEquals(Optional.empty(), roleFromDb);
+    void getRoleByName_givenWrongRole_thenFail() {
+        assertEquals(Optional.empty(), roleDao.getRoleByName(ADMIN.value()),
+                "should be empty Optional");
+    }
+
+    @Test
+    void getRoleByName_givenWrongDataType_thenFail() {
+        assertThrows(DataProcessingException.class, () -> roleDao.getRoleByName(SPACE),
+                "Expected DataProcessingException when non-Role data passed");
+    }
+
+    private void validateRoles(Role expectedRole, Role actualRole) {
+        assertNotNull(actualRole);
+        assertEquals(expectedRole.getRoleName(), actualRole.getRoleName(),
+                "should have the same name");
     }
 
     @AfterAll
     void afterAll() {
-        roleDao.delete(role.getId());
+        roleDao.delete(roleFromDb.getId());
     }
 }

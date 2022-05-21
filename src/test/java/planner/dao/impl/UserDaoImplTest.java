@@ -1,14 +1,18 @@
 package planner.dao.impl;
 
+import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static planner.model.UserRoleName.USER;
 
 import java.util.Optional;
 import java.util.Set;
-import org.junit.jupiter.api.BeforeEach;
+import model.hardcoded.UserTest;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import planner.AbstractTest;
 import planner.dao.RoleDao;
@@ -16,75 +20,64 @@ import planner.dao.UserDao;
 import planner.exception.DataProcessingException;
 import planner.model.Role;
 import planner.model.User;
-import planner.model.UserRoleName;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserDaoImplTest extends AbstractTest {
-    private String userEmail;
-    private String name;
-    private String surname;
+    private User expected;
     @Autowired
     private UserDao userDao;
     @Autowired
     private RoleDao roleDao;
-    private User user;
 
-    @BeforeEach
-    void setUp() {
-        userEmail = "user@gmail.com";
-        name = "John";
-        surname = "Terris";
-        String userPassword = "12345";
-        user = new User();
-        user.setPassword(userPassword);
-        user.setEmail(userEmail);
-        user.setName(name);
-        user.setSurname(surname);
+    @BeforeAll
+    void beforeAll() {
+        expected = new UserTest().getUserNoRolesNoId();
+        expected.setRoles(Set.of(roleDao.save(new Role(USER))));
     }
 
     @Test
-    void save_validUserData_thenCorrect() {
-        //Long userId = 1L;
-        User actual = userDao.save(user);
-        assertNotNull(actual);
-        //assertEquals(userId, actual.getId());
-        assertEquals(userEmail, actual.getEmail());
-        assertEquals(name, actual.getName());
-        assertEquals(surname, actual.getSurname());
-        userDao.delete(actual.getId());
+    void saveUserToDb_givenValidUser_thenSuccess() {
+        User actual = userDao.save(expected);
+        validateUsers(expected, actual);
     }
 
     @Test
-    void save_duplicatedUser_thenException() {
-        User actual = userDao.save(user);
-        assertNotNull(actual);
-        assertThrows(DataProcessingException.class, () -> userDao.save(user),
+    void saveUserToDb_givenDuplicatedUser_thenFail() {
+        assertThrows(DataProcessingException.class, () -> userDao.save(expected),
                 "Expected DataProcessingException when saving User which already exist in DB");
-        userDao.delete(actual.getId());
     }
 
     @Test
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    void findByEmail_validUserData_thenCorrect() {
-        Role roleFromDb = roleDao.save(new Role(UserRoleName.USER));
-        user.setRoles(Set.of(roleFromDb));
-        User userFromDb = userDao.save(user);
-        String userEmail = "user@gmail.com";
-        Optional<User> actual = userDao.findByEmail(userEmail);
-        assertNotNull(actual);
-        assertEquals(userFromDb.getId(), actual.get().getId());
-        assertEquals(userFromDb.getEmail(), actual.get().getEmail());
-        assertEquals(userFromDb.getRoles().size(), actual.get().getRoles().size());
-        userDao.delete(userFromDb.getId());
-        roleDao.delete(roleFromDb.getId());
+    void findUserByEmailFromDb_givenValidEmail_thenSuccess() {
+        User actual = userDao.findByEmail(expected.getEmail()).orElse(null);
+        validateUsers(expected, actual);
     }
 
     @Test
-    void findByEmail_nonExistentUser_thenEmptyOptional() {
-        User userFromDb = userDao.save(user);
-        String userEmail = "prefix" + userFromDb.getEmail();
-        Optional<User> actual = userDao.findByEmail(userEmail);
+    void findUserByEmailFromDb_givenWrongEmail_thenFail() {
+        assertEquals(Optional.empty(), userDao.findByEmail("invalid@gmail.com"),
+                "should be empty Optional");
+        assertEquals(Optional.empty(), userDao.findByEmail(SPACE),
+                "should be empty Optional");
+    }
+
+    private void validateUsers(User expected, User actual) {
         assertNotNull(actual);
-        assertTrue(actual.isEmpty());
-        userDao.delete(userFromDb.getId());
+        assertEquals(expected.getId(), actual.getId(),
+                "should have the same id");
+        assertEquals(expected.getEmail(), actual.getEmail(),
+                "should have the same email");
+        assertEquals(expected.getName(), actual.getName(),
+                "should have the same name");
+        assertEquals(expected.getSurname(), actual.getSurname(),
+                "should have the same surname");
+        assertEquals(expected.getRoles().size(), actual.getRoles().size(),
+                "should have the same amount of Roles");
+    }
+
+    @AfterAll
+    void afterAll() {
+        userDao.delete(expected.getId());
+        roleDao.delete(1L);
     }
 }

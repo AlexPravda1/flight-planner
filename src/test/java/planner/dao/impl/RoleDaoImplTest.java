@@ -8,44 +8,44 @@ import static planner.model.UserRoleName.ADMIN;
 import static planner.model.UserRoleName.USER;
 
 import java.util.Optional;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import planner.AbstractTest;
 import planner.dao.RoleDao;
 import planner.exception.DataProcessingException;
 import planner.model.Role;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RoleDaoImplTest extends AbstractTest {
     @Autowired
     private RoleDao roleDao;
-    private Role expectedRole;
-    private Role roleFromDb;
+    private Role expected;
+    private Role actualFromDb;
 
-    @BeforeAll
-    void beforeAll() {
-        expectedRole = new Role(USER);
-        roleFromDb = roleDao.save(expectedRole);
+    @BeforeEach
+    void setUp() {
+        expected = new Role(USER);
     }
 
     @Test
     void saveRoleToDb_givenValidRole_thenSuccess() {
-        validateRoles(expectedRole, roleFromDb);
+        actualFromDb = roleDao.save(expected);
+        validateRoles(expected, actualFromDb);
     }
 
     @Test
     void saveRoleToDb_givenDuplicatedRole_thenFail() {
-        assertThrows(DataProcessingException.class, () -> roleDao.save(expectedRole),
+        roleDao.save(expected);
+        assertThrows(DataProcessingException.class, () -> roleDao.save(expected),
                 "Expected DataProcessingException when saving Role which already exist in DB");
     }
 
     @Test
     void getRoleByNameFromDb_givenExistingRole_thenSuccess() {
-        Role actual = roleDao.getRoleByName(expectedRole.getRoleName().name()).orElse(null);
-        validateRoles(expectedRole, actual);
+        roleDao.save(expected);
+        actualFromDb = roleDao.getRoleByName(expected.getRoleName().name()).orElse(null);
+        validateRoles(expected, actualFromDb);
     }
 
     @Test
@@ -66,8 +66,9 @@ class RoleDaoImplTest extends AbstractTest {
                 "should have the same name");
     }
 
-    @AfterAll
-    void afterAll() {
-        roleDao.delete(roleFromDb.getId());
+    @AfterEach
+    void tearDown() {
+        roleDao.getRoleByName(expected.getRoleName().name())
+                .ifPresent(role -> roleDao.delete(role.getId()));
     }
 }

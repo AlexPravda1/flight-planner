@@ -1,28 +1,36 @@
 package planner.security.jwt;
 
+import static org.apache.commons.lang3.StringUtils.SPACE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static planner.model.UserRoleName.USER;
 
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import org.junit.jupiter.api.Assertions;
+import model.hardcoded.UserTest;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.util.ReflectionTestUtils;
 import planner.AbstractTest;
+import planner.exception.InvalidJwtAuthenticationException;
 
 class JwtTokenProviderTest extends AbstractTest {
+    private static planner.model.User user;
     private static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyQGdtYW"
             + "lsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNjUyNzA4ODgxLCJleHAiOjE2NTQ4NTYzNjV"
             + "9.CT7cPAcYsbGxfPXJYNvflYFoyAmBE49f3KJ37xx8a7I";
-    private String userEmail;
-    private String userPassword;
     @Mock
     private UserDetailsService userDetailsService;
     @InjectMocks
@@ -30,61 +38,62 @@ class JwtTokenProviderTest extends AbstractTest {
 
     @BeforeEach
     void setUp() {
-        userEmail = "user@gmail.com";
-        userPassword = "12345";
         ReflectionTestUtils.setField(jwtTokenProvider, "secretKey", "secretTestKey");
         ReflectionTestUtils.setField(jwtTokenProvider, "validityInMilliseconds", Integer.MAX_VALUE);
     }
 
-    @Test
-    void createToken_validData_thenCorrect() {
-        List<String> roles = List.of("USER");
-        String actual = jwtTokenProvider.createToken(userEmail, roles);
-        Assertions.assertNotNull(actual);
-        Assertions.assertEquals(VALID_TOKEN.length(), actual.length());
+    @BeforeAll
+    static void beforeAll() {
+        user = UserTest.getUserNoRolesNoId();
     }
 
     @Test
-    void getAuthentication_validData_thenCorrect() {
-        User.UserBuilder builder = org.springframework.security.core.userdetails
-                .User.withUsername(userEmail)
-                .password(userPassword)
-                .roles(List.of("USER").toArray(String[]::new));
-        UserDetails userDetails = builder.build();
-        Mockito.when(this.userDetailsService.loadUserByUsername(any())).thenReturn(userDetails);
+    void createToken_givenValidData_thenSuccess() {
+        List<String> roles = List.of(USER.value());
+        String actual = jwtTokenProvider.createToken(user.getEmail(), roles);
+        assertNotNull(actual);
+        assertEquals(VALID_TOKEN.length(), actual.length());
+    }
+
+    @Test
+    void getAuthentication_givenValidData_thenSuccess() {
+        UserDetails userDetails = org.springframework.security.core.userdetails
+                .User.withUsername(user.getEmail())
+                .password(user.getPassword())
+                .roles(List.of(USER.value()).toArray(String[]::new))
+                .build();
+        when(userDetailsService.loadUserByUsername(any())).thenReturn(userDetails);
         Authentication authentication = jwtTokenProvider.getAuthentication(VALID_TOKEN);
         User actual = (User) authentication.getPrincipal();
-        Assertions.assertNotNull(actual);
-        Assertions.assertEquals(actual.getUsername(), userEmail);
+        assertNotNull(actual);
+        assertEquals(actual.getUsername(), user.getEmail());
     }
 
     @Test
-    void getUsername_validData_thenCorrect() {
+    void getUsername_givenValidData_thenSuccess() {
         String actual = jwtTokenProvider.getUsername(VALID_TOKEN);
-        Assertions.assertNotNull(actual);
-        Assertions.assertEquals(actual, userEmail);
+        assertNotNull(actual);
+        assertEquals(actual, user.getEmail());
     }
 
     @Test
-    void resolveToken_validData_thenCorrect() {
-        HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
-        Mockito.when(req.getHeader("Authorization")).thenReturn("Bearer " + VALID_TOKEN);
+    void resolveToken_givenValidData_thenSuccess() {
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        when(req.getHeader("Authorization")).thenReturn("Bearer " + VALID_TOKEN);
         String actual = jwtTokenProvider.resolveToken(req);
-        Assertions.assertNotNull(actual);
-        Assertions.assertEquals(actual, VALID_TOKEN);
+        assertNotNull(actual);
+        assertEquals(actual, VALID_TOKEN);
     }
 
     @Test
-    void validateToken_validToken_thenCorrect() {
-        boolean actual = jwtTokenProvider.validateToken(VALID_TOKEN);
-        Assertions.assertTrue(actual);
+    void validateToken_givenValidToken_thenSuccess() {
+        assertTrue(jwtTokenProvider.validateToken(VALID_TOKEN));
     }
 
     @Test
-    void validateToken_invalidToken_thenException() {
-        String invalidToken = "part1.part2.token";
-        Assertions.assertThrows(RuntimeException.class,
-                () -> jwtTokenProvider.validateToken(invalidToken),
+    void validateToken_givenWrongToken_thenFail() {
+        assertThrows(InvalidJwtAuthenticationException.class,
+                () -> jwtTokenProvider.validateToken(SPACE),
                 "Expected RuntimeException for invalid Token");
     }
 }

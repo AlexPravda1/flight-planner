@@ -1,54 +1,58 @@
 package planner.security;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+import static planner.model.UserRoleName.USER;
+
 import java.util.Optional;
 import java.util.Set;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import model.hardcoded.UserTest;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import planner.AbstractTest;
 import planner.model.Role;
 import planner.model.User;
-import planner.model.UserRoleName;
 import planner.service.UserService;
 
 class CustomUserDetailsServiceTest extends AbstractTest {
-    private String userEmail;
-    private String userPassword;
+    private static User expected;
     @Mock
     private UserService userService;
     @InjectMocks
     private CustomUserDetailsService userDetailsService;
-    private User user;
 
-    @BeforeEach
-    void setUp() {
-        userEmail = "user@gmail.com";
-        userPassword = "12345";
-        user = new User();
-        user.setEmail(userEmail);
-        user.setPassword(userPassword);
-        user.setRoles(Set.of(new Role(UserRoleName.USER)));
+    @BeforeAll
+    static void beforeAll() {
+        expected = UserTest.getUserNoRolesNoId();
+        expected.setRoles(Set.of(new Role(USER)));
     }
 
     @Test
-    void loadUserByUsername_validData_thenCorrect() {
-        Mockito.when(userService.findByEmail(userEmail)).thenReturn(Optional.of(user));
-        UserDetails actual = userDetailsService.loadUserByUsername(userEmail);
-        Assertions.assertNotNull(actual);
-        Assertions.assertEquals(userEmail, actual.getUsername());
-        Assertions.assertEquals(userPassword, actual.getPassword());
+    void loadUserByUsername_givenValidEmail_thenSuccess() {
+        when(userService.findByEmail(expected.getEmail())).thenReturn(Optional.of(expected));
+        UserDetails actual = userDetailsService.loadUserByUsername(expected.getEmail());
+        validateUserDetails(actual);
     }
 
     @Test
-    void loadUserByUsername_nonExistentUsername_thenException() {
-        Mockito.when(userService.findByEmail(userEmail)).thenReturn(Optional.empty());
-        Assertions.assertThrows(UsernameNotFoundException.class,
-                () -> userDetailsService.loadUserByUsername(userEmail),
+    void loadUserByUsername_nonExistentUsername_thenFail() {
+        when(userService.findByEmail(expected.getEmail())).thenReturn(Optional.empty());
+        assertThrows(UsernameNotFoundException.class,
+                () -> userDetailsService.loadUserByUsername(expected.getEmail()),
                 "Expected UsernameNotFoundException when User email doesn't exist");
+    }
+
+    private void validateUserDetails(UserDetails actual) {
+        assertEquals(expected.getEmail(), actual.getUsername(),
+                "should have the same email");
+        assertEquals(expected.getPassword(), actual.getPassword(),
+                "should have the same password");
+        assertEquals(expected.getRoles().size(), actual.getAuthorities().size(),
+                "should have the same amount of User Roles");
     }
 }

@@ -1,5 +1,7 @@
 package planner.security.jwt;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -70,7 +72,6 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(getUsername(token));
         return new UsernamePasswordAuthenticationToken(userDetails,
-                "",
-                userDetails.getAuthorities());
+                EMPTY, userDetails.getAuthorities());
     }
 }

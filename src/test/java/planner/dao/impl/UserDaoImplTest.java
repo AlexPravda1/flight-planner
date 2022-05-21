@@ -30,13 +30,21 @@ class UserDaoImplTest extends AbstractTest {
 
     @BeforeEach
     void setUp() {
-        expected = new UserTest().getUserNoRolesNoId();
+        expected = UserTest.getUserNoRolesNoId();
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (actualFromDb != null) {
+            userDao.delete(actualFromDb.getId());
+        }
+        roleDao.getRoleByName(USER.value()).ifPresent(role -> roleDao.delete(role.getId()));
     }
 
     @Test
     void saveUserToDb_givenValidUser_thenSuccess() {
         actualFromDb = userDao.save(expected);
-        validateUsers(expected, actualFromDb);
+        validateUser(expected, actualFromDb);
     }
 
     @Test
@@ -51,7 +59,7 @@ class UserDaoImplTest extends AbstractTest {
         expected.setRoles(Set.of(roleDao.save(new Role(USER))));
         userDao.save(expected);
         actualFromDb = userDao.findByEmail(expected.getEmail()).orElse(null);
-        validateUsers(expected, actualFromDb);
+        validateUser(expected, actualFromDb);
     }
 
     @Test
@@ -62,7 +70,7 @@ class UserDaoImplTest extends AbstractTest {
                 "should be empty Optional");
     }
 
-    private void validateUsers(User expected, User actual) {
+    private void validateUser(User expected, User actual) {
         assertNotNull(actual);
         assertEquals(expected.getEmail(), actual.getEmail(),
                 "should have the same email");
@@ -70,13 +78,5 @@ class UserDaoImplTest extends AbstractTest {
                 "should have the same name");
         assertEquals(expected.getSurname(), actual.getSurname(),
                 "should have the same surname");
-    }
-
-    @AfterEach
-    void tearDown() {
-        if (actualFromDb != null) {
-            userDao.delete(actualFromDb.getId());
-        }
-        roleDao.getRoleByName(USER.value()).ifPresent(role -> roleDao.delete(role.getId()));
     }
 }

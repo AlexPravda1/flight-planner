@@ -28,10 +28,16 @@ class RoleDaoImplTest extends AbstractTest {
         expected = new Role(USER);
     }
 
+    @AfterEach
+    void tearDown() {
+        roleDao.getRoleByName(expected.getRoleName().name())
+                .ifPresent(role -> roleDao.delete(role.getId()));
+    }
+
     @Test
     void saveRoleToDb_givenValidRole_thenSuccess() {
         actualFromDb = roleDao.save(expected);
-        validateRoles(expected, actualFromDb);
+        validateRole(expected, actualFromDb);
     }
 
     @Test
@@ -45,7 +51,7 @@ class RoleDaoImplTest extends AbstractTest {
     void getRoleByNameFromDb_givenExistingRole_thenSuccess() {
         roleDao.save(expected);
         actualFromDb = roleDao.getRoleByName(expected.getRoleName().name()).orElse(null);
-        validateRoles(expected, actualFromDb);
+        validateRole(expected, actualFromDb);
     }
 
     @Test
@@ -60,15 +66,9 @@ class RoleDaoImplTest extends AbstractTest {
                 "Expected DataProcessingException when non-Role data passed");
     }
 
-    private void validateRoles(Role expectedRole, Role actualRole) {
+    private void validateRole(Role expectedRole, Role actualRole) {
         assertNotNull(actualRole);
         assertEquals(expectedRole.getRoleName(), actualRole.getRoleName(),
                 "should have the same name");
-    }
-
-    @AfterEach
-    void tearDown() {
-        roleDao.getRoleByName(expected.getRoleName().name())
-                .ifPresent(role -> roleDao.delete(role.getId()));
     }
 }

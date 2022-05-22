@@ -1,5 +1,6 @@
 package planner.model.leon;
 
+import static org.apache.commons.lang3.StringUtils.SPACE;
 import static planner.model.leon.LeonQueryTemplateBuilderConfig.BODY_POSTFIX;
 import static planner.model.leon.LeonQueryTemplateBuilderConfig.BODY_PREFIX;
 import static planner.model.leon.LeonQueryTemplateBuilderConfig.QUERY_POSTFIX;
@@ -7,7 +8,6 @@ import static planner.model.leon.LeonQueryTemplateBuilderConfig.QUERY_PREFIX;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
 
 @Builder
 @Getter
@@ -18,40 +18,40 @@ public class LeonQuery {
     private String filterName;
 
     @Builder.Default
-    private String filterCondition = StringUtils.SPACE;
+    private String filterCondition = SPACE;
 
     @Builder.Default
     private String bodyPrefix = BODY_PREFIX.value();
 
     @Builder.Default
-    private String generalConditions = StringUtils.SPACE;
+    private String generalConditions = SPACE;
 
     @Builder.Default
-    private String flightWatch = StringUtils.SPACE;
+    private String flightWatch = SPACE;
 
     @Builder.Default
-    private String aircraft = StringUtils.SPACE;
+    private String aircraft = SPACE;
 
     @Builder.Default
-    private String startAirport = StringUtils.SPACE;
+    private String startAirport = SPACE;
 
     @Builder.Default
-    private String endAirport = StringUtils.SPACE;
+    private String endAirport = SPACE;
 
     @Builder.Default
-    private String sectorHandling = StringUtils.SPACE;
+    private String sectorHandling = SPACE;
 
     @Builder.Default
-    private String checklist = StringUtils.SPACE;
+    private String checklist = SPACE;
 
     @Builder.Default
-    private String notes = StringUtils.SPACE;
+    private String notes = SPACE;
 
     @Builder.Default
-    private String passengerList = StringUtils.SPACE;
+    private String passengerList = SPACE;
 
     @Builder.Default
-    private String crewList = StringUtils.SPACE;
+    private String crewList = SPACE;
 
     @Builder.Default
     private String bodyPostfix = BODY_POSTFIX.value();
@@ -75,7 +75,7 @@ public class LeonQuery {
                 + crewList
                 + bodyPostfix
                 + queryPostfix
-                .replaceAll("[\\r\\n]+", StringUtils.SPACE)
-                .replaceAll(System.lineSeparator(), StringUtils.SPACE);
+                .replaceAll("[\\r\\n]+", SPACE)
+                .replaceAll(System.lineSeparator(), SPACE);
     }
 }

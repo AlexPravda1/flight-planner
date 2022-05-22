@@ -67,7 +67,6 @@ class LeonApiDaoImplTest extends AbstractTest {
         LeonMetaData leonData = jsonMapper.readValue(
                 fixJsonForMappers(jsonResponse), LeonMetaData.class);
         List<FlightList> flightList = getFilteredFlightList(leonData);
-
         validateFlightList(flightList);
     }
 

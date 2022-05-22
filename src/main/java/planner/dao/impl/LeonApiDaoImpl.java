@@ -1,5 +1,7 @@
 package planner.dao.impl;
 
+import static java.lang.String.format;
+import static java.time.LocalDateTime.now;
 import static planner.config.template.HttpConnectionConfig.APPLICATION_JSON;
 import static planner.config.template.HttpConnectionConfig.AUTHORIZATION;
 import static planner.config.template.HttpConnectionConfig.BEARER;
@@ -10,6 +12,9 @@ import static planner.config.template.LeonApiConfig.QUERY_URL_POSTFIX;
 import static planner.config.template.LeonApiConfig.REFRESH_TOKEN_HEADER;
 import static planner.config.template.LeonApiConfig.TOKEN_URL_POSTFIX;
 import static planner.config.template.LeonApiConfig.TOKEN_VALIDITY_MINUTES;
+import static planner.util.LeonUtil.prepareQueryAllAircraft;
+import static planner.util.LeonUtil.prepareQueryAllFlightsByPeriod;
+import static planner.util.LeonUtil.prepareQueryAllFlightsByPeriodAndAircraftId;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +34,6 @@ import planner.dao.LeonApiDao;
 import planner.exception.LeonAccessException;
 import planner.model.Airline;
 import planner.model.leon.AccessToken;
-import planner.util.LeonUtil;
 
 @Repository
 @Log4j2
@@ -39,18 +43,18 @@ public class LeonApiDaoImpl implements LeonApiDao {
     @Override
     public String getAllAircraft(Airline airline) {
         URL url = generateUrl(QUERY_URL_POSTFIX, airline);
-        String query = LeonUtil.prepareQueryAllAircraft();
+        String query = prepareQueryAllAircraft();
         String accessToken = getAccessToken(airline);
-        log.info(String.format("Processing %s, %s", url, query));
+        log.info(format("Processing %s, %s", url, query));
         return fetchLeonResponse(url, query, accessToken);
     }
 
     @Override
     public String getAllFlightsByPeriod(Airline airline, long daysRange) {
         URL url = generateUrl(QUERY_URL_POSTFIX, airline);
-        String query = LeonUtil.prepareQueryAllFlightsByPeriod(daysRange);
+        String query = prepareQueryAllFlightsByPeriod(daysRange);
         String accessToken = getAccessToken(airline);
-        log.info(String.format("Processing %s, %s", url, query));
+        log.info(format("Processing %s, %s", url, query));
         return fetchLeonResponse(url, query, accessToken);
     }
 
@@ -58,9 +62,9 @@ public class LeonApiDaoImpl implements LeonApiDao {
     public String getAllFlightsByPeriodAndAircraftId(
             Airline airline, long daysRange, Long aircraftId) {
         URL url = generateUrl(QUERY_URL_POSTFIX, airline);
-        String query = LeonUtil.prepareQueryAllFlightsByPeriodAndAircraftId(daysRange, aircraftId);
+        String query = prepareQueryAllFlightsByPeriodAndAircraftId(daysRange, aircraftId);
         String accessToken = getAccessToken(airline);
-        log.info(String.format("Processing %s, %s", url, query));
+        log.info(format("Processing %s, %s", url, query));
         return fetchLeonResponse(url, query, accessToken);
     }
 
@@ -69,7 +73,7 @@ public class LeonApiDaoImpl implements LeonApiDao {
             return new URL(HTTP_PREFIX.value()
                     + airline.getLeonSubDomain() + urlType.value());
         } catch (MalformedURLException e) {
-            String message = String.format("Failed to build %s URL for %s",
+            String message = format("Failed to build %s URL for %s",
                     urlType.name(), airline.getName());
             log.error(message, e);
             throw new LeonAccessException(message, e);
@@ -78,11 +82,11 @@ public class LeonApiDaoImpl implements LeonApiDao {
 
     private boolean isValidTokenByDuration(String airlineName) {
         return tokensPool.containsKey(airlineName)
-                && tokensPool.get(airlineName).getValidityTime().isAfter(LocalDateTime.now());
+                && tokensPool.get(airlineName).getValidityTime().isAfter(now());
     }
 
     private String putInTokenPoolMap(String airlineName, String fetchedToken) {
-        LocalDateTime validity = LocalDateTime.now()
+        LocalDateTime validity = now()
                 .plusMinutes(Long.parseLong(TOKEN_VALIDITY_MINUTES.value()));
         tokensPool.put(airlineName, new AccessToken(fetchedToken, validity));
         return fetchedToken;
@@ -90,13 +94,13 @@ public class LeonApiDaoImpl implements LeonApiDao {
 
     private String getAccessToken(Airline airline) {
         if (isValidTokenByDuration(airline.getName())) {
-            log.info(String.format("Returned existing Token for: %s", airline.getName()));
+            log.info(format("Returned existing Token for: %s", airline.getName()));
             return tokensPool.get(airline.getName()).getToken();
         }
         URL url = generateUrl(TOKEN_URL_POSTFIX, airline);
         String query = REFRESH_TOKEN_HEADER.value() + airline.getLeonApiKey();
         String fetchedToken = fetchLeonResponse(url, query, StringUtils.EMPTY);
-        log.info(String.format("Generated new Token %s for: %s", fetchedToken, airline.getName()));
+        log.info(format("Generated new Token %s for: %s", fetchedToken, airline.getName()));
         return putInTokenPoolMap(airline.getName(), fetchedToken);
     }
 

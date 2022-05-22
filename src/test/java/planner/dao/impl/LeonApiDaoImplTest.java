@@ -1,20 +1,16 @@
 package planner.dao.impl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static model.hardcoded.AirlineTest.getAirlineWithIdAndLeonApiKey;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static planner.model.leon.LeonQueryTemplateBuilderConfig.RESPONSE_FIX_UTC_CAMEL_CASE;
-import static planner.model.leon.LeonQueryTemplateBuilderConfig.RESPONSE_UTC_CAPITAL;
+import static planner.util.LeonUtil.fixJsonForMappers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.dozer.Mapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import planner.AbstractTest;
@@ -23,85 +19,82 @@ import planner.model.Aircraft;
 import planner.model.Airline;
 import planner.model.json.flight.list.FlightList;
 import planner.model.json.plane.AircraftList;
-import planner.model.json.root.Root;
+import planner.model.json.root.LeonMetaData;
 
 class LeonApiDaoImplTest extends AbstractTest {
-    private Airline airline;
-    @Autowired
-    private LeonApiDao leonApiDao;
-    @Autowired
-    private Mapper entityMapper;
-    @Autowired
-    private ObjectMapper jsonMapper;
-
-    @BeforeEach
-    void setUp() {
-        airline = new Airline();
-        airline.setId(1L);
-        airline.setName("Volare Aviation");
-        airline.setLeonSubDomain("vlz");
-        airline.setLeonApiKey(
-                "ff0bd02c05f2d6916deeb8b9d022e03a388a7e0f48fb02e577faf41350d73cb32d47f6b0");
-    }
+    private static final Airline airline = getAirlineWithIdAndLeonApiKey();
+    @Autowired private LeonApiDao leonApiDao;
+    @Autowired private Mapper entityMapper;
+    @Autowired private ObjectMapper jsonMapper;
 
     @Test
-    void getAllAircraft_validData_thenCorrect() throws JsonProcessingException {
+    void getAllAircraftJson_givenValidRequest_thenSuccess() {
         String jsonResponse = leonApiDao.getAllAircraft(airline);
-        Root root = jsonMapper.readValue(jsonResponse, Root.class);
+        assertFalse(jsonResponse.contains("error"));
+        assertTrue(jsonResponse.contains("registration"));
+        assertTrue(jsonResponse.contains("isAircraft"));
+        assertTrue(jsonResponse.contains("aircraftNid"));
+    }
 
-        List<Aircraft> allActiveAicraft = root.getData().getAircraftList().stream()
-                .filter(AircraftList::getIsActive)
-                .filter(acft -> acft.getAcftType().getIsAircraft())
-                .map(acft -> entityMapper.map(acft, Aircraft.class))
-                .collect(Collectors.toList());
+    @Test
+    void getAllAircraftList_givenValidRequest_thenSuccess() throws JsonProcessingException {
+        String jsonResponse = leonApiDao.getAllAircraft(airline);
+        LeonMetaData leonData = jsonMapper.readValue(jsonResponse, LeonMetaData.class);
+        List<Aircraft> activeAircraftList = getFilteredAircraftList(leonData);
 
-        assertNotEquals(allActiveAicraft, Collections.EMPTY_LIST);
-
-        for (Aircraft aircraft : allActiveAicraft) {
-            assertTrue(aircraft.getIsActive());
-            assertEquals(Aircraft.class, aircraft.getClass());
-        }
-
-        List<Aircraft> allInactiveAicraft = root.getData().getAircraftList().stream()
-                .filter(acft -> !acft.getIsActive())
-                .filter(acft -> acft.getAcftType().getIsAircraft())
-                .map(x -> entityMapper.map(x, Aircraft.class))
-                .collect(Collectors.toList());
-
-        assertNotEquals(allInactiveAicraft, Collections.EMPTY_LIST);
-        for (Aircraft aircraft : allInactiveAicraft) {
-            assertFalse(aircraft.getIsActive());
+        assertFalse(activeAircraftList.isEmpty());
+        for (Aircraft aircraft : activeAircraftList) {
             assertTrue(aircraft.getIsAircraft());
+            assertTrue(aircraft.getIsActive());
         }
     }
 
     @Test
-    @Disabled("To be implemented")
-    void getAllFlightsByPeriod_validData_thenCorrect() {
-        //PH
-        assertTrue(true);
+    void getAllFlightsByPeriod_givenValidRequest_thenSuccess() throws JsonProcessingException {
+        String jsonResponse = leonApiDao.getAllFlightsByPeriod(airline, 0L);
+        LeonMetaData leonData = jsonMapper.readValue(
+                fixJsonForMappers(jsonResponse), LeonMetaData.class);
+
+        List<FlightList> commercialFlightList = getFilteredFlightList(leonData);
+        validateFlightList(commercialFlightList);
     }
 
     @Test
     void getAllFlightsByPeriodAndAircraftId_validData_thenCorrect() throws JsonProcessingException {
         //log.info(leonApiDao.getAllFlightsByPeriodAndAircraftId(airline, 2L, 22249L));
-        String jsonResponse = leonApiDao.getAllFlightsByPeriodAndAircraftId(airline, 0, 17038L);
+        String jsonResponse = leonApiDao.getAllFlightsByPeriodAndAircraftId(airline, 0, 20611L);
 
-        // Temporary! Mappers should be tested separately?
-        // "Replace" implemented on Service layer
-        String jsonResponseFix = jsonResponse.replaceAll(RESPONSE_UTC_CAPITAL.value(),
-                RESPONSE_FIX_UTC_CAMEL_CASE.value());
+        LeonMetaData leonData = jsonMapper.readValue(
+                fixJsonForMappers(jsonResponse), LeonMetaData.class);
+        List<FlightList> flightList = getFilteredFlightList(leonData);
 
-        Root root = jsonMapper.readValue(jsonResponseFix, Root.class);
-        List<FlightList> flightList = root.getData().getFlightList().stream()
-                .filter(flight -> !flight.getIsCnl())
-                .filter(FlightList::getIsCommercial)
-                .collect(Collectors.toList());
+        validateFlightList(flightList);
+    }
 
-        assertNotEquals(flightList, Collections.EMPTY_LIST);
+    private void validateFlightList(List<FlightList> flightList) {
+        assertFalse(flightList.isEmpty());
         for (FlightList flight : flightList) {
-            assertFalse(flight.getIsCnl());
             assertTrue(flight.getIsCommercial());
+            assertTrue(flight.getAcft().getIsActive());
+            assertFalse(flight.getIsCnl());
         }
+    }
+
+    private List<Aircraft> getFilteredAircraftList(LeonMetaData leonData) {
+        Predicate<AircraftList> onlyActiveAircraft = AircraftList::getIsActive;
+        Predicate<AircraftList> onlyIsAircraft =
+                aircraftList -> aircraftList.getAcftType().getIsAircraft();
+        return leonData.getData().getAircraftList().stream()
+                .filter(onlyActiveAircraft.and(onlyIsAircraft))
+                .map(acft -> entityMapper.map(acft, Aircraft.class))
+                .collect(Collectors.toList());
+    }
+
+    private List<FlightList> getFilteredFlightList(LeonMetaData leonData) {
+        Predicate<FlightList> onlyCommercialFlight = FlightList::getIsCommercial;
+        Predicate<FlightList> onlyActiveAircraft = flightList -> flightList.getAcft().getIsActive();
+        return leonData.getData().getFlightList().stream()
+                .filter(onlyCommercialFlight.and(onlyActiveAircraft))
+                .collect(Collectors.toList());
     }
 }

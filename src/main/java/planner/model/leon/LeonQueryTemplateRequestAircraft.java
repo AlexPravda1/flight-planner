@@ -2,7 +2,7 @@ package planner.model.leon;
 
 public enum LeonQueryTemplateRequestAircraft {
     AIRCRAFT_REGISTRATION_MATCHER("[\\w]{1,2}[-][\\w]{3,5}"),
-    AIRCRAFT("acft { aircraftNid, registration, acftType { icao, isAircraft }} ");
+    AIRCRAFT("acft { isActive, aircraftNid, registration, acftType { icao, isAircraft }} ");
 
     private final String value;
 

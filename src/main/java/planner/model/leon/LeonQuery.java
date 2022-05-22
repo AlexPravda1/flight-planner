@@ -45,6 +45,9 @@ public class LeonQuery {
     private String checklist = StringUtils.SPACE;
 
     @Builder.Default
+    private String notes = StringUtils.SPACE;
+
+    @Builder.Default
     private String passengerList = StringUtils.SPACE;
 
     @Builder.Default
@@ -67,6 +70,7 @@ public class LeonQuery {
                 + startAirport + endAirport
                 + sectorHandling
                 + checklist
+                + notes
                 + passengerList
                 + crewList
                 + bodyPostfix

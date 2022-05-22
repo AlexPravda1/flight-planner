@@ -9,6 +9,8 @@ import planner.model.json.checklist.Checklist;
 import planner.model.json.crew.CrewList;
 import planner.model.json.flight.watch.FlightWatch;
 import planner.model.json.handling.LegHandling;
+import planner.model.json.notes.Notes;
+import planner.model.json.notes.Trip;
 import planner.model.json.passenger.PassengerList;
 import planner.model.json.plane.Acft;
 
@@ -27,6 +29,8 @@ public class FlightList {
     private EndAirport endAirport;
     private LegHandling legHandling;
     private Checklist checklist;
+    private Notes notes;
+    private Trip trip;
     private PassengerList passengerList;
     private ArrayList<CrewList> crewList;
 

@@ -17,7 +17,11 @@ import static planner.model.leon.LeonQueryTemplateRequestAircraft.AIRCRAFT;
 import static planner.model.leon.LeonQueryTemplateRequestAirport.END_AIRPORT;
 import static planner.model.leon.LeonQueryTemplateRequestAirport.START_AIRPORT;
 import static planner.model.leon.LeonQueryTemplateRequestChecklist.CHECKLIST_ALL;
+import static planner.model.leon.LeonQueryTemplateRequestChecklist.NOTES;
 import static planner.model.leon.LeonQueryTemplateRequestCrew.CREW_LIST;
+import static planner.model.leon.LeonQueryTemplateRequestFlightTimings.FLIGHT_WATCH;
+import static planner.model.leon.LeonQueryTemplateRequestHandler.SECTOR_HANDLING;
+import static planner.model.leon.LeonQueryTemplateRequestPassengers.PAX_COUNT;
 
 import java.time.LocalDate;
 import planner.exception.LeonAccessException;
@@ -38,46 +42,49 @@ public final class LeonUtil {
     }
 
     public static String prepareQueryAllAircraft() {
-        LeonQuery queryBuilder = LeonQuery.builder()
-                .filterName(FILTER_TYPE_ALL_AIRCRAFT.value())
-                .generalConditions(GENERAL_CONDITIONS_ALL_ACTIVE_AIRCRAFT_LIST.value())
-                .build();
+        LeonQuery queryBuilder = getLeonQueryBuilderAllAircraft();
         validateQueryBuilder(queryBuilder);
         return queryBuilder.toString();
     }
 
     public static String prepareQueryAllFlightsByPeriodAndAircraftId(
             Long daysRange, Long aircraftId) {
-        String filterWithDateAndAircraft =
+        String filter =
                 getFilterByAircraftIdFromCurrentDatePlusRange(daysRange, aircraftId);
-
-        LeonQuery queryBuilder = LeonQuery.builder()
-                .filterName(FILTER_TYPE_FLIGHT_LIST.value())
-                .filterCondition(filterWithDateAndAircraft)
-                .generalConditions(GENERAL_CONDITIONS_ALL.value())
-                .startAirport(START_AIRPORT.value())
-                .endAirport(END_AIRPORT.value())
-                .aircraft(AIRCRAFT.value())
-                .checklist(CHECKLIST_ALL.value())
-                .crewList(CREW_LIST.value())
-                .build();
+        LeonQuery queryBuilder = getLeonQueryBuilderAllFieldsIn(filter);
         validateQueryBuilder(queryBuilder);
         return queryBuilder.toString();
     }
 
     public static String prepareQueryAllFlightsByPeriod(Long daysRange) {
-        String filterWithDate = getFilterAllAircraftFromCurrentDatePlusRange(daysRange);
+        String filter = getFilterAllAircraftFromCurrentDatePlusRange(daysRange);
+        LeonQuery queryBuilder = getLeonQueryBuilderAllFieldsIn(filter);
+        validateQueryBuilder(queryBuilder);
+        return queryBuilder.toString();
+    }
 
-        LeonQuery queryBuilder = LeonQuery.builder()
+    private static LeonQuery getLeonQueryBuilderAllFieldsIn(String filter) {
+        return LeonQuery.builder()
                 .filterName(FILTER_TYPE_FLIGHT_LIST.value())
-                .filterCondition(filterWithDate)
+                .filterCondition(filter)
                 .generalConditions(GENERAL_CONDITIONS_ALL.value())
                 .startAirport(START_AIRPORT.value())
                 .endAirport(END_AIRPORT.value())
+                .sectorHandling(SECTOR_HANDLING.value())
                 .aircraft(AIRCRAFT.value())
+                .flightWatch(FLIGHT_WATCH.value())
+                .checklist(CHECKLIST_ALL.value())
+                .notes(NOTES.value())
+                .passengerList(PAX_COUNT.value())
+                .crewList(CREW_LIST.value())
                 .build();
-        validateQueryBuilder(queryBuilder);
-        return queryBuilder.toString();
+    }
+
+    private static LeonQuery getLeonQueryBuilderAllAircraft() {
+        return LeonQuery.builder()
+                .filterName(FILTER_TYPE_ALL_AIRCRAFT.value())
+                .generalConditions(GENERAL_CONDITIONS_ALL_ACTIVE_AIRCRAFT_LIST.value())
+                .build();
     }
 
     private static void validateQueryBuilder(LeonQuery queryBuilder) {
@@ -98,7 +105,7 @@ public final class LeonUtil {
 
     private static String putDateInQueryTemplate(LeonQueryTemplateFilterConditions filterTemplate,
                                                  Long daysRange) {
-        if (daysRange == null || daysRange == 0) {
+        if (daysRange == 0) {
             daysRange = Long.parseLong(DEFAULT_DAYS_RANGE.value());
         }
         String filterWithStartDate = filterTemplate.value()

@@ -1,5 +1,6 @@
 package planner.security.jwt;
 
+import static model.hardcoded.UserTest.getUserNoRolesNoId;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -12,7 +13,6 @@ import static planner.model.UserRoleName.USER;
 
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import model.hardcoded.UserTest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ class JwtTokenProviderTest extends AbstractTest {
 
     @BeforeAll
     static void beforeAll() {
-        user = UserTest.getUserNoRolesNoId();
+        user = getUserNoRolesNoId();
     }
 
     @Test

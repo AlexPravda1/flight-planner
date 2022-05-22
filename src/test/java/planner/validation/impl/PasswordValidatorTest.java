@@ -1,50 +1,48 @@
 package planner.validation.impl;
 
+import static model.hardcoded.UserTest.getUserNoRolesNoId;
+import static org.apache.commons.lang3.StringUtils.SPACE;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
+
 import javax.validation.ConstraintValidatorContext;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import planner.AbstractTest;
 import planner.model.dto.request.UserRegistrationDto;
 import planner.validation.Password;
 
 class PasswordValidatorTest extends AbstractTest {
-    private String userEmail;
     private String userPassword;
-    @Mock
-    private ConstraintValidatorContext constraintValidatorContext;
     private UserRegistrationDto registrationDto;
     private PasswordValidator passwordValidator;
-    private Password constraintAnnotation;
+    @Mock private ConstraintValidatorContext constraintValidatorContext;
+    @Mock private Password constraintAnnotation;
 
     @BeforeEach
     void setUp() {
-        passwordValidator = new PasswordValidator();
         registrationDto = new UserRegistrationDto();
-        userPassword = "12345";
-        userEmail = "user@gmail.com";
-        registrationDto.setEmail(userEmail);
-        registrationDto.setPassword(userPassword);
+        registrationDto.setPassword(userPassword = getUserNoRolesNoId().getPassword());
 
-        constraintAnnotation = Mockito.mock(Password.class);
-        Mockito.when(constraintAnnotation.field()).thenReturn("password");
-        Mockito.when(constraintAnnotation.fieldMatch()).thenReturn("repeatPassword");
+        passwordValidator = new PasswordValidator();
+        when(constraintAnnotation.field()).thenReturn("password");
+        when(constraintAnnotation.fieldMatch()).thenReturn("repeatPassword");
         passwordValidator.initialize(constraintAnnotation);
     }
 
     @Test
-    void isValid_validData_thenCorrect() {
+    void isValid_givenValidPassword_thenSuccess() {
         registrationDto.setRepeatPassword(userPassword);
-        Assertions.assertTrue(passwordValidator.isValid(
-                registrationDto, constraintValidatorContext), "Passwords should match");
+        assertTrue(passwordValidator.isValid(registrationDto, constraintValidatorContext),
+                "Passwords should match");
     }
 
     @Test
-    void isValid_invalidPassword_thenFalse() {
-        registrationDto.setRepeatPassword(userPassword + "1");
-        Assertions.assertFalse(passwordValidator.isValid(
-                registrationDto, constraintValidatorContext), "Passwords should NOT match");
+    void isValid_givenWrongPassword_thenFail() {
+        registrationDto.setRepeatPassword(userPassword + SPACE);
+        assertFalse(passwordValidator.isValid(registrationDto, constraintValidatorContext),
+                "Passwords should NOT match");
     }
 }

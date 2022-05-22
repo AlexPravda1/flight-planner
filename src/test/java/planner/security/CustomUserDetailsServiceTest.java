@@ -1,5 +1,6 @@
 package planner.security;
 
+import static model.hardcoded.UserTest.getUserNoRolesNoId;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
@@ -7,7 +8,6 @@ import static planner.model.UserRoleName.USER;
 
 import java.util.Optional;
 import java.util.Set;
-import model.hardcoded.UserTest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -28,7 +28,7 @@ class CustomUserDetailsServiceTest extends AbstractTest {
 
     @BeforeAll
     static void beforeAll() {
-        expected = UserTest.getUserNoRolesNoId();
+        expected = getUserNoRolesNoId();
         expected.setRoles(Set.of(new Role(USER)));
     }
 

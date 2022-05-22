@@ -1,11 +1,12 @@
 package planner.service.impl;
 
+import static model.hardcoded.UserTest.getUserNoRolesNoId;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -15,55 +16,48 @@ import planner.dao.UserDao;
 import planner.model.User;
 
 class UserServiceImplTest extends AbstractTest {
-    private String userEmail;
-    private String userPassword;
-    private Long userId;
+    private static User expected;
+    private User actualFromDb;
     @Mock
     private UserDao userDao;
     @Mock
     private PasswordEncoder passwordEncoder;
-    private User user;
     @InjectMocks
     private UserServiceImpl userService;
 
-    @BeforeEach
-    void setUp() {
-        userEmail = "user@gmail.com";
-        userPassword = "12345";
-        userId = 1L;
-        user = new User();
-        user.setId(userId);
-        user.setPassword(userPassword);
-        user.setEmail(userEmail);
+    @BeforeAll
+    static void beforeAll() {
+        expected = getUserNoRolesNoId();
+        expected.setId(1L);
     }
 
     @Test
     void save_validData_thenCorrect() {
-        when(userDao.save(user)).thenReturn(user);
-        when(passwordEncoder.encode(any())).thenReturn(user.getPassword());
-        User actual = userService.save(user);
-        Assertions.assertNotNull(actual);
-        Assertions.assertEquals(userEmail, actual.getEmail());
-        Assertions.assertEquals(userPassword, actual.getPassword());
-        Assertions.assertEquals(userId, actual.getId());
+        when(userDao.save(expected)).thenReturn(expected);
+        when(passwordEncoder.encode(any())).thenReturn(expected.getPassword());
+        actualFromDb = userService.save(expected);
+        validateUser(actualFromDb);
+
     }
 
     @Test
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     void findById_validData_thenCorrect() {
-        when(userDao.findById(any())).thenReturn(Optional.of(user));
-        Optional<User> actual = userService.findById(userId);
-        Assertions.assertNotNull(actual);
-        Assertions.assertEquals(user.getClass(), actual.get().getClass());
+        when(userDao.findById(any())).thenReturn(Optional.of(expected));
+        actualFromDb = userService.findById(expected.getId()).orElse(null);
+        validateUser(actualFromDb);
     }
 
     @Test
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     void findByEmail_validData_thenCorrect() {
-        when(userDao.findByEmail(userEmail)).thenReturn(Optional.of(user));
-        Optional<User> actual = userService.findByEmail(userEmail);
-        Assertions.assertNotNull(actual);
-        Assertions.assertEquals(user.getClass(), actual.get().getClass());
-        Assertions.assertEquals(user.getEmail(), actual.get().getEmail());
+        when(userDao.findByEmail(expected.getEmail())).thenReturn(Optional.of(expected));
+        User actualFromDb = userService.findByEmail(expected.getEmail()).orElse(null);
+        validateUser(actualFromDb);
+    }
+
+    private void validateUser(User actualFromDb) {
+        Assertions.assertNotNull(actualFromDb);
+        Assertions.assertEquals(expected.getEmail(), actualFromDb.getEmail());
+        Assertions.assertEquals(expected.getName(), actualFromDb.getName());
+        Assertions.assertEquals(expected.getSurname(), actualFromDb.getSurname());
     }
 }

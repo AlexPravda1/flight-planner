@@ -1,6 +1,6 @@
 package planner.service.impl;
 
-import static planner.util.LeonUtil.fixJsonForMappers;
+import static planner.util.LeonUtil.fixJsonForMapper;
 import static planner.util.LeonUtil.validateJsonResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -18,14 +18,14 @@ public class LeonApiServiceImpl implements LeonApiService {
     public String getAllFlightsByPeriod(Airline airline, long daysRange) {
         String response = leonApiDao.getAllFlightsByPeriod(airline, daysRange);
         validateJsonResponse(response);
-        return fixJsonForMappers(response);
+        return fixJsonForMapper(response);
     }
 
     @Override
     public String getAllAircraft(Airline airline) {
         String response = leonApiDao.getAllAircraft(airline);
         validateJsonResponse(response);
-        return fixJsonForMappers(response);
+        return fixJsonForMapper(response);
     }
 
     @Override
@@ -34,6 +34,6 @@ public class LeonApiServiceImpl implements LeonApiService {
         String response =
                 leonApiDao.getAllFlightsByPeriodAndAircraftId(airline, daysRange, aircraftId);
         validateJsonResponse(response);
-        return fixJsonForMappers(response);
+        return fixJsonForMapper(response);
     }
 }

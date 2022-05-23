@@ -36,7 +36,7 @@ public final class LeonUtil {
         }
     }
 
-    public static String fixJsonForMappers(String response) {
+    public static String fixJsonForMapper(String response) {
         return response
                 .replaceAll(RESPONSE_UTC_CAPITAL.value(), RESPONSE_FIX_UTC_CAMEL_CASE.value());
     }

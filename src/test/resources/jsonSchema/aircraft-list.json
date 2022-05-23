@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "http://www.jsonschema.net/",
+  "type": "object",
+  "required": [
+    "data"
+  ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "required": [
+        "aircraftList"
+      ],
+      "properties": {
+        "aircraftList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "isActive",
+              "aircraftNid",
+              "registration",
+              "acftType",
+              "operator"
+            ],
+            "properties": {
+              "isActive": {
+                "type": "boolean"
+              },
+              "aircraftNid": {
+                "type": "integer"
+              },
+              "registration": {
+                "type": "string"
+              },
+              "acftType": {
+                "type": "object",
+                "required": [
+                  "acftTypeId",
+                  "icao",
+                  "isAircraft"
+                ],
+                "properties": {
+                  "acftTypeId": {
+                    "type": "string"
+                  },
+                  "icao": {
+                    "type": "string"
+                  },
+                  "isAircraft": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "operator": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "oprId",
+                  "oprNid"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "oprId": {
+                    "type": "string"
+                  },
+                  "oprNid": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,444 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "http://www.jsonschema.net/",
+  "type": "object",
+  "required": [
+    "data"
+  ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "required": [
+        "flightList"
+      ],
+      "properties": {
+        "flightList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "isCnl",
+              "icaoType",
+              "isCommercial",
+              "flightNo",
+              "flightType",
+              "startTimeUTC",
+              "endTimeUTC",
+              "flightWatch",
+              "acft",
+              "startAirport",
+              "endAirport",
+              "legHandling",
+              "checklist",
+              "notes",
+              "trip",
+              "passengerList",
+              "crewList"
+            ],
+            "properties": {
+              "isCnl": {
+                "type": "boolean"
+              },
+              "icaoType": {
+                "type": "string"
+              },
+              "isCommercial": {
+                "type": "boolean"
+              },
+              "flightNo": {
+                "type": "string"
+              },
+              "flightType": {
+                "type": "string"
+              },
+              "startTimeUTC": {
+                "type": "string"
+              },
+              "endTimeUTC": {
+                "type": "string"
+              },
+              "flightWatch": {
+                "type": [
+                  "null",
+                  "object"
+                ],
+                "required": [
+                  "atd",
+                  "ata",
+                  "paxCount"
+                ],
+                "properties": {
+                  "atd": {
+                    "type": [
+                      "null",
+                      "integer"
+                    ]
+                  },
+                  "ata": {
+                    "type": [
+                      "null",
+                      "integer"
+                    ]
+                  },
+                  "paxCount": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "acft": {
+                "type": "object",
+                "required": [
+                  "isActive",
+                  "aircraftNid",
+                  "registration",
+                  "acftType"
+                ],
+                "properties": {
+                  "isActive": {
+                    "type": "boolean"
+                  },
+                  "aircraftNid": {
+                    "type": "integer"
+                  },
+                  "registration": {
+                    "type": "string"
+                  },
+                  "acftType": {
+                    "type": "object",
+                    "required": [
+                      "icao",
+                      "isAircraft"
+                    ],
+                    "properties": {
+                      "icao": {
+                        "type": "string"
+                      },
+                      "isAircraft": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              },
+              "startAirport": {
+                "type": "object",
+                "required": [
+                  "code",
+                  "city",
+                  "country"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "object",
+                    "required": [
+                      "icao"
+                    ],
+                    "properties": {
+                      "icao": {
+                        "type": [
+                          "null",
+                          "string"
+                        ]
+                      }
+                    }
+                  },
+                  "city": {
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "country": {
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  }
+                }
+              },
+              "endAirport": {
+                "type": "object",
+                "required": [
+                  "code",
+                  "city",
+                  "country"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "object",
+                    "required": [
+                      "icao"
+                    ],
+                    "properties": {
+                      "icao": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    }
+                  },
+                  "city": {
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "country": {
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  }
+                }
+              },
+              "legHandling": {
+                "type": "object",
+                "required": [
+                  "adepHandler",
+                  "adesHandler"
+                ],
+                "properties": {
+                  "adepHandler": {
+                    "type": [
+                      "null",
+                      "object"
+                    ],
+                    "required": [
+                      "name",
+                      "email",
+                      "telephone",
+                      "telephoneAfterHours"
+                    ],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "telephone": {
+                        "type": "string"
+                      },
+                      "telephoneAfterHours": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "adesHandler": {
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "required": [
+                      "name",
+                      "email",
+                      "telephone",
+                      "telephoneAfterHours"
+                    ],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "telephone": {
+                        "type": "string"
+                      },
+                      "telephoneAfterHours": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
+              "checklist": {
+                "type": [
+                  "null",
+                  "object"
+                ],
+                "required": [
+                  "allItems"
+                ],
+                "properties": {
+                  "allItems": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "definition",
+                        "status",
+                        "comment",
+                        "files"
+                      ],
+                      "properties": {
+                        "definition": {
+                          "type": "object",
+                          "required": [
+                            "label",
+                            "section"
+                          ],
+                          "properties": {
+                            "label": {
+                              "type": "string"
+                            },
+                            "section": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "status": {
+                          "type": "object",
+                          "required": [
+                            "status",
+                            "caption",
+                            "color"
+                          ],
+                          "properties": {
+                            "status": {
+                              "type": "string"
+                            },
+                            "caption": {
+                              "type": "string"
+                            },
+                            "color": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "comment": {
+                          "type": [
+                            "null",
+                            "string"
+                          ]
+                        },
+                        "files": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "fileName",
+                              "signedUrl"
+                            ],
+                            "properties": {
+                              "fileName": {
+                                "type": "string"
+                              },
+                              "signedUrl": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "notes": {
+                "type": [
+                  "null",
+                  "object"
+                ],
+                "required": [
+                  "ops",
+                  "sales"
+                ],
+                "properties": {
+                  "ops": {
+                    "type": "string"
+                  },
+                  "sales": {
+                    "type": "string"
+                  }
+                }
+              },
+              "trip": {
+                "type": [
+                  "null",
+                  "object"
+                ],
+                "required": [
+                  "notes",
+                  "tripNotes"
+                ],
+                "properties": {
+                  "notes": {
+                    "type": "string"
+                  },
+                  "tripNotes": {
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "required": [
+                      "tripSupplementaryInfo"
+                    ],
+                    "properties": {
+                      "tripSupplementaryInfo": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
+              "passengerList": {
+                "type": [
+                  "null",
+                  "object"
+                ],
+                "required": [
+                  "countExcludingAnimals"
+                ],
+                "properties": {
+                  "countExcludingAnimals": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "crewList": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "position",
+                    "contact"
+                  ],
+                  "properties": {
+                    "position": {
+                      "type": "object",
+                      "required": [
+                        "occupation"
+                      ],
+                      "properties": {
+                        "occupation": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "contact": {
+                      "type": "object",
+                      "required": [
+                        "name",
+                        "surname"
+                      ],
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "surname": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

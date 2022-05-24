@@ -7,6 +7,8 @@ import planner.model.User;
 public interface UserDao {
     User save(User user);
 
+    User saveOrUpdate(User user);
+
     Optional<User> findByEmail(String email);
 
     Optional<User> findById(Long id);

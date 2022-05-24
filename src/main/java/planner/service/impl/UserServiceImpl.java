@@ -22,6 +22,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User saveOrUpdate(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userDao.saveOrUpdate(user);
+    }
+
+    @Override
     public Optional<User> findById(Long id) {
         return userDao.findById(id);
     }

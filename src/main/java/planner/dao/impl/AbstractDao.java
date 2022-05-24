@@ -37,6 +37,28 @@ public abstract class AbstractDao<T, I extends Serializable> {
         }
     }
 
+    @SuppressWarnings("TryFinallyCanBeTryWithResources")
+    public T saveOrUpdate(T entity) {
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            session.saveOrUpdate(entity);
+            transaction.commit();
+            return entity;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new DataProcessingException(String.format(MESSAGE, "save " + entity), e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
     public List<T> findAll() {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("from " + clazz.getSimpleName(), clazz).getResultList();

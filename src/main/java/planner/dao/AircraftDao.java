@@ -13,5 +13,7 @@ public interface AircraftDao {
 
     List<Aircraft> findAll();
 
+    List<Aircraft> findAllActiveByAirline(String airlineName);
+
     void delete(Long id);
 }

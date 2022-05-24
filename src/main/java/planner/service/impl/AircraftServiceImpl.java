@@ -1,5 +1,8 @@
 package planner.service.impl;
 
+import static java.util.stream.Collectors.toList;
+import static planner.model.leon.LeonQueryTemplateRequestAircraft.AIRCRAFT_REGISTRATION_REGEX;
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,8 +35,17 @@ public class AircraftServiceImpl implements AircraftService {
     }
 
     @Override
-    public List<Aircraft> findAll() {
-        return aircraftDao.findAll();
+    public List<Aircraft> findAllActive() {
+        return aircraftDao.findAll().stream()
+                .filter(Aircraft::getIsActive)
+                .collect(toList());
+    }
+
+    @Override
+    public List<Aircraft> findAllActiveByAirline(String airlineName) {
+        return aircraftDao.findAllActiveByAirline(airlineName).stream()
+                .filter(acft -> acft.getRegistration().matches(AIRCRAFT_REGISTRATION_REGEX.value()))
+                .collect(toList());
     }
 
     @Override

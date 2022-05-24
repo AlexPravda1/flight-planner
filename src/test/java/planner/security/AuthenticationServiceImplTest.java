@@ -1,6 +1,6 @@
 package planner.security;
 
-import static model.hardcoded.UserTest.getUserNoRolesNoId;
+import static model.UserHardcoded.getUserNoRolesNoId;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -9,7 +9,6 @@ import static planner.model.UserRoleName.USER;
 
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -22,7 +21,7 @@ import planner.service.RoleService;
 import planner.service.UserService;
 
 class AuthenticationServiceImplTest extends AbstractTest {
-    private static User expected;
+    private static final User expected = getUserNoRolesNoId();
     @Mock
     private UserService userService;
     @Mock
@@ -31,11 +30,6 @@ class AuthenticationServiceImplTest extends AbstractTest {
     private RoleService roleService;
     @InjectMocks
     private AuthenticationServiceImpl authenticationService;
-
-    @BeforeAll
-    static void beforeAll() {
-        expected = getUserNoRolesNoId();
-    }
 
     @Test
     void registerUser_givenValidUserData_thenSuccess() {

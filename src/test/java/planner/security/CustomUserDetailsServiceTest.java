@@ -1,36 +1,26 @@
 package planner.security;
 
-import static model.hardcoded.UserTest.getUserNoRolesNoId;
+import static model.UserHardcoded.getUserWithUserRoleNoId;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
-import static planner.model.UserRoleName.USER;
 
 import java.util.Optional;
-import java.util.Set;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import planner.AbstractTest;
-import planner.model.Role;
 import planner.model.User;
 import planner.service.UserService;
 
 class CustomUserDetailsServiceTest extends AbstractTest {
-    private static User expected;
+    private static final User expected = getUserWithUserRoleNoId();
     @Mock
     private UserService userService;
     @InjectMocks
     private CustomUserDetailsService userDetailsService;
-
-    @BeforeAll
-    static void beforeAll() {
-        expected = getUserNoRolesNoId();
-        expected.setRoles(Set.of(new Role(USER)));
-    }
 
     @Test
     void loadUserByUsername_givenValidEmail_thenSuccess() {

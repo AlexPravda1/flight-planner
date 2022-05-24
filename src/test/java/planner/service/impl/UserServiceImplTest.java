@@ -1,12 +1,12 @@
 package planner.service.impl;
 
-import static model.hardcoded.UserTest.getUserNoRolesNoId;
+import static model.UserHardcoded.getUserNoRolesNoId;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -16,7 +16,7 @@ import planner.dao.UserDao;
 import planner.model.User;
 
 class UserServiceImplTest extends AbstractTest {
-    private static User expected;
+    private static final User expected = getUserNoRolesNoId();
     private User actualFromDb;
     @Mock
     private UserDao userDao;
@@ -24,12 +24,6 @@ class UserServiceImplTest extends AbstractTest {
     private PasswordEncoder passwordEncoder;
     @InjectMocks
     private UserServiceImpl userService;
-
-    @BeforeAll
-    static void beforeAll() {
-        expected = getUserNoRolesNoId();
-        expected.setId(1L);
-    }
 
     @Test
     void save_validData_thenCorrect() {
@@ -55,9 +49,9 @@ class UserServiceImplTest extends AbstractTest {
     }
 
     private void validateUser(User actualFromDb) {
-        Assertions.assertNotNull(actualFromDb);
-        Assertions.assertEquals(expected.getEmail(), actualFromDb.getEmail());
-        Assertions.assertEquals(expected.getName(), actualFromDb.getName());
-        Assertions.assertEquals(expected.getSurname(), actualFromDb.getSurname());
+        assertNotNull(actualFromDb);
+        assertEquals(expected.getEmail(), actualFromDb.getEmail());
+        assertEquals(expected.getName(), actualFromDb.getName());
+        assertEquals(expected.getSurname(), actualFromDb.getSurname());
     }
 }

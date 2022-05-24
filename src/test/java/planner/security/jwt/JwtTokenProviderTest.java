@@ -1,6 +1,6 @@
 package planner.security.jwt;
 
-import static model.hardcoded.UserTest.getUserNoRolesNoId;
+import static model.UserHardcoded.getUserNoRolesNoId;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -13,7 +13,6 @@ import static planner.model.UserRoleName.USER;
 
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -27,7 +26,7 @@ import planner.AbstractTest;
 import planner.exception.InvalidJwtAuthenticationException;
 
 class JwtTokenProviderTest extends AbstractTest {
-    private static planner.model.User user;
+    private static final planner.model.User user = getUserNoRolesNoId();
     private static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyQGdtYW"
             + "lsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNjUyNzA4ODgxLCJleHAiOjE2NTQ4NTYzNjV"
             + "9.CT7cPAcYsbGxfPXJYNvflYFoyAmBE49f3KJ37xx8a7I";
@@ -42,15 +41,9 @@ class JwtTokenProviderTest extends AbstractTest {
         ReflectionTestUtils.setField(jwtTokenProvider, "validityInMilliseconds", Integer.MAX_VALUE);
     }
 
-    @BeforeAll
-    static void beforeAll() {
-        user = getUserNoRolesNoId();
-    }
-
     @Test
     void createToken_givenValidData_thenSuccess() {
-        List<String> roles = List.of(USER.value());
-        String actual = jwtTokenProvider.createToken(user.getEmail(), roles);
+        String actual = jwtTokenProvider.createToken(user.getEmail(), List.of(USER.value()));
         assertNotNull(actual);
         assertEquals(VALID_TOKEN.length(), actual.length());
     }
@@ -60,7 +53,7 @@ class JwtTokenProviderTest extends AbstractTest {
         UserDetails userDetails = org.springframework.security.core.userdetails
                 .User.withUsername(user.getEmail())
                 .password(user.getPassword())
-                .roles(List.of(USER.value()).toArray(String[]::new))
+                .roles(USER.value())
                 .build();
         when(userDetailsService.loadUserByUsername(any())).thenReturn(userDetails);
         Authentication authentication = jwtTokenProvider.getAuthentication(VALID_TOKEN);

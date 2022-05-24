@@ -20,27 +20,6 @@ Current local time is around ${time.getHour()} : ${time.getMinute()}, more or le
     <thead>
     <tr>
         <th>ID</th>
-        <th>EMAIL</th>
-        <th>NAME</th>
-        <th>SURNAME</th>
-    </tr>
-    </thead>
-    <tbody>
-    <c:forEach items="${users}" var="user">
-        <tr>
-            <td>${user.id}</td>
-            <td>${user.email}</td>
-            <td>${user.name}</td>
-            <td>${user.surname}</td>
-        </tr>
-    </c:forEach>
-    </tbody>
-</table>
-
-<table class="table_dark">
-    <thead>
-    <tr>
-        <th>ID</th>
         <th>REGISTRATION</th>
         <th>TYPE</th>
         <th>AIRLINE</th>
@@ -52,7 +31,7 @@ Current local time is around ${time.getHour()} : ${time.getMinute()}, more or le
             <td>${list.id}</td>
             <td>${list.registration}</td>
             <td>${list.type}</td>
-            <td>${list.airline.name}</td>
+            <td>${list.airlineName}</td>
         </tr>
     </c:forEach>
     </tbody>

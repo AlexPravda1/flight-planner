@@ -10,7 +10,9 @@ public interface AircraftService {
 
     Aircraft findById(Long id);
 
-    List<Aircraft> findAll();
+    List<Aircraft> findAllActive();
+
+    List<Aircraft> findAllActiveByAirline(String airlineName);
 
     void delete(Long id);
 }

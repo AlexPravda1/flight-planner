@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.annotations.QueryHints;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import planner.dao.UserDao;
@@ -33,7 +34,9 @@ public class UserDaoImpl extends AbstractDao<User, Long> implements UserDao {
     public List<User> findAll() {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery(
-                    "FROM User u JOIN FETCH u.roles", User.class).getResultList();
+                    "SELECT DISTINCT u FROM User u JOIN FETCH u.roles", User.class)
+                    .setHint(QueryHints.PASS_DISTINCT_THROUGH, false)
+                    .getResultList();
         } catch (Exception e) {
             throw new DataProcessingException(String.format(MESSAGE, "find all "
                     + clazz.getSimpleName()), e);

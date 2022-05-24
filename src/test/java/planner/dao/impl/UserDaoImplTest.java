@@ -1,6 +1,6 @@
 package planner.dao.impl;
 
-import static model.hardcoded.UserTest.getUserNoRolesNoId;
+import static model.UserHardcoded.getUserNoRolesNoId;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

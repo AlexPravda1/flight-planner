@@ -1,4 +1,4 @@
-package model.hardcoded.json;
+package model.json;
 
 public enum JsonSchemaConfig {
     AIRCRAFT_LIST_SCHEMA("classpath:jsonSchema/aircraft-list.json"),

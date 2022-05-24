@@ -1,5 +1,6 @@
 package planner.dao.impl;
 
+import java.util.List;
 import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -27,6 +28,20 @@ public class AircraftDaoImpl extends AbstractDao<Aircraft, Long> implements Airc
         } catch (Exception e) {
             throw new DataProcessingException("Couldn't get Aircraft by registration: "
                     + registration, e);
+        }
+    }
+
+    @Override
+    public List<Aircraft> findAllActiveByAirline(String airlineName) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery(
+                            "FROM Aircraft a WHERE a.airline.name = :airlineName "
+                                    + "AND a.isActive = true", Aircraft.class)
+                    .setParameter("airlineName", airlineName)
+                    .getResultList();
+        } catch (Exception e) {
+            throw new DataProcessingException("Couldn't get Aircraft list for: "
+                    + airlineName, e);
         }
     }
 }

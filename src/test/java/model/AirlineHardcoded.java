@@ -1,4 +1,4 @@
-package planner.util;
+package model;
 
 import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.springframework.util.ResourceUtils.getFile;
@@ -6,11 +6,12 @@ import static org.springframework.util.ResourceUtils.getFile;
 import java.io.IOException;
 import planner.model.Airline;
 
-public final class AirlineUtil {
-    public static Airline getVlzAirline() {
+public final class AirlineHardcoded {
+
+    public static Airline getAirlineWithIdAndLeonApiKey() {
         Airline airline = new Airline();
         airline.setId(1063L);
-        airline.setName("Volare Aviation UK");
+        airline.setName("Volare Aviation");
         airline.setLeonSubDomain("vlz");
         try {
             airline.setLeonApiKey(readFileToString(

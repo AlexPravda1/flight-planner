@@ -1,18 +1,16 @@
 package planner.dao.impl;
 
 import static java.util.stream.Collectors.toList;
-import static model.hardcoded.AirlineTest.getAirlineWithIdAndLeonApiKey;
-import static model.hardcoded.json.JsonSchemaConfig.AIRCRAFT_LIST_SCHEMA;
-import static model.hardcoded.json.JsonSchemaConfig.FLIGHT_LIST_SCHEMA;
+import static model.AirlineHardcoded.getAirlineWithIdAndLeonApiKey;
+import static model.json.JsonSchemaConfig.AIRCRAFT_LIST_SCHEMA;
+import static model.json.JsonSchemaConfig.FLIGHT_LIST_SCHEMA;
 import static org.apache.commons.io.FileUtils.openInputStream;
 import static org.apache.commons.io.IOUtils.toInputStream;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.util.ResourceUtils.getFile;
 import static planner.model.leon.LeonQueryTemplateBuilderConfig.ERROR;
-import static planner.util.LeonUtil.fixJsonForMapper;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.schema.JsonSchema;
@@ -49,39 +47,9 @@ class LeonApiDaoImplTest extends AbstractTest {
     }
 
     @Test
-    void getAllAircraftList_givenValidRequest_thenSuccess() throws JsonProcessingException {
-        String jsonResponse = leonApiDao.getAllAircraft(airline);
-        LeonMetaData leonData = jsonMapper.readValue(jsonResponse, LeonMetaData.class);
-        List<Aircraft> activeAircraftList = getFilteredAircraftList(leonData);
-        assertFalse(activeAircraftList.isEmpty());
-        for (Aircraft aircraft : activeAircraftList) {
-            assertTrue(aircraft.getIsAircraft());
-            assertTrue(aircraft.getIsActive());
-        }
-    }
-
-    @Test
     void getAllFlightsJson_givenValidRequest_thenSuccess() {
         String jsonResponse = leonApiDao.getAllFlightsByPeriod(airline, 0L);
         validateJsonString(jsonResponse);
-    }
-
-    @Test
-    void getAllFlightsByPeriod_givenValidRequest_thenSuccess() throws JsonProcessingException {
-        String jsonResponse = leonApiDao.getAllFlightsByPeriod(airline, 0L);
-        LeonMetaData leonData = jsonMapper.readValue(
-                fixJsonForMapper(jsonResponse), LeonMetaData.class);
-        List<FlightList> commercialFlightList = getFilteredFlightList(leonData);
-        validateFlightList(commercialFlightList);
-    }
-
-    @Test
-    void getAllFlightsByPeriodAndAircraftId_validData_thenCorrect() throws JsonProcessingException {
-        String jsonResponse = leonApiDao.getAllFlightsByPeriodAndAircraftId(airline, 0L, 20611L);
-        LeonMetaData leonData = jsonMapper.readValue(
-                fixJsonForMapper(jsonResponse), LeonMetaData.class);
-        List<FlightList> commercialFlightList = getFilteredFlightList(leonData);
-        validateFlightList(commercialFlightList);
     }
 
     @Test
@@ -151,8 +119,9 @@ class LeonApiDaoImplTest extends AbstractTest {
         Predicate<FlightList> onlyCommercialFlight = FlightList::getIsCommercial;
         Predicate<FlightList> onlyActiveAircraft =
                 flightList -> flightList.getAcft().getIsActive();
+        Predicate<FlightList> onlyActive = flightList -> !flightList.getIsCnl();
         return leonData.getData().getFlightList().stream()
-                .filter(onlyCommercialFlight.and(onlyActiveAircraft))
+                .filter(onlyCommercialFlight.and(onlyActiveAircraft).and(onlyActive))
                 .collect(toList());
     }
 

@@ -65,7 +65,6 @@ public class TestJspController {
             @RequestParam(name = "hasNotes", required = false, defaultValue = "false")
             boolean hasNotes,
             Model model) throws JsonProcessingException {
-
         if (hasNotes) {
             String jsonResponse = leonApiService.getAllFlightsByPeriod(getVlzAirline(), daysRange);
             List<FlightList> leonData = jsonMapper.readValue(jsonResponse, LeonMetaData.class)
@@ -95,7 +94,7 @@ public class TestJspController {
                     .getData().getFlightList();
             model.addAttribute("leonData", leonData);
         } else {
-            //airline info must be taken from Auth session or User info
+            //FIX REQ: airline info must be taken from Auth session or User info
             String jsonResponse = leonApiService.getAllFlightsByPeriod(getVlzAirline(), daysRange);
             List<FlightList> leonData = jsonMapper.readValue(jsonResponse, LeonMetaData.class)
                     .getData().getFlightList()
@@ -104,7 +103,9 @@ public class TestJspController {
                     .collect(toList());
             model.addAttribute("leonData", leonData);
         }
-        log.info("processing flights page");
+        log.debug(String.format(
+                "Processing \"FLIGHTS\" page for: %s withing daysRange: %s and Registration: %s",
+                getVlzAirline().getName(), daysRange, registration));
         return "flights";
     }
 }

@@ -23,7 +23,7 @@ public enum LeonQueryTemplateFilterConditions {
             + "{start: \\\"" + START_DAY + "\\\" "
             + "end: \\\"" + END_DAY + "\\\"} "
             + "aircraftNid: " + AIRCRAFT_ID
-            + "flightStatus: CONFIRMED "
+            + " flightStatus: CONFIRMED "
             + "isCnl: false }) ");
 
     private final String value;

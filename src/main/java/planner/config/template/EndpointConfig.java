@@ -5,6 +5,7 @@ public enum EndpointConfig {
     TEST("/test/**"),
     LOGIN("/login/**"),
     REGISTER("/register/**"),
+    FLIGHTS("/flights/**"),
     WELCOME("/welcome/**");
 
     private final String value;

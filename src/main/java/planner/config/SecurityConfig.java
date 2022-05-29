@@ -1,5 +1,6 @@
 package planner.config;
 
+import static planner.config.template.EndpointConfig.FLIGHTS;
 import static planner.config.template.EndpointConfig.INDEX;
 import static planner.config.template.EndpointConfig.LOGIN;
 import static planner.config.template.EndpointConfig.REGISTER;
@@ -41,8 +42,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
 
-                .antMatchers(HttpMethod.GET,
-                        TEST.value()).hasRole(ADMIN.value())
+                //.antMatchers(TEST.value()).hasRole(ADMIN.value())
+                .antMatchers(TEST.value()).permitAll()
 
                 .antMatchers(HttpMethod.GET,
                         INDEX.value())
@@ -53,6 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         LOGIN.value()).permitAll()
 
                 .antMatchers(WELCOME.value()).permitAll()
+                .antMatchers(FLIGHTS.value()).permitAll()
 
                 .antMatchers(HttpMethod.DELETE).hasRole(ADMIN.value())
                 .antMatchers(HttpMethod.PUT).hasRole(ADMIN.value())

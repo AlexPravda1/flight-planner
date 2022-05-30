@@ -13,6 +13,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.dozer.Mapper;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,12 +38,14 @@ public class TestJspController {
     private final ObjectMapper jsonMapper;
 
     @GetMapping("/welcome")
-    public String welcome(
-            @RequestParam(name = "name", required = false, defaultValue = "Traveller")
-            String name, Model model) {
+    public String welcome(Authentication authentication,
+                          @RequestParam(name = "defaultName", required = false,
+                                  defaultValue = "Traveller")
+            String defaultName, Model model) {
         List<User> users = userService.findAll();
         model.addAttribute("users", users);
-        model.addAttribute("userName", name);
+        model.addAttribute("userName", authentication != null
+                ? authentication.getName() : defaultName);
 
         LocalDateTime time = LocalDateTime.now();
         model.addAttribute("time", time);
@@ -54,7 +57,7 @@ public class TestJspController {
                 .collect(toList());
 
         model.addAttribute("acftList", activeAircraftList);
-        log.info("processing welcome page");
+        log.info("/welcome page called");
         return "welcome";
     }
 
@@ -104,7 +107,7 @@ public class TestJspController {
             model.addAttribute("leonData", leonData);
         }
         log.debug(String.format(
-                "Processing \"FLIGHTS\" page for: %s withing daysRange: %s and Registration: %s",
+                "\"FLIGHTS\" page called for: %s withing daysRange: %s and Registration: %s",
                 getVlzAirline().getName(), daysRange, registration));
         return "flights";
     }

@@ -17,6 +17,7 @@ import static planner.config.template.mapper.config.MapperAircraftResponseDtoFie
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 import org.dozer.loader.api.BeanMappingBuilder;
@@ -30,9 +31,11 @@ import planner.model.json.plane.AircraftList;
 @Configuration
 @ComponentScan(basePackages = "planner")
 @RequiredArgsConstructor
+@Log4j2
 public class MapperConfig {
     @Bean
     public ObjectMapper getJsonMapper() {
+        log.debug("Created JSON ObjectMapper");
         return new ObjectMapper();
     }
 
@@ -41,6 +44,7 @@ public class MapperConfig {
         DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();
         dozerBeanMapper.addMapping(aircraftMapperBuilder());
         dozerBeanMapper.addMapping(aircraftDtoMapperBuilder());
+        log.debug("Created DozerMapper");
         return dozerBeanMapper;
     }
 

@@ -14,6 +14,7 @@ import static planner.config.template.WebJspConfig.WEB_INF;
 import java.util.Properties;
 import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -32,6 +33,7 @@ import org.springframework.web.servlet.view.JstlView;
 @PropertySource("classpath:application.properties")
 @ComponentScan(basePackages = "planner")
 @RequiredArgsConstructor
+@Log4j2
 public class AppConfig {
     private final Environment environment;
 
@@ -59,12 +61,13 @@ public class AppConfig {
 
         localSessionFactoryBean.setHibernateProperties(properties);
         localSessionFactoryBean.setPackagesToScan(PACKAGES_TO_SCAN.value());
-
+        log.debug("Provided LocalSessionFactoryBean from config/AppConfig");
         return localSessionFactoryBean;
     }
 
     @Bean
     public PasswordEncoder getEncoder() {
+        log.debug("Provided PasswordEncoder Bean from config/AppConfig");
         return new BCryptPasswordEncoder();
     }
 
@@ -74,6 +77,7 @@ public class AppConfig {
         bean.setViewClass(JstlView.class);
         bean.setPrefix(WEB_INF.value());
         bean.setSuffix(PAGE_SUFFIX.value());
+        log.debug("Provided ViewResolver Bean from config/AppConfig");
         return bean;
     }
 

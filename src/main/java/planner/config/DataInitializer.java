@@ -66,6 +66,9 @@ public class DataInitializer {
             aliceUser.setName("alice");
             aliceUser.setSurname("alicynsky");
             userService.save(aliceUser);
+            log.debug(String.format("Users injected: %s (ROLES: %S), %s (ROLES: %S)",
+                    bobAdmin.getName(), bobAdmin.getRoles().toString(),
+                    aliceUser.getName(), aliceUser.getRoles().toString()));
         }
     }
 

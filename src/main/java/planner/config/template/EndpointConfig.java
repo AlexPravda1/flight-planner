@@ -1,5 +1,8 @@
 package planner.config.template;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public enum EndpointConfig {
     INDEX("/index/**"),
     TEST("/test/**"),
@@ -15,6 +18,7 @@ public enum EndpointConfig {
     }
 
     public String value() {
+        log.debug("Providing ENUM endpoint value " + value);
         return value;
     }
 }

@@ -4,8 +4,10 @@ import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.springframework.util.ResourceUtils.getFile;
 
 import java.io.IOException;
+import lombok.extern.log4j.Log4j2;
 import planner.model.Airline;
 
+@Log4j2
 public final class AirlineUtil {
     public static Airline getVlzAirline() {
         Airline airline = new Airline();
@@ -18,6 +20,7 @@ public final class AirlineUtil {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        log.debug(airline.getName() + " airline provided from AirlineUtil");
         return airline;
     }
 }

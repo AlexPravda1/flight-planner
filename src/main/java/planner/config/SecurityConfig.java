@@ -10,6 +10,7 @@ import static planner.model.UserRoleName.ADMIN;
 import static planner.model.UserRoleName.USER;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,6 +24,7 @@ import planner.security.jwt.JwtTokenProvider;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
+@Log4j2
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
@@ -30,6 +32,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        log.debug("SecurityConfig access AuthenticationManagerBuilder "
+                + "in Configure method to authorize user via userDetailsService");
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 

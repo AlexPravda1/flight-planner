@@ -48,6 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 //.antMatchers(TEST.value()).hasRole(ADMIN.value())
                 .antMatchers(TEST.value()).permitAll()
+                .antMatchers("/user_login").permitAll()
 
                 .antMatchers(HttpMethod.GET,
                         INDEX.value())
@@ -73,4 +74,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .headers().frameOptions().disable();
     }
+    /*
+       .formLogin()
+                    .loginPage("/login").loginProcessingUrl("/perform_auth").defaultSuccessUrl("/")
+                        .and()
+                    .logout()
+                    .logoutUrl("/logout").permitAll()
+     */
 }

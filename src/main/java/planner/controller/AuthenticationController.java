@@ -28,26 +28,27 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public UserResponseDto register(@RequestBody @Valid UserRegistrationDto registrationDto) {
+        log.debug("Access register method from AuthenticationController for "
+                + registrationDto.getEmail());
         User user = authenticationService.register(
                 registrationDto.getEmail(),
                 registrationDto.getPassword(),
                 registrationDto.getName(),
                 registrationDto.getSurname());
-        log.debug("Access register method from AuthenticationController for " + registrationDto);
         return MapperUtil.map(user, UserResponseDto.class);
     }
 
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody @Valid UserLoginDto userLoginDto)
             throws AuthenticationException {
+        log.debug("/login from AuthenticationController is called for " + userLoginDto.getLogin());
         User user = authenticationService.login(userLoginDto.getLogin(),
                 userLoginDto.getPassword());
         String token = jwtTokenProvider.createToken(user.getEmail(),
                 user.getRoles().stream()
                         .map(r -> r.getRoleName().name())
                         .collect(Collectors.toList()));
-        log.debug(String.format("Access login method from AuthenticationController for %s. "
-                        + "JWT Token issued.", userLoginDto.getLogin()));
+        log.debug("/login login issued JWT Token");
         return new ResponseEntity<>(Map.of("token", token), HttpStatus.OK);
     }
 }

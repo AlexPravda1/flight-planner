@@ -28,7 +28,7 @@ public class JwtTokenFilter extends GenericFilterBean {
             log.debug("Authentication done and added to SecurityContextHolder"
                     + " based on valid JWT Token.");
         }
-        log.debug(String.format("Was provided %s JWT Token", token == null ? "WRONG" : "VALID"));
+        log.debug(String.format("Was provided %s jwt Token", token == null ? "WRONG" : "VALID"));
         filterChain.doFilter(servletRequest, servletResponse);
     }
 }

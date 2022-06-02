@@ -77,13 +77,15 @@ public class DataInitializer {
         Airline airline = airlineService.saveOrUpdate(getVlzAirline());
         log.debug(airline.getName() + " Airline saved to internal DB");
 
-        String jsonResponse = leonApiService.getAllAircraft(getVlzAirline());
+        /*String jsonResponse = leonApiService.getAllAircraft(getVlzAirline());
         LeonMetaData leonData = jsonMapper.readValue(jsonResponse, LeonMetaData.class);
         List<Aircraft> aircraftList = getFilteredOnlyAircraftList(leonData);
         for (Aircraft aircraft : aircraftList) {
             aircraftDao.saveOrUpdate(aircraft);
             log.debug(aircraft.getRegistration() + " aircraft saved to internal DB");
         }
+        */
+        log.debug("Aircraft injection skipped");
     }
 
     private List<Aircraft> getFilteredOnlyAircraftList(LeonMetaData leonData) {

@@ -4,21 +4,22 @@
     <title>Spring Security- Change default login page</title>
 </head>
 <body>
+
 <h1>Spring Security- Change default login page</h1>
 
-<form action="login" method="post">
+<form method ="POST" action="${pageContext.request.contextPath}/login">
     <table>
         <tr style="color: red;">
             <td></td>
             <td>${SPRING_SECURITY_LAST_EXCEPTION.message}</td>
         </tr>
         <tr>
-            <td>User name:</td>
-            <td><label for="username"></label><input id="username" name="username" type="text">
+            <td>Login:</td>
+            <td><input id="login" name="login" type="text"></td>
         </tr>
         <tr>
             <td>Password:</td>
-            <td><label for="password"></label><input id="password" name="password" type="password"></td>
+            <td><input id="password" name="password" type="password"></td>
         </tr>
         <tr>
             <td></td>

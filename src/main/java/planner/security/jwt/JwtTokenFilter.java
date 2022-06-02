@@ -22,6 +22,14 @@ public class JwtTokenFilter extends GenericFilterBean {
                          ServletResponse servletResponse,
                          FilterChain filterChain) throws IOException, ServletException {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
+        log.debug("Trying to get token from HTTP Header: " + (token == null ? "FAIL" : "SUCCESS"));
+
+        if (token == null) {
+            token = jwtTokenProvider.getJwtFromCookie((HttpServletRequest) servletRequest);
+            log.debug("Trying to get token from COOKIE Header: "
+                    + (token == null ? "FAIL" : "SUCCESS"));
+        }
+
         if (token != null && jwtTokenProvider.validateToken(token)) {
             Authentication auth = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(auth);

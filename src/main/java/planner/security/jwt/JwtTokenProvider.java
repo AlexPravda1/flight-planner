@@ -11,6 +11,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -20,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.WebUtils;
 import planner.exception.InvalidJwtAuthenticationException;
 
 @Component
@@ -28,6 +30,8 @@ import planner.exception.InvalidJwtAuthenticationException;
 public class JwtTokenProvider {
     private static final String AUTH_HEADER_KEY = "Authorization";
     private static final String AUTH_HEADER_VALUE_PREFIX = "Bearer ";
+    @Value("${security.jwt.cookie.token}")
+    private String jwtCookieToken;
     @Value("${security.jwt.token.secret-key}")
     private String secretKey;
     @Value("${security.jwt.token.expiry-length}")
@@ -66,6 +70,11 @@ public class JwtTokenProvider {
         }
         log.debug("BearerToken is NULL!");
         return null;
+    }
+
+    public String getJwtFromCookie(HttpServletRequest request) {
+        Cookie cookie = WebUtils.getCookie(request, jwtCookieToken);
+        return cookie == null ? null : cookie.getValue();
     }
 
     public boolean validateToken(String token) {

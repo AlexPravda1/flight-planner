@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Log4j2
 public class LoginController {
 
-    @RequestMapping("/user_login")
+    @RequestMapping("/user-login")
     public String userLogin() {
         log.debug("/user_login page is called from LoginController");
-        return "user_login";
+        return "user-login";
     }
 }

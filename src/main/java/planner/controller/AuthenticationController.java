@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import planner.exception.AuthenticationException;
 import planner.model.User;
@@ -46,7 +45,7 @@ public class AuthenticationController {
         return MapperUtil.map(user, UserResponseDto.class);
     }
 
-    @RequestMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<Object> login(
             @Valid @ModelAttribute("UserLoginDto") UserLoginDto userLoginDto)
             throws AuthenticationException {

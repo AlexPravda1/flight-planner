@@ -67,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
 
-                .formLogin().loginPage("/user_login").permitAll()
+                .formLogin().loginPage("/user-login").permitAll()
                 .and()
 
                 .apply(new JwtConfigurer(jwtTokenProvider))

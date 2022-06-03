@@ -67,6 +67,8 @@ public class TestJspController {
             @RequestParam(name = "daysRange", required = false, defaultValue = "0") long daysRange,
             @RequestParam(name = "hasNotes", required = false, defaultValue = "false")
             boolean hasNotes,
+            @RequestParam(name = "hasFiles", required = false, defaultValue = "false")
+            boolean hasFiles,
             Model model) throws JsonProcessingException {
         if (hasNotes) {
             String jsonResponse = leonApiService.getAllFlightsByPeriod(getVlzAirline(), daysRange);
@@ -84,6 +86,24 @@ public class TestJspController {
                             .getTripSupplementaryInfo().isEmpty()))
                     .sorted(Comparator.comparing(FlightList::getStartTimeUtc))
                     .collect(toList());
+            model.addAttribute("leonData", leonData);
+            return "flights";
+        }
+
+        if (hasFiles) {
+            String jsonResponse = leonApiService.getAllFlightsByPeriod(getVlzAirline(), daysRange);
+            List<FlightList> leonData = jsonMapper.readValue(jsonResponse, LeonMetaData.class)
+                    .getData().getFlightList()
+                    .stream()
+                    .filter(flight -> flight.getAcft().getAcftType().getIsAircraft()
+                            && flight.getAcft().getIsActive())
+                    .filter(flight -> flight.getChecklist().getAllItems()
+                            .stream().anyMatch(f -> !f.getFiles().isEmpty()))
+                    .sorted(Comparator.comparing(FlightList::getStartTimeUtc))
+                    .collect(toList());
+
+            //List<FlightList> collect = leonData.stream().filter(x -> x.getChecklist()
+            // .getAllItems().stream().anyMatch(f -> !f.getFiles().isEmpty())).collect(toList());
             model.addAttribute("leonData", leonData);
             return "flights";
         }

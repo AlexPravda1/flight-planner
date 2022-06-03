@@ -16,6 +16,7 @@
 }
 .table_dark td {
     color: #3b2b4f;
+    min-width: 70px;
     border-bottom: 1px solid #000000;
     border-right: 1px solid #000000;
     padding: 7px 17px;
@@ -26,6 +27,7 @@
 }
 .table_dark td:last-child {
     border-right: #000000;
+    min-width: 70px;
 }
 .table_dark tr:hover td {
     text-decoration: underline;

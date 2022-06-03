@@ -32,7 +32,7 @@ public class JwtTokenProvider {
     private static final String AUTH_HEADER_KEY = "Authorization";
     private static final String AUTH_HEADER_VALUE_PREFIX = "Bearer ";
     @Value("${security.jwt.cookie.token}")
-    private String jwtCookieToken;
+    private String jwtCookieName;
     @Value("${security.jwt.token.secret-key}")
     private String secretKey;
     @Value("${security.jwt.token.expiry-length.milliseconds}")
@@ -74,7 +74,7 @@ public class JwtTokenProvider {
     }
 
     public String getJwtFromCookie(HttpServletRequest request) {
-        Cookie cookie = WebUtils.getCookie(request, jwtCookieToken);
+        Cookie cookie = WebUtils.getCookie(request, jwtCookieName);
         return cookie == null ? null : SecurityCipher.decrypt(cookie.getValue());
     }
 

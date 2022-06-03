@@ -1,5 +1,7 @@
 package planner.controller;
 
+import static planner.config.template.EndpointConfig.INDEX;
+
 import java.net.URI;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -30,7 +32,7 @@ import planner.util.SecurityCipher;
 @Log4j2
 public class AuthenticationController {
     @Value("${security.jwt.cookie.token}")
-    private String jwtCookieToken;
+    private String jwtCookieName;
     @Value("${security.jwt.cookie.validity.seconds}")
     private int jwtCookieValidity;
     private final AuthenticationService authenticationService;
@@ -54,22 +56,31 @@ public class AuthenticationController {
             throws AuthenticationException {
         log.debug("/auth from AuthenticationController is called for "
                 + userLoginDto.getLogin());
-        User user = authenticationService.login(userLoginDto.getLogin(),
-                userLoginDto.getPassword());
-        String token = jwtTokenProvider.createToken(user.getEmail(),
-                user.getRoles().stream()
-                        .map(r -> r.getRoleName().name())
-                        .collect(Collectors.toList()));
-        log.debug("/auth login issued JWT Token");
+        String token = getUserAccessToken(userLoginDto);
+        HttpHeaders responseHeaders = getHttpHeadersWithEncryptedCookiesAndUrlRedirect(token);
+        return new ResponseEntity<>(responseHeaders, HttpStatus.FOUND);
+    }
+
+    private HttpHeaders getHttpHeadersWithEncryptedCookiesAndUrlRedirect(String token) {
         HttpHeaders responseHeaders = new HttpHeaders();
-        HttpCookie httpCookie = ResponseCookie.from(jwtCookieToken, SecurityCipher.encrypt(token))
+        HttpCookie httpCookie = ResponseCookie
+                .from(jwtCookieName, SecurityCipher.encrypt(token))
                 .maxAge(jwtCookieValidity)
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
                 .build();
         responseHeaders.add(HttpHeaders.SET_COOKIE, httpCookie.toString());
-        responseHeaders.setLocation(URI.create("/index"));
-        return new ResponseEntity<>(responseHeaders, HttpStatus.FOUND);
+        responseHeaders.setLocation(URI.create(INDEX.value()));
+        return responseHeaders;
+    }
+
+    private String getUserAccessToken(UserLoginDto userLoginDto) throws AuthenticationException {
+        User user = authenticationService.login(userLoginDto.getLogin(),
+                userLoginDto.getPassword());
+        return jwtTokenProvider.createToken(user.getEmail(),
+                user.getRoles().stream()
+                        .map(r -> r.getRoleName().name())
+                        .collect(Collectors.toList()));
     }
 }

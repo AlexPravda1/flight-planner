@@ -24,6 +24,7 @@
         <th>ADEP</th>
         <th>ADES</th>
         <th>ACFT</th>
+        <th>FILES</th>
         <th>NOTES</th>
     </tr>
     </thead>
@@ -35,6 +36,21 @@
             <td>${leonFlights.startAirport.code.icao}</td>
             <td>${leonFlights.endAirport.code.icao}</td>
             <td>${leonFlights.acft.registration}</td>
+
+            <td>
+            <c:forEach items="${leonFlights.checklist.allItems}" var="services">
+                <c:if test="${not empty services.files}" >
+                        <c:forEach items="${services.files}" var="file">
+                            <c:if test="${not empty file.fileName}" >
+                                <a href="${file.signedUrl}" target="_blank"><b>${services.definition.label}</b></a>
+                            </c:if>
+                        </c:forEach>
+                        <br>
+                        <br>
+                </c:if>
+            </c:forEach>
+            </td>
+
             <td>
                 <c:if test="${not empty leonFlights.notes.ops}" >
                     <b>OPS: </b>${leonFlights.notes.ops} <br>
@@ -51,7 +67,7 @@
                 <c:if test="${not empty leonFlights.trip.tripNotes.tripSupplementaryInfo}" >
                     <b>SUPPLEMENTARY: </b>${leonFlights.trip.tripNotes.tripSupplementaryInfo} <br>
                 </c:if>
-      </tr>
+      </td>
     </c:forEach>
     </tbody>
     </table>

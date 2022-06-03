@@ -1,3 +1,6 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,6 +15,9 @@
         <tr style="color: red;">
             <td></td>
             <td>${SPRING_SECURITY_LAST_EXCEPTION.message}</td>
+            <td><c:out value="${exception.message}" /></td>
+            <td><c:out value="${pageContext.exception.message}" /></td>
+
         </tr>
         <tr>
             <td>Login:</td>

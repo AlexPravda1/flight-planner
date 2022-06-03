@@ -34,7 +34,7 @@ public class JwtTokenProvider {
     private String jwtCookieToken;
     @Value("${security.jwt.token.secret-key}")
     private String secretKey;
-    @Value("${security.jwt.token.expiry-length}")
+    @Value("${security.jwt.token.expiry-length.milliseconds}")
     private long validityInMilliseconds;
     private final UserDetailsService userDetailsService;
 

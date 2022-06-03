@@ -30,6 +30,8 @@ import planner.util.MapperUtil;
 public class AuthenticationController {
     @Value("${security.jwt.cookie.token}")
     private String jwtCookieToken;
+    @Value("${security.jwt.cookie.validity.seconds}")
+    private int jwtCookieValidity;
     private final AuthenticationService authenticationService;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -60,8 +62,9 @@ public class AuthenticationController {
         log.debug("/auth login issued JWT Token");
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpCookie httpCookie = ResponseCookie.from(jwtCookieToken, token)
-                .maxAge(300)
+                .maxAge(jwtCookieValidity)
                 .httpOnly(true)
+                .secure(true)
                 .path("/")
                 .build();
         responseHeaders.add(HttpHeaders.SET_COOKIE, httpCookie.toString());

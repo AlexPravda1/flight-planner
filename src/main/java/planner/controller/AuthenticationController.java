@@ -45,11 +45,11 @@ public class AuthenticationController {
         return MapperUtil.map(user, UserResponseDto.class);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<Object> login(
+    @PostMapping("/auth")
+    public ResponseEntity<String> auth(
             @Valid @ModelAttribute("UserLoginDto") UserLoginDto userLoginDto)
             throws AuthenticationException {
-        log.debug("/login from AuthenticationController is called for "
+        log.debug("/auth from AuthenticationController is called for "
                 + userLoginDto.getLogin());
         User user = authenticationService.login(userLoginDto.getLogin(),
                 userLoginDto.getPassword());
@@ -57,7 +57,7 @@ public class AuthenticationController {
                 user.getRoles().stream()
                         .map(r -> r.getRoleName().name())
                         .collect(Collectors.toList()));
-        log.debug("/login login issued JWT Token");
+        log.debug("/auth login issued JWT Token");
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpCookie httpCookie = ResponseCookie.from(jwtCookieToken, token)
                 .maxAge(300)

@@ -7,7 +7,7 @@
 
 <h1>Spring Security- Change default login page</h1>
 
-<form method ="POST" action="${pageContext.request.contextPath}/login">
+<form method ="POST" action="${pageContext.request.contextPath}/auth">
     <table>
         <tr style="color: red;">
             <td></td>
@@ -15,11 +15,11 @@
         </tr>
         <tr>
             <td>Login:</td>
-            <td><input id="login" name="login" type="text"></td>
+            <td><label for="login"></label><input id="login" name="login" type="text"></td>
         </tr>
         <tr>
             <td>Password:</td>
-            <td><input id="password" name="password" type="password"></td>
+            <td><label for="password"></label><input id="password" name="password" type="password"></td>
         </tr>
         <tr>
             <td></td>

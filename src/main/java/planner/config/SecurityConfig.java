@@ -1,13 +1,7 @@
 package planner.config;
 
-import static planner.config.template.EndpointConfig.FLIGHTS;
-import static planner.config.template.EndpointConfig.INDEX;
-import static planner.config.template.EndpointConfig.LOGIN;
-import static planner.config.template.EndpointConfig.REGISTER;
 import static planner.config.template.EndpointConfig.TEST;
-import static planner.config.template.EndpointConfig.WELCOME;
 import static planner.model.UserRoleName.ADMIN;
-import static planner.model.UserRoleName.USER;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -44,30 +38,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
+                .formLogin().loginPage("/user-login").permitAll()
+
+                .and()
                 .authorizeRequests()
 
+                .antMatchers("/user-login/**").permitAll()
+                .antMatchers("/login/**").permitAll()
+                .antMatchers("/auth/**").permitAll()
+                .antMatchers(TEST.value()).hasRole(ADMIN.value())
+                .antMatchers("/**").authenticated()
                 //.antMatchers(TEST.value()).hasRole(ADMIN.value())
-                .antMatchers(TEST.value()).permitAll()
 
-                .antMatchers(HttpMethod.GET,
-                        INDEX.value())
-                .hasAnyRole(ADMIN.value(), USER.value())
+                //.antMatchers(HttpMethod.GET, INDEX.value())
+                // .hasAnyRole(ADMIN.value(), USER.value())
 
-                .antMatchers(HttpMethod.POST,
-                        REGISTER.value(),
-                        LOGIN.value()).permitAll()
+                //.antMatchers(HttpMethod.POST, REGISTER.value(), LOGIN.value()).permitAll()
 
-                .antMatchers(WELCOME.value()).permitAll()
-                .antMatchers(FLIGHTS.value()).permitAll()
+                //.antMatchers(WELCOME.value()).permitAll()
+                //.antMatchers(FLIGHTS.value()).permitAll()
 
                 .antMatchers(HttpMethod.DELETE).hasRole(ADMIN.value())
                 .antMatchers(HttpMethod.PUT).hasRole(ADMIN.value())
 
                 .anyRequest().authenticated()
 
-                .and()
-
-                .formLogin().loginPage("/user-login").permitAll()
                 .and()
 
                 .apply(new JwtConfigurer(jwtTokenProvider))

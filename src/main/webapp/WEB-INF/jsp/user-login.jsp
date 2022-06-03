@@ -15,11 +15,13 @@
         </tr>
         <tr>
             <td>Login:</td>
-            <td><label for="login"></label><input id="login" name="login" type="text"></td>
+            <td><label for="login"></label>
+                <input id="login" name="login" type="text"></td>
         </tr>
         <tr>
             <td>Password:</td>
-            <td><label for="password"></label><input id="password" name="password" type="password"></td>
+            <td><label for="password"></label>
+                <input id="password" name="password" type="password"></td>
         </tr>
         <tr>
             <td></td>

@@ -39,6 +39,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .formLogin().loginPage("/user-login").permitAll()
+                    .and()
+                    .logout().clearAuthentication(true)
+                    .logoutSuccessUrl("/user-login")
+                    .deleteCookies("accessToken")
 
                 .and()
                 .authorizeRequests()

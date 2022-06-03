@@ -23,6 +23,7 @@ import planner.model.dto.response.UserResponseDto;
 import planner.security.AuthenticationService;
 import planner.security.jwt.JwtTokenProvider;
 import planner.util.MapperUtil;
+import planner.util.SecurityCipher;
 
 @RestController
 @RequiredArgsConstructor
@@ -61,7 +62,7 @@ public class AuthenticationController {
                         .collect(Collectors.toList()));
         log.debug("/auth login issued JWT Token");
         HttpHeaders responseHeaders = new HttpHeaders();
-        HttpCookie httpCookie = ResponseCookie.from(jwtCookieToken, token)
+        HttpCookie httpCookie = ResponseCookie.from(jwtCookieToken, SecurityCipher.encrypt(token))
                 .maxAge(jwtCookieValidity)
                 .httpOnly(true)
                 .secure(true)

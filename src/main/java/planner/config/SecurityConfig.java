@@ -1,10 +1,15 @@
 package planner.config;
 
+import static planner.config.template.EndpointConfig.LOGIN;
+import static planner.config.template.EndpointConfig.REGISTER;
 import static planner.config.template.EndpointConfig.TEST;
+import static planner.config.template.EndpointConfig.USER_AUTH;
+import static planner.config.template.EndpointConfig.USER_LOGIN;
 import static planner.model.UserRoleName.ADMIN;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +25,8 @@ import planner.security.jwt.JwtTokenProvider;
 @RequiredArgsConstructor
 @Log4j2
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    @Value("${security.jwt.cookie.token}")
+    private String jwtCookieName;
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
@@ -36,49 +43,46 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
                 .and()
-                .formLogin().loginPage("/user-login").permitAll()
+
+                .formLogin().loginPage(USER_LOGIN.value()).permitAll()
                     .and()
-                    .logout().clearAuthentication(true)
-                    .logoutSuccessUrl("/user-login")
-                    .deleteCookies("accessToken")
+                .logout().clearAuthentication(true)
+                    .logoutSuccessUrl(USER_LOGIN.value())
+                    .deleteCookies(jwtCookieName)
 
                 .and()
                 .authorizeRequests()
 
-                .antMatchers("/user-login/**").permitAll()
-                .antMatchers("/login/**").permitAll()
-                .antMatchers("/auth/**").permitAll()
+                .mvcMatchers(LOGIN.value()).permitAll()
+                .mvcMatchers(USER_LOGIN.value()).permitAll()
+                .mvcMatchers(USER_AUTH.value()).permitAll()
+                .mvcMatchers(REGISTER.value()).permitAll()
+
                 .antMatchers(TEST.value()).hasRole(ADMIN.value())
-                .antMatchers("/**").authenticated()
-                //.antMatchers(TEST.value()).hasRole(ADMIN.value())
-
-                //.antMatchers(HttpMethod.GET, INDEX.value())
-                // .hasAnyRole(ADMIN.value(), USER.value())
-
-                //.antMatchers(HttpMethod.POST, REGISTER.value(), LOGIN.value()).permitAll()
-
-                //.antMatchers(WELCOME.value()).permitAll()
-                //.antMatchers(FLIGHTS.value()).permitAll()
-
                 .antMatchers(HttpMethod.DELETE).hasRole(ADMIN.value())
                 .antMatchers(HttpMethod.PUT).hasRole(ADMIN.value())
 
                 .anyRequest().authenticated()
-
                 .and()
-
                 .apply(new JwtConfigurer(jwtTokenProvider))
-
                 .and()
                 .headers().frameOptions().disable();
     }
+
     /*
-       .formLogin()
-                    .loginPage("/login").loginProcessingUrl("/perform_auth").defaultSuccessUrl("/")
-                        .and()
-                    .logout()
-                    .logoutUrl("/logout").permitAll()
-     */
+                .formLogin()
+                .loginPage("/login").loginProcessingUrl("/perform_auth").defaultSuccessUrl("/")
+                    .and()
+                .logout()
+                .logoutUrl("/logout").permitAll()
+
+                //.antMatchers("/**").authenticated()
+                //.antMatchers(TEST.value()).hasRole(ADMIN.value())
+                //.antMatchers(HttpMethod.GET, INDEX.value())
+                //.hasAnyRole(ADMIN.value(), USER.value())
+                //.antMatchers(HttpMethod.POST, REGISTER.value(), LOGIN.value()).permitAll()
+                //.antMatchers(WELCOME.value()).permitAll()
+                //.antMatchers(FLIGHTS.value()).permitAll()
+    */
 }

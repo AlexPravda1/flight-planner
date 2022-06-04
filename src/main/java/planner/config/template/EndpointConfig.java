@@ -4,10 +4,12 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public enum EndpointConfig {
-    INDEX("/index/**"),
+    LOGIN("/login"),
+    USER_LOGIN("/user-login"),
+    USER_AUTH("/auth"),
+    REGISTER("/register"),
+    INDEX("/index"),
     TEST("/test/**"),
-    LOGIN("/login/**"),
-    REGISTER("/register/**"),
     FLIGHTS("/flights/**"),
     WELCOME("/welcome/**");
 

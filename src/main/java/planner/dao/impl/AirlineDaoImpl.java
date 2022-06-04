@@ -26,4 +26,16 @@ public class AirlineDaoImpl extends AbstractDao<Airline, Long> implements Airlin
             throw new DataProcessingException("Couldn't get Airline by name: " + name, e);
         }
     }
+
+    @Override
+    public Optional<Airline> findByLeonDomain(String leonSubDomain) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("FROM Airline a WHERE a.leonSubDomain = :leonSubDomain",
+                            Airline.class)
+                    .setParameter("leonSubDomain", leonSubDomain)
+                    .uniqueResultOptional();
+        } catch (Exception e) {
+            throw new DataProcessingException("Couldn't get Airline by name: " + leonSubDomain, e);
+        }
+    }
 }

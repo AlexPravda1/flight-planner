@@ -6,7 +6,6 @@ import static planner.util.AirlineUtil.getVlzAirline;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -19,11 +18,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import planner.model.Aircraft;
+import planner.model.Airline;
 import planner.model.User;
 import planner.model.dto.response.AircraftResponseDto;
 import planner.model.json.flight.list.FlightList;
 import planner.model.json.root.LeonMetaData;
 import planner.service.AircraftService;
+import planner.service.AirlineService;
 import planner.service.LeonApiService;
 import planner.service.UserService;
 
@@ -33,6 +34,7 @@ import planner.service.UserService;
 public class TestJspController {
     private final UserService userService;
     private final AircraftService aircraftService;
+    private final AirlineService airlineService;
     private final LeonApiService leonApiService;
     private final Mapper entityMapper;
     private final ObjectMapper jsonMapper;
@@ -61,8 +63,9 @@ public class TestJspController {
         return "welcome";
     }
 
+    @SuppressWarnings(value = "OptionalGetWithoutIsPresent")
     @GetMapping("/flights")
-    public String flights(
+    public String flights(Authentication authentication,
             @RequestParam(name = "registration", required = false) String registration,
             @RequestParam(name = "daysRange", required = false, defaultValue = "0") long daysRange,
             @RequestParam(name = "hasNotes", required = false, defaultValue = "false")
@@ -70,8 +73,12 @@ public class TestJspController {
             @RequestParam(name = "hasFiles", required = false, defaultValue = "false")
             boolean hasFiles,
             Model model) throws JsonProcessingException {
+
+        User user = userService.findByEmail(authentication.getName()).get();
+        Airline userAirline = airlineService.findById(user.getAirlineId());
+
         if (hasNotes) {
-            String jsonResponse = leonApiService.getAllFlightsByPeriod(getVlzAirline(), daysRange);
+            String jsonResponse = leonApiService.getAllFlightsByPeriod(userAirline, daysRange);
             List<FlightList> leonData = jsonMapper.readValue(jsonResponse, LeonMetaData.class)
                     .getData().getFlightList()
                     .stream()
@@ -91,19 +98,16 @@ public class TestJspController {
         }
 
         if (hasFiles) {
-            String jsonResponse = leonApiService.getAllFlightsByPeriod(getVlzAirline(), daysRange);
+            String jsonResponse = leonApiService.getAllFlightsByPeriod(userAirline, daysRange);
             List<FlightList> leonData = jsonMapper.readValue(jsonResponse, LeonMetaData.class)
                     .getData().getFlightList()
                     .stream()
                     .filter(flight -> flight.getAcft().getAcftType().getIsAircraft()
                             && flight.getAcft().getIsActive())
                     .filter(flight -> flight.getChecklist().getAllItems()
-                            .stream().anyMatch(f -> !f.getFiles().isEmpty()))
+                            .stream().anyMatch(files -> !files.getFiles().isEmpty()))
                     .sorted(Comparator.comparing(FlightList::getStartTimeUtc))
                     .collect(toList());
-
-            //List<FlightList> collect = leonData.stream().filter(x -> x.getChecklist()
-            // .getAllItems().stream().anyMatch(f -> !f.getFiles().isEmpty())).collect(toList());
             model.addAttribute("leonData", leonData);
             return "flights";
         }
@@ -112,17 +116,17 @@ public class TestJspController {
             Aircraft aircraft = aircraftService.findByRegistration(registration);
             String jsonResponse = leonApiService.getAllFlightsByPeriodAndAircraftId(
                     aircraft.getAirline(), daysRange, aircraft.getId());
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yy HH:mm");
             ArrayList<FlightList> leonData = jsonMapper.readValue(jsonResponse, LeonMetaData.class)
                     .getData().getFlightList();
             model.addAttribute("leonData", leonData);
         } else {
-            //FIX REQ: airline info must be taken from Auth session or User info
-            String jsonResponse = leonApiService.getAllFlightsByPeriod(getVlzAirline(), daysRange);
+            String jsonResponse = leonApiService.getAllFlightsByPeriod(userAirline, daysRange);
             List<FlightList> leonData = jsonMapper.readValue(jsonResponse, LeonMetaData.class)
                     .getData().getFlightList()
                     .stream()
                     .filter(x -> !x.getIsCnl())
+                    .filter(x -> x.getAcft().getAcftType().getIsAircraft())
+                    .filter(x -> x.getAcft().getIsActive())
                     .collect(toList());
             model.addAttribute("leonData", leonData);
         }

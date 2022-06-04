@@ -57,6 +57,7 @@ public class DataInitializer {
             bobAdmin.setPassword("1234");
             bobAdmin.setName("bob");
             bobAdmin.setSurname("bobinsky");
+            bobAdmin.setAirlineId(1063L);
             userService.save(bobAdmin);
 
             User aliceUser = new User();
@@ -65,6 +66,7 @@ public class DataInitializer {
             aliceUser.setPassword("1234");
             aliceUser.setName("alice");
             aliceUser.setSurname("alicynsky");
+            aliceUser.setAirlineId(1063L);
             userService.save(aliceUser);
             log.debug(String.format("Users injected: %s (ROLES: %S), %s (ROLES: %S)",
                     bobAdmin.getName(), bobAdmin.getRoles().toString(),

@@ -43,6 +43,8 @@ public class User {
     @Column(nullable = false)
     private String surname;
 
+    private long airlineId;
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + "("

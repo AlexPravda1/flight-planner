@@ -25,6 +25,13 @@ public class AirlineServiceImpl implements AirlineService {
     }
 
     @Override
+    public Airline findByLeonDomain(String leonSubDomain) {
+        return airlineDao.findByLeonDomain(leonSubDomain)
+                .orElseThrow(() -> new DataProcessingException(
+                "Airline with name: " + leonSubDomain + " was not found in DB."));
+    }
+
+    @Override
     public Airline findById(Long id) {
         return airlineDao.findById(id).orElseThrow(() -> new DataProcessingException(
                 "Airline with id: " + id + " was not found in DB."));

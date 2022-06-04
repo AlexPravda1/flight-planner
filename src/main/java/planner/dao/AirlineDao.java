@@ -9,6 +9,8 @@ public interface AirlineDao {
 
     Optional<Airline> findByName(String name);
 
+    Optional<Airline> findByLeonDomain(String leonSubDomain);
+
     Optional<Airline> findById(Long id);
 
     List<Airline> findAll();

@@ -8,6 +8,8 @@ public interface AirlineService {
 
     Airline findByName(String name);
 
+    Airline findByLeonDomain(String leonSubDomain);
+
     Airline findById(Long id);
 
     List<Airline> findAll();

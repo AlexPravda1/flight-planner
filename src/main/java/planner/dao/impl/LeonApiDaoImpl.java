@@ -45,7 +45,7 @@ public class LeonApiDaoImpl implements LeonApiDao {
         URL url = generateUrl(QUERY_URL_POSTFIX, airline);
         String query = prepareQueryAllAircraft();
         String accessToken = getAccessToken(airline);
-        log.info(format("Processing %s, %s", url, query));
+        log.info(format("Processing query for %s", url));
         return fetchLeonResponse(url, query, accessToken);
     }
 
@@ -54,7 +54,7 @@ public class LeonApiDaoImpl implements LeonApiDao {
         URL url = generateUrl(QUERY_URL_POSTFIX, airline);
         String query = prepareQueryAllFlightsByPeriod(daysRange);
         String accessToken = getAccessToken(airline);
-        log.info(format("Processing %s, %s", url, query));
+        log.info(format("Processing query for %s", url));
         return fetchLeonResponse(url, query, accessToken);
     }
 
@@ -64,7 +64,7 @@ public class LeonApiDaoImpl implements LeonApiDao {
         URL url = generateUrl(QUERY_URL_POSTFIX, airline);
         String query = prepareQueryAllFlightsByPeriodAndAircraftId(daysRange, aircraftId);
         String accessToken = getAccessToken(airline);
-        log.info(format("Processing %s, %s", url, query));
+        log.info(format("Processing query for %s", url));
         return fetchLeonResponse(url, query, accessToken);
     }
 

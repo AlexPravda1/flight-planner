@@ -8,6 +8,7 @@
 <html>
 <head>
     <title>Flight list</title>
+    <%@ include file="/WEB-INF/parts/header.jsp" %>
 </head>
 
 <body>
@@ -45,8 +46,7 @@
                                 <a href="${file.signedUrl}" target="_blank"><b>${services.definition.label}</b></a>
                             </c:if>
                         </c:forEach>
-                        <br>
-                        <br>
+                        <br><br>
                 </c:if>
             </c:forEach>
             </td>

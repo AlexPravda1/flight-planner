@@ -17,5 +17,6 @@
     </tr>
     <tr><td><a href="${pageContext.request.contextPath}/flights">Display All Flights</a></td></tr>
     <tr><td><a href="${pageContext.request.contextPath}/flights?hasFiles=true">Display All Flights with Files</a></td></tr>
+    <tr><td><a href="${pageContext.request.contextPath}/flights?hasNotes=true">Display All Flights with Notes</a></td></tr>
 </table>
 </html>

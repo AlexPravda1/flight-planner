@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class IndexController {
     @GetMapping("/index")
     public String index(Authentication authentication, Model model) {
-        model.addAttribute("userName", authentication != null
-                ? authentication.getName() : "Traveller");
+        model.addAttribute("userName", authentication.getName());
         log.debug("/index page controller called");
         return "index";
     }

@@ -33,7 +33,7 @@
     <c:forEach items="${leonData}" var="leonFlights">
         <tr>
             <td>${leonFlights.flightNo}</td>
-            <td>${leonFlights.startTimeUtc}</td>
+            <td><fmt:formatDate pattern = "dd-MMM HH:ss" value = "${leonFlights.startTimeUtc}"/>Z</td>
             <td>${leonFlights.startAirport.code.icao}</td>
             <td>${leonFlights.endAirport.code.icao}</td>
             <td>${leonFlights.acft.registration}</td>

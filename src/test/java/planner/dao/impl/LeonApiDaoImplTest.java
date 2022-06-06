@@ -44,12 +44,6 @@ class LeonApiDaoImplTest extends AbstractTest {
     }
 
     @Test
-    void getAllFlightsByPeriodAndAircraftIdJson_givenValidRequest_thenSuccess() {
-        String jsonResponse = leonApiDao.getAllFlightsByPeriodAndAircraftId(airline, 0L, 20611L);
-        validateJsonString(jsonResponse);
-    }
-
-    @Test
     void validateJsonSchema_forAllAircraftList_givenValidJson_thenSuccess() throws IOException {
         String jsonResponse = leonApiDao.getAllAircraft(airline);
         assertTrue(getJsonSchemaValidationMessageSet(jsonResponse, AIRCRAFT_LIST_SCHEMA.value())
@@ -67,22 +61,6 @@ class LeonApiDaoImplTest extends AbstractTest {
                 .isEmpty());
 
         jsonResponse = leonApiDao.getAllFlightsByPeriod(airline, 15L);
-        assertTrue(getJsonSchemaValidationMessageSet(jsonResponse, FLIGHT_LIST_SCHEMA.value())
-                .isEmpty());
-    }
-
-    @Test
-    void validateJsonSchema_forAllFlightListByAircraftId_givenValidJson_thenSuccess()
-            throws IOException {
-        String jsonResponse = leonApiDao.getAllFlightsByPeriodAndAircraftId(airline, 0L, 22249L);
-        assertTrue(getJsonSchemaValidationMessageSet(jsonResponse, FLIGHT_LIST_SCHEMA.value())
-                .isEmpty());
-
-        jsonResponse = leonApiDao.getAllFlightsByPeriodAndAircraftId(airline, 10L, 19413L);
-        assertTrue(getJsonSchemaValidationMessageSet(jsonResponse, FLIGHT_LIST_SCHEMA.value())
-                .isEmpty());
-
-        jsonResponse = leonApiDao.getAllFlightsByPeriodAndAircraftId(airline, 20L, 19653L);
         assertTrue(getJsonSchemaValidationMessageSet(jsonResponse, FLIGHT_LIST_SCHEMA.value())
                 .isEmpty());
     }

@@ -69,20 +69,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .headers().frameOptions().disable();
     }
-
-    /*
-                .formLogin()
-                .loginPage("/login").loginProcessingUrl("/perform_auth").defaultSuccessUrl("/")
-                    .and()
-                .logout()
-                .logoutUrl("/logout").permitAll()
-
-                //.antMatchers("/**").authenticated()
-                //.antMatchers(TEST.value()).hasRole(ADMIN.value())
-                //.antMatchers(HttpMethod.GET, INDEX.value())
-                //.hasAnyRole(ADMIN.value(), USER.value())
-                //.antMatchers(HttpMethod.POST, REGISTER.value(), LOGIN.value()).permitAll()
-                //.antMatchers(WELCOME.value()).permitAll()
-                //.antMatchers(FLIGHTS.value()).permitAll()
-    */
 }

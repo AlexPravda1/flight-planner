@@ -1,7 +1,6 @@
 package planner.service.impl;
 
 import static java.util.stream.Collectors.toList;
-import static planner.model.leon.LeonQueryTemplateRequestAircraft.AIRCRAFT_REGISTRATION_REGEX;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -42,10 +41,13 @@ public class AircraftServiceImpl implements AircraftService {
     }
 
     @Override
-    public List<Aircraft> findAllActiveByAirline(String airlineName) {
-        return aircraftDao.findAllActiveByAirline(airlineName).stream()
-                .filter(acft -> acft.getRegistration().matches(AIRCRAFT_REGISTRATION_REGEX.value()))
-                .collect(toList());
+    public List<Aircraft> findAllActiveByAirlineName(String airlineName) {
+        return aircraftDao.findAllActiveByAirlineName(airlineName);
+    }
+
+    @Override
+    public List<Aircraft> findAllActiveByAirlineId(Long airlineId) {
+        return aircraftDao.findAllActiveByAirlineId(airlineId);
     }
 
     @Override

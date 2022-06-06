@@ -3,7 +3,6 @@ package planner.config;
 import static java.util.stream.Collectors.toList;
 import static planner.model.UserRoleName.ADMIN;
 import static planner.model.UserRoleName.USER;
-import static planner.util.AirlineUtil.getVlzAirline;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +27,7 @@ import planner.service.AirlineService;
 import planner.service.LeonApiService;
 import planner.service.RoleService;
 import planner.service.UserService;
+import planner.util.AirlineUtil;
 
 @Component
 @RequiredArgsConstructor
@@ -76,18 +76,18 @@ public class DataInitializer {
 
     @PostConstruct
     public void injectAirlineAndAircraft() throws JsonProcessingException {
-        Airline airline = airlineService.saveOrUpdate(getVlzAirline());
-        log.debug(airline.getName() + " Airline saved to internal DB");
+        for (Airline airline : AirlineUtil.getAllAirlines()) {
+            airline = airlineService.saveOrUpdate(airline);
+            log.debug(airline.getName() + " Airline saved to internal DB");
 
-        /*String jsonResponse = leonApiService.getAllAircraft(getVlzAirline());
-        LeonMetaData leonData = jsonMapper.readValue(jsonResponse, LeonMetaData.class);
-        List<Aircraft> aircraftList = getFilteredOnlyAircraftList(leonData);
-        for (Aircraft aircraft : aircraftList) {
-            aircraftDao.saveOrUpdate(aircraft);
-            log.debug(aircraft.getRegistration() + " aircraft saved to internal DB");
+            String jsonResponse = leonApiService.getAllAircraft(airline);
+            LeonMetaData leonData = jsonMapper.readValue(jsonResponse, LeonMetaData.class);
+            List<Aircraft> aircraftList = getFilteredOnlyAircraftList(leonData);
+            for (Aircraft aircraft : aircraftList) {
+                aircraftDao.saveOrUpdate(aircraft);
+                log.debug(aircraft.getRegistration() + " aircraft saved to internal DB");
+            }
         }
-        */
-        log.debug("Aircraft injection skipped");
     }
 
     private List<Aircraft> getFilteredOnlyAircraftList(LeonMetaData leonData) {

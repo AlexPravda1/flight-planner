@@ -13,7 +13,9 @@ public interface AircraftDao {
 
     List<Aircraft> findAll();
 
-    List<Aircraft> findAllActiveByAirline(String airlineName);
+    List<Aircraft> findAllActiveByAirlineName(String airlineName);
 
     void delete(Long id);
+
+    List<Aircraft> findAllActiveByAirlineId(Long airlineId);
 }

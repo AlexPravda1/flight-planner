@@ -14,7 +14,6 @@ import static planner.config.template.LeonApiConfig.TOKEN_URL_POSTFIX;
 import static planner.config.template.LeonApiConfig.TOKEN_VALIDITY_MINUTES;
 import static planner.util.LeonUtil.prepareQueryAllAircraft;
 import static planner.util.LeonUtil.prepareQueryAllFlightsByPeriod;
-import static planner.util.LeonUtil.prepareQueryAllFlightsByPeriodAndAircraftId;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,16 +57,6 @@ public class LeonApiDaoImpl implements LeonApiDao {
         return fetchLeonResponse(url, query, accessToken);
     }
 
-    @Override
-    public String getAllFlightsByPeriodAndAircraftId(
-            Airline airline, long daysRange, Long aircraftId) {
-        URL url = generateUrl(QUERY_URL_POSTFIX, airline);
-        String query = prepareQueryAllFlightsByPeriodAndAircraftId(daysRange, aircraftId);
-        String accessToken = getAccessToken(airline);
-        log.info(format("Processing query for %s", url));
-        return fetchLeonResponse(url, query, accessToken);
-    }
-
     private URL generateUrl(LeonApiConfig urlType, Airline airline) {
         try {
             return new URL(HTTP_PREFIX.value()
@@ -94,13 +83,13 @@ public class LeonApiDaoImpl implements LeonApiDao {
 
     private String getAccessToken(Airline airline) {
         if (isValidTokenByDuration(airline.getName())) {
-            log.info(format("Returned existing Token for: %s", airline.getName()));
+            log.info("Returned existing Token for: {}", airline.getName());
             return tokensPool.get(airline.getName()).getToken();
         }
         URL url = generateUrl(TOKEN_URL_POSTFIX, airline);
         String query = REFRESH_TOKEN_HEADER.value() + airline.getLeonApiKey();
         String fetchedToken = fetchLeonResponse(url, query, StringUtils.EMPTY);
-        log.info(format("Generated new Token %s for: %s", fetchedToken, airline.getName()));
+        log.info("Generated new Token {} for: {}", fetchedToken, airline.getName());
         return putInTokenPoolMap(airline.getName(), fetchedToken);
     }
 

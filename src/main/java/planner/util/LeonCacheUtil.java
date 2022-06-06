@@ -22,8 +22,9 @@ import planner.service.LeonApiService;
 @Log4j2
 @RequiredArgsConstructor
 public class LeonCacheUtil {
-    //Limited by Leon reply "1400 max difficulty level" capability
-    //Lower data amount transmitted from Leon increase max days amount possibility
+    //Limited by Leon reply "1400 max difficulty level" capability, gives "error" answer otherwise
+    //Lower data requested from Leon increases max days amount possibility
+    //80 days is limit determined "by hand" as of LeonQuery structure by 01-JUN-2022
     private static final int DAYS_RANGE = 80;
     private final LeonApiService leonApiService;
     private final ObjectMapper jsonMapper;
@@ -34,7 +35,7 @@ public class LeonCacheUtil {
         return allFlightsMap.get(airlineId);
     }
 
-    @Scheduled(fixedDelay = 1000 * 60 * 5)
+    @Scheduled(fixedDelayString = "${cache.flight-list.renew.milliseconds}")
     private void putAllFlights() throws JsonProcessingException {
         for (Airline airline : AirlineUtil.getAllAirlines()) {
             String jsonResponse = leonApiService.getAllFlightsByPeriod(airline, DAYS_RANGE);

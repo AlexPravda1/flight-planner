@@ -32,7 +32,7 @@ public class AircraftDaoImpl extends AbstractDao<Aircraft, Long> implements Airc
     }
 
     @Override
-    public List<Aircraft> findAllActiveByAirline(String airlineName) {
+    public List<Aircraft> findAllActiveByAirlineName(String airlineName) {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery(
                             "FROM Aircraft a WHERE a.airline.name = :airlineName "
@@ -42,6 +42,20 @@ public class AircraftDaoImpl extends AbstractDao<Aircraft, Long> implements Airc
         } catch (Exception e) {
             throw new DataProcessingException("Couldn't get Aircraft list for: "
                     + airlineName, e);
+        }
+    }
+
+    @Override
+    public List<Aircraft> findAllActiveByAirlineId(Long airlineId) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery(
+                            "FROM Aircraft a WHERE a.airline.id = :airlineId "
+                                    + "AND a.isActive = true", Aircraft.class)
+                    .setParameter("airlineId", airlineId)
+                    .getResultList();
+        } catch (Exception e) {
+            throw new DataProcessingException("Couldn't get Aircraft list for AirlineId: "
+                    + airlineId, e);
         }
     }
 }

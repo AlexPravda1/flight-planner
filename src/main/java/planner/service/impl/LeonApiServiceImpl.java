@@ -27,13 +27,4 @@ public class LeonApiServiceImpl implements LeonApiService {
         validateJsonResponse(response);
         return fixJsonForMapper(response);
     }
-
-    @Override
-    public String getAllFlightsByPeriodAndAircraftId(
-            Airline airline, long daysRange, Long aircraftId) {
-        String response =
-                leonApiDao.getAllFlightsByPeriodAndAircraftId(airline, daysRange, aircraftId);
-        validateJsonResponse(response);
-        return fixJsonForMapper(response);
-    }
 }

@@ -12,7 +12,9 @@ public interface AircraftService {
 
     List<Aircraft> findAllActive();
 
-    List<Aircraft> findAllActiveByAirline(String airlineName);
+    List<Aircraft> findAllActiveByAirlineName(String airlineName);
+
+    List<Aircraft> findAllActiveByAirlineId(Long airlineId);
 
     void delete(Long id);
 }

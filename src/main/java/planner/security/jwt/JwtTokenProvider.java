@@ -23,7 +23,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
 import planner.exception.InvalidJwtAuthenticationException;
-import planner.util.SecurityCipher;
 
 @Component
 @RequiredArgsConstructor
@@ -63,11 +62,11 @@ public class JwtTokenProvider {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
-    public String resolveToken(HttpServletRequest request) {
+    public String getJwtFromBearerHeader(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTH_HEADER_KEY);
         if (bearerToken != null && bearerToken.startsWith(AUTH_HEADER_VALUE_PREFIX)) {
             log.debug("bearerToken is provided based on JWT Token");
-            return SecurityCipher.decrypt(bearerToken.substring(7));
+            return bearerToken.substring(7);
         }
         log.debug("BearerToken is NULL!");
         return null;
@@ -75,7 +74,7 @@ public class JwtTokenProvider {
 
     public String getJwtFromCookie(HttpServletRequest request) {
         Cookie cookie = WebUtils.getCookie(request, jwtCookieName);
-        return cookie == null ? null : SecurityCipher.decrypt(cookie.getValue());
+        return cookie == null ? null : cookie.getValue();
     }
 
     public boolean validateToken(String token) {

@@ -3,7 +3,6 @@ package planner.util;
 import static javax.crypto.Cipher.DECRYPT_MODE;
 import static javax.crypto.Cipher.ENCRYPT_MODE;
 import static javax.crypto.Cipher.getInstance;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static planner.config.template.SecurityCipherConfig.DIGEST_ALGORITHM;
 import static planner.config.template.SecurityCipherConfig.DIGEST_ARRAY_SIZE;
 import static planner.config.template.SecurityCipherConfig.ENCRYPT_STANDARD;
@@ -50,7 +49,7 @@ public class SecurityCipher {
             return Base64.getEncoder().encodeToString(
                     cipher.doFinal(strToEncrypt.getBytes(StandardCharsets.UTF_8)));
         }
-        return EMPTY;
+        return null;
     }
 
     @SneakyThrows
@@ -61,6 +60,6 @@ public class SecurityCipher {
             cipher.init(DECRYPT_MODE, secretKey);
             return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)));
         }
-        return EMPTY;
+        return null;
     }
 }

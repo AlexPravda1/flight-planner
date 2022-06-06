@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
+import planner.util.SecurityCipher;
 
 @RequiredArgsConstructor
 @Log4j2
@@ -21,7 +22,7 @@ public class JwtTokenFilter extends GenericFilterBean {
     public void doFilter(ServletRequest servletRequest,
                          ServletResponse servletResponse,
                          FilterChain filterChain) throws IOException, ServletException {
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
+        String token = jwtTokenProvider.getJwtFromBearerHeader((HttpServletRequest) servletRequest);
         log.debug("Trying to get token from HTTP Header: " + (token == null ? "FAIL" : "SUCCESS"));
 
         if (token == null) {
@@ -29,14 +30,12 @@ public class JwtTokenFilter extends GenericFilterBean {
             log.debug("Trying to get token from COOKIE Header: "
                     + (token == null ? "FAIL" : "SUCCESS"));
         }
-
+        token = SecurityCipher.decrypt(token);
         if (token != null && jwtTokenProvider.validateToken(token)) {
             Authentication auth = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
-            log.debug("Authentication done and added to SecurityContextHolder"
-                    + " based on valid JWT Token.");
+            log.debug("Authentication done for {}", auth.getName().toUpperCase());
         }
-        log.debug(String.format("Was provided %s jwt Token", token == null ? "WRONG" : "VALID"));
         filterChain.doFilter(servletRequest, servletResponse);
     }
 }

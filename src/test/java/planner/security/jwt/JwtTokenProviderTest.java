@@ -73,7 +73,7 @@ class JwtTokenProviderTest extends AbstractTest {
     void resolveToken_givenValidData_thenSuccess() {
         HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getHeader("Authorization")).thenReturn("Bearer " + VALID_TOKEN);
-        String actual = jwtTokenProvider.resolveToken(req);
+        String actual = jwtTokenProvider.getJwtFromBearerHeader(req);
         assertNotNull(actual);
         assertEquals(actual, VALID_TOKEN);
     }

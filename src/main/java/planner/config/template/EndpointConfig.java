@@ -20,7 +20,6 @@ public enum EndpointConfig {
     }
 
     public String value() {
-        log.debug("Providing ENUM endpoint value " + value);
         return value;
     }
 }

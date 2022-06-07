@@ -6,6 +6,9 @@
 </style>
 <html>
 <body>
+<img src="<c:url value="/resources/images/jbs-logo.bmp" />" alt="image" />
+<img src ="${pageContext.request.contextPath}/resources/images/123.png" />
+
 <h4><a href="${pageContext.request.contextPath}/index">Main </a></h4>
 <b>Today is:
     <fmt:timeZone value = "GMT">

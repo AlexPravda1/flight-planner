@@ -10,4 +10,5 @@ public class UserResponseDto {
     private String email;
     private String name;
     private String surname;
+    private long airlineId;
 }

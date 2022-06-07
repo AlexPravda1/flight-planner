@@ -9,19 +9,29 @@
 
 <%@ include file="/WEB-INF/parts/header.jsp" %>
 
-<form method="post" id="redirect"></form>
-<h1 class="table_dark"> Greetings, ${userName}! </h1>
+<h1 class="table_dark"> Greetings, ${user.name}! </h1>
 <table class="table_dark">
     <tr>
         <th>Redirect to</th>
     </tr>
     <tr><td><a href="${pageContext.request.contextPath}/welcome">User profile with aircraft list</a><br></td></tr>
     <tr><td><a href="${pageContext.request.contextPath}/flights">Display All Flights</a></td></tr>
-    <tr><td><a href="${pageContext.request.contextPath}/flights?hasFiles=true">Display All Flights with Files</a></td></tr>
-    <tr><td><a href="${pageContext.request.contextPath}/flights?hasNotes=true">Display All Flights with Notes</a></td></tr>
-    <tr><td><a href="${pageContext.request.contextPath}/flights?hasNotes=true&hasFiles=true">Display All Flights with Notes&Files</a></td></tr>
-    <tr><td><a href="${pageContext.request.contextPath}/flights?registration=2-SWIS">Display All Flights for 2-SWIS aircraft</a></td></tr>
-    <tr><td><a href="${pageContext.request.contextPath}/flights?hasNotes=true&registration=2-SWIS">Display All Flights with Notes for 2-SWIS aircraft</a></td></tr>
-    <tr><td><a href="${pageContext.request.contextPath}/flights?daysRange=5">Display All Flights for 5 days ahead only</a></td></tr>
 </table>
+
+<form method="GET" id="redirect" action="${pageContext.request.contextPath}/flights" class="table_dark">
+    <table>
+        <tr>
+            <th rowspan="4"><input type="submit" value="Filter flights"></th>
+            <td><input type="checkbox" name="hasNotes" value="true"> Has notes</td></tr>
+        <tr><td><input type="checkbox" name="hasFiles" value="true"> Has files</td></tr>
+        <tr><td>Days limit: <input type="number" name="daysRange" value="90" min="0" max="90"></td></tr>
+        <tr><td>Registration: <select name="registration">
+                                <option value="">All</option>
+                                <c:forEach items="${acftList}" var="list">
+                                    <option value="${list.registration}">${list.registration}</option>
+                                </c:forEach></select>
+                                </td></tr>
+    </table>
+</form>
+
 </html>

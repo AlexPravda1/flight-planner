@@ -4,11 +4,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Spring Security- Change default login page</title>
+    <title>JBS Login page</title>
 </head>
 <body>
 
-<h1>Spring Security- Change default login page</h1>
+<h1>Please enter username and password</h1>
 
 <form method ="POST" action="${pageContext.request.contextPath}/auth">
     <table>

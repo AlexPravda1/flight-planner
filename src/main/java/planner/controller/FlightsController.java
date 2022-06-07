@@ -69,9 +69,9 @@ public class FlightsController {
         allFlightsList = leonFlightListService.getFlightsHasDaysRange(allFlightsList, daysRange);
         allFlightsList = leonFlightListService.getFlightsHasNotes(allFlightsList, hasNotes);
         allFlightsList = leonFlightListService.getFlightsHasFiles(allFlightsList, hasFiles);
-        log.debug("/flights processed for user {}, registration {}, "
-                        + "days Range: {}, with Notes: {}, withFiles: {}",
-                user.getEmail(), registration, daysRange, hasNotes, hasFiles);
+        log.debug("/flights processed for airlineId {}, registration {}, "
+                        + "daysRange: {}, withNotes: {}, withFiles: {}",
+                user.getAirlineId(), registration, daysRange, hasNotes, hasFiles);
         model.addAttribute("leonData", allFlightsList);
         return "flights";
     }

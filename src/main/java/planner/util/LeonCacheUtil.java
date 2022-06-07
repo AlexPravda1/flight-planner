@@ -49,7 +49,7 @@ public class LeonCacheUtil {
                     .collect(toList());
             allFlightsMap.put(airline.getId(), leonData);
         }
-        log.info("(EVERY 5 MINs) Scheduled putAllFlights called to update FlightsMap at "
+        log.info("(EVERY 10 MINs) Scheduled putAllFlights called to update FlightsMap at "
                 + LocalDateTime.now());
     }
 }

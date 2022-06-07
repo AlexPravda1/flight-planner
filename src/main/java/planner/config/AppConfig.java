@@ -8,8 +8,6 @@ import static planner.config.template.SessionFactoryBeanConfig.HIBERNATE_DIALECT
 import static planner.config.template.SessionFactoryBeanConfig.HIBERNATE_HBM2DDL;
 import static planner.config.template.SessionFactoryBeanConfig.PACKAGES_TO_SCAN;
 import static planner.config.template.SessionFactoryBeanConfig.SHOW_SQL;
-import static planner.config.template.WebJspConfig.PAGE_SUFFIX;
-import static planner.config.template.WebJspConfig.WEB_INF;
 
 import java.util.Properties;
 import javax.sql.DataSource;
@@ -25,10 +23,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.view.BeanNameViewResolver;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @PropertySource("classpath:application.properties")
@@ -72,20 +66,5 @@ public class AppConfig {
     public PasswordEncoder getEncoder() {
         log.debug("Provided PasswordEncoder Bean from config/AppConfig");
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public ViewResolver internalResourceViewResolver() {
-        InternalResourceViewResolver bean = new InternalResourceViewResolver();
-        bean.setViewClass(JstlView.class);
-        bean.setPrefix(WEB_INF.value());
-        bean.setSuffix(PAGE_SUFFIX.value());
-        log.debug("Provided ViewResolver Bean from config/AppConfig");
-        return bean;
-    }
-
-    @Bean
-    public BeanNameViewResolver beanNameViewResolver() {
-        return new BeanNameViewResolver();
     }
 }

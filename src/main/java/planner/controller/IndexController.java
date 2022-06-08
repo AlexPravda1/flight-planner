@@ -32,13 +32,13 @@ public class IndexController {
         return "index";
     }
 
-    @GetMapping("/welcome")
+    @GetMapping("/profile")
     public String welcome(Authentication authentication, Model model) {
         setTimeToPage(model);
         UserResponseDto user = setUserToPage(authentication, model);
         setAircraftListToPage(model, user);
-        log.info("/welcome page called");
-        return "welcome";
+        log.info("/profile page called");
+        return "profile";
     }
 
     private void setTimeToPage(Model model) {

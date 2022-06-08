@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Predicate;
 import org.springframework.stereotype.Service;
 import planner.model.json.flight.list.FlightList;
 import planner.service.LeonFlightListService;
@@ -17,12 +18,7 @@ public class LeonFlightServiceImpl implements LeonFlightListService {
     public List<FlightList> getFlightsHasNotes(List<FlightList> flights, boolean hasNotes) {
         return !hasNotes ? flights
                 : flights.stream()
-                .filter((flight -> !flight.getNotes().getOps().isBlank()
-                        || !flight.getNotes().getSales().isBlank()
-                        || !flight.getTrip().getNotes().isBlank()
-                        || flight.getTrip().getTripNotes() != null
-                        && !flight.getTrip().getTripNotes()
-                        .getTripSupplementaryInfo().isEmpty()))
+                .filter(getFlightsWithAnyNotesPredicate())
                 .collect(toList());
     }
 
@@ -39,8 +35,7 @@ public class LeonFlightServiceImpl implements LeonFlightListService {
     public List<FlightList> getFlightsHasFiles(List<FlightList> flights, boolean hasFiles) {
         return !hasFiles ? flights
                 : flights.stream()
-                .filter(flight -> flight.getChecklist().getAllItems()
-                        .stream().anyMatch(files -> !files.getFiles().isEmpty()))
+                .filter(getFlightsWithAttachedFilesPredicate())
                 .collect(toList());
     }
 
@@ -52,5 +47,19 @@ public class LeonFlightServiceImpl implements LeonFlightListService {
                 : flights.stream()
                 .filter(flight -> flight.getStartTimeUtc().before(dateLimit))
                 .collect(toList());
+    }
+
+    private Predicate<FlightList> getFlightsWithAttachedFilesPredicate() {
+        return flight -> flight.getChecklist().getAllItems()
+                .stream().anyMatch(files -> !files.getFiles().isEmpty());
+    }
+
+    private Predicate<FlightList> getFlightsWithAnyNotesPredicate() {
+        return flight -> !flight.getNotes().getOps().isBlank()
+                || !flight.getNotes().getSales().isBlank()
+                || !flight.getTrip().getNotes().isBlank()
+                || flight.getTrip().getTripNotes() != null
+                && !flight.getTrip().getTripNotes()
+                .getTripSupplementaryInfo().isEmpty();
     }
 }

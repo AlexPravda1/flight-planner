@@ -2,23 +2,23 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <style>
-    <%@include file='/resources/css/table_dark.css' %>
+    <%@include file='/resources/css/menu.css' %>
 </style>
 <html>
 <body>
-<img src="<c:url value="/resources/images/jbs-logo.bmp" />" alt="image" />
-<img src ="${pageContext.request.contextPath}/resources/images/123.png" />
+<logo>
+<img src="<c:url value="/resources/images/logo.png" />"/>
+</logo>
+<nav>
+    <a href="${pageContext.request.contextPath}/index">Home</a>
+    <a href="${pageContext.request.contextPath}/profile">Profile</a>
+    <a href="https://jbs.aero/contactus">Contacts</a>
+    <a href="https://jbs.aero/contents/lists/about-us">About JBS</a>
+    <a href="${pageContext.request.contextPath}/logout">Logout</a>
+    <div class="animation start-home"></div>
+</nav>
+<BR><BR><BR><BR><BR>
 
-<h4><a href="${pageContext.request.contextPath}/index">Main </a></h4>
-<b>Today is:
-    <fmt:timeZone value = "GMT">
-        <fmt:formatDate type = "both" dateStyle = "medium" timeStyle = "short" value = "<%= new java.util.Date()%>" />
-    </fmt:timeZone>
-    (UTC +0)
-</b>
-
-<h4><a href="${pageContext.request.contextPath}/logout">Logout</a></h4>
-<br>
 </body>
 </html>
 

@@ -84,8 +84,8 @@ public class DataInitializer {
             LeonMetaData leonData = jsonMapper.readValue(jsonResponse, LeonMetaData.class);
             List<Aircraft> aircraftList = getFilteredOnlyAircraftList(leonData);
             for (Aircraft aircraft : aircraftList) {
-                //aircraftDao.saveOrUpdate(aircraft);
-                //log.debug(aircraft.getRegistration() + " aircraft saved to internal DB");
+                aircraftDao.saveOrUpdate(aircraft);
+                log.debug(aircraft.getRegistration() + " aircraft saved to internal DB");
             }
         }
     }

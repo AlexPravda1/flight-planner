@@ -1,0 +1,109 @@
+table {
+    border-spacing: 0;
+}
+
+.table_flights {
+    border-radius: 10px;
+    width: 100%;
+    background: white;
+    text-align: left;
+    font-family: monospace;
+}
+
+.table_flights td {
+    border-right: 1px dashed #34495e;
+    letter-spacing: 0.5px;
+    padding: 15px 10px 20px;
+}
+
+.table_flights tr {
+    margin-top: 10px;
+}
+
+.table_flights th {
+    border-right: 1px dashed #34495e;
+    border-bottom: 1px solid #34495e;
+    letter-spacing: 2px;
+    padding: 10px;
+    font-size: 15px;
+    text-align: center;
+}
+
+.table_flights tr:nth-child(even) {
+    background-color: lightblue;
+}
+
+.table_flights td:nth-child(1) {
+    text-align: center;
+    width: 45px;
+}
+
+.table_flights td:nth-child(2) {
+    text-align: center;
+    width: 45px;
+}
+
+.table_flights td:nth-child(3) {
+    text-align: center;
+    width: 45px;
+}
+
+.table_flights td:nth-child(4) {
+    text-align: center;
+    width: 45px;
+}
+
+.table_flights td:nth-child(5) {
+    text-align: center;
+    width: 45px;
+}
+
+.table_flights td:nth-child(6) {
+    line-height: 140%;
+    min-width: 320px;
+}
+
+.table_flights td:nth-child(7) {
+    vertical-align: top;
+    text-transform: uppercase;
+    min-width: 120px;
+}
+
+.table_flights td:nth-child(8) {
+    line-height: 120%;
+    vertical-align: top;
+    min-width: 330px;
+}
+
+.table_flights p1 {
+    color: red;
+    text-shadow: 1px 1px #777;
+    font-size: 17px;
+    font-style: oblique;
+}
+
+.table_flights p2 {
+    color: red;
+    text-shadow: 1px 1px #777;
+    font-size: 14px;
+    font-style: oblique;
+}
+
+.table_flights p3 {
+    color: darkgoldenrod;
+    text-shadow: 1px 1px #777;
+    font-size: 14px;
+    font-style: oblique;
+}
+
+.header {
+    font-variant-numeric: tabular-nums;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: #34495e;
+    color: white;
+    font-size: 1.5em;
+    padding: 1rem;
+    text-align: center;
+    text-transform: uppercase;
+}

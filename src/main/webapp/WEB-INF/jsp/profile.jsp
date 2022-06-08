@@ -4,25 +4,21 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <style>
-    <%@include file='/resources/css/table_dark.css' %>
+    <%@include file='/resources/css/general.css' %>
 </style>
 <html>
 <head>
-    <title>Lets begin</title>
+    <title>Profile</title>
+    <%@ include file="/WEB-INF/parts/header.jsp" %>
 </head>
 
 <body>
-<h1 class="table_dark"> Greetings, ${userName}! </h1> <br>
+<table class="general">
 
-<h4 class="table_dark"> Today is:
-    <fmt:timeZone value = "GMT">
-        <fmt:formatDate type = "both" dateStyle = "medium" timeStyle = "short" value = "<%= new java.util.Date()%>" />
-    </fmt:timeZone>
-    (UTC +0)
-    Here you have list of active aircraft: </h4>
-
-<table class="table_dark">
     <thead>
+    <tr>
+        <th colspan="4" id="user">Hi, ${user.name}.<br><br>Here you have list of active aircraft.<br><br></th>
+    </tr>
     <tr>
         <th>ID</th>
         <th>REGISTRATION</th>

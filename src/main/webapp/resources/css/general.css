@@ -1,0 +1,93 @@
+.general th {
+    color: #34495e;
+    padding: 12px 17px;
+    font-size: 15px;
+    text-align: left;
+}
+
+#user{
+    color: #34495e;
+    padding: 12px 17px;
+    font-size: 19px;
+}
+
+.general td {
+    color: #34495e;
+    padding: 5px 10px;
+    font-size: 19px;
+}
+
+#submit {
+    background-color: #d29252;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border-radius:8px;
+    width: 200px;
+    height: 50px;
+    margin-right: 20px;
+    color: #34495e;
+    font-family: monospace;
+    font-size: 22px;
+    text-decoration: none;
+    cursor: pointer;
+    border:none;
+}
+
+#submit:hover {
+    border: none;
+    background:red;
+    color: #ffffff;
+    box-shadow: 0 0 1px #777;
+}
+
+#loginSubmit {
+    background-color: #d29252;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border-radius:8px;
+    width: 157px;
+    height: 40px;
+    color: #34495e;
+    font-family: monospace;
+    font-size: 22px;
+    text-decoration: none;
+    cursor: pointer;
+    border:none;
+}
+
+#loginSubmit:hover {
+    border: none;
+    background:red;
+    color: #ffffff;
+    box-shadow: 0 0 1px #777;
+}
+
+#login {
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border-radius:8px;
+    width: 150px;
+    height: 30px;
+    margin-left: 1px;
+    padding-left: 5px;
+    font-family: monospace;
+    font-size: 17px;
+    text-decoration: none;
+    cursor: pointer;
+    border:1px solid #34495e;
+}
+
+#password {
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border-radius:8px;
+    width: 150px;
+    height: 30px;
+    margin-left: 1px;
+    padding-left: 5px;
+    font-family: monospace;
+    font-size: 17px;
+    text-decoration: none;
+    cursor: pointer;
+    border:1px solid #34495e;
+}

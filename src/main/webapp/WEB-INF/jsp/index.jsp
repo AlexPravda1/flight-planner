@@ -1,29 +1,20 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <style>
-    <%@include file='/resources/css/table_dark.css' %>
+    <%@include file='/resources/css/general.css' %>
 </style>
 <html>
 <head>
     <title>JBS Customer Portal</title>
 </head>
-
 <%@ include file="/WEB-INF/parts/header.jsp" %>
 
-<h1 class="table_dark"> Greetings, ${user.name}! </h1>
-<table class="table_dark">
-    <tr>
-        <th>Redirect to</th>
-    </tr>
-    <tr><td><a href="${pageContext.request.contextPath}/welcome">User profile with aircraft list</a><br></td></tr>
-    <tr><td><a href="${pageContext.request.contextPath}/flights">Display All Flights</a></td></tr>
-</table>
-
-<form method="GET" id="redirect" action="${pageContext.request.contextPath}/flights" class="table_dark">
+<form method="GET" id="redirect" action="${pageContext.request.contextPath}/flights" class="general">
     <table>
+        <tr><th colspan="2" id="user">Hi, ${user.name}.<br><br>Please make your selection and review the flights.<br><br></th></tr>
         <tr>
-            <th rowspan="4"><input type="submit" value="Filter flights"></th>
-            <td><input type="checkbox" name="hasNotes" value="true"> Has notes</td></tr>
-        <tr><td><input type="checkbox" name="hasFiles" value="true"> Has files</td></tr>
+            <th rowspan="5"><input type="submit" value="Show flights" id="submit"></th>
+        <tr><td><input type="checkbox" name="hasNotes" value="true"> With notes</td></tr>
+        <tr><td><input type="checkbox" name="hasFiles" value="true"> With files</td></tr>
         <tr><td>Days limit: <input type="number" name="daysRange" value="90" min="0" max="90"></td></tr>
         <tr><td>Registration: <select name="registration">
                                 <option value="">All</option>
@@ -32,6 +23,7 @@
                                 </c:forEach></select>
                                 </td></tr>
     </table>
+
 </form>
 
 </html>

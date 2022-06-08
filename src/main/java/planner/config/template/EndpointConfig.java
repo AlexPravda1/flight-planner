@@ -11,7 +11,7 @@ public enum EndpointConfig {
     INDEX("/index"),
     TEST("/test/**"),
     FLIGHTS("/flights/**"),
-    WELCOME("/welcome/**");
+    PROFILE("/profile/**");
 
     private final String value;
 

@@ -46,6 +46,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) {
+        web.ignoring().mvcMatchers(
+                "/favicon.ico",
+                "/webjars/**",
+                "/public/**"
+        );
         web
                 .ignoring()
                 .antMatchers(ANT_RESOURCES.value(), ANT_STATIC.value(),

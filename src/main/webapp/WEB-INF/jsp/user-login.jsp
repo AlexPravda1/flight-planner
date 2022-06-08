@@ -16,7 +16,7 @@
         <th><h3>Please enter username and password</h3></th>
     </tr>
 </table>
-<form method ="POST" action="${pageContext.request.contextPath}/auth" class="general">
+<form method ="POST" action="/auth" class="general">
     <table>
         <tr style="color: red;">
             <td></td>

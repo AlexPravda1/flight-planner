@@ -52,8 +52,7 @@ public class AuthenticationController {
 
     @PostMapping("/auth")
     public ResponseEntity<String> auth(
-            //@Valid @ModelAttribute("UserLoginDto") UserLoginDto userLoginDto)
-            @ModelAttribute("UserLoginDto") UserLoginDto userLoginDto)
+            @Valid @ModelAttribute("UserLoginDto") UserLoginDto userLoginDto)
             throws AuthenticationException {
         log.debug("/auth from AuthenticationController is called for "
                 + userLoginDto.getLogin());
@@ -68,7 +67,7 @@ public class AuthenticationController {
                 .from(jwtCookieName, SecurityCipher.encrypt(token))
                 .maxAge(jwtCookieValidity)
                 .httpOnly(true)
-                .secure(true)
+                //.secure(true)
                 .path("/")
                 .build();
         responseHeaders.add(HttpHeaders.SET_COOKIE, httpCookie.toString());

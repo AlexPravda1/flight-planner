@@ -68,9 +68,17 @@ public class DataInitializer {
             aliceUser.setSurname("alicynsky");
             aliceUser.setAirlineId(1063L);
             userService.save(aliceUser);
-            log.debug(String.format("Users injected: %s (ROLES: %S), %s (ROLES: %S)",
-                    bobAdmin.getName(), bobAdmin.getRoles().toString(),
-                    aliceUser.getName(), aliceUser.getRoles().toString()));
+
+            User jbsUser = new User();
+            jbsUser.setRoles(Set.of(roles.get(1)));
+            jbsUser.setEmail("ops@jbs.aero");
+            jbsUser.setPassword("JBSOperations1");
+            jbsUser.setName("JBS Operations");
+            jbsUser.setSurname("JBS");
+            jbsUser.setAirlineId(1063L);
+            userService.save(jbsUser);
+            log.debug("Users injected: {}, {}, {}",
+                    bobAdmin.getName(), aliceUser.getName(), jbsUser.getName());
         }
     }
 

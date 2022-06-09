@@ -17,7 +17,7 @@
         <tr><td><input type="checkbox" name="hasFiles" value="true"> With files</td></tr>
         <tr><td>Days limit: <input type="number" name="daysRange" value="90" min="0" max="90"></td></tr>
         <tr><td>Registration: <select name="registration">
-                                <option value="">All</option>
+                                <option value="All">All</option>
                                 <c:forEach items="${acftList}" var="list">
                                     <option value="${list.registration}">${list.registration}</option>
                                 </c:forEach></select>

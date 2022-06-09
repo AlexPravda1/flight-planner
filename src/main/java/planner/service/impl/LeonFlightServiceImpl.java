@@ -1,6 +1,7 @@
 package planner.service.impl;
 
 import static java.util.stream.Collectors.toList;
+import static planner.model.leon.LeonQueryTemplateRequestAircraft.AIRCRAFT_REGISTRATION_ALL;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,7 +26,8 @@ public class LeonFlightServiceImpl implements LeonFlightListService {
     @Override
     public List<FlightList> getFlightsHasRegistration(List<FlightList> flights,
                                                       String registration) {
-        return registration == null || registration.isEmpty() ? flights
+        return registration == null || registration.equals(AIRCRAFT_REGISTRATION_ALL.value())
+                ? flights
                 : flights.stream()
                 .filter(acft -> acft.getAcft().getRegistration().equals(registration))
                 .collect(toList());

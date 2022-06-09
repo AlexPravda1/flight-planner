@@ -52,7 +52,8 @@ public class AuthenticationController {
 
     @PostMapping("/auth")
     public ResponseEntity<String> auth(
-            @Valid @ModelAttribute("UserLoginDto") UserLoginDto userLoginDto)
+            //@Valid @ModelAttribute("UserLoginDto") UserLoginDto userLoginDto)
+            @ModelAttribute("UserLoginDto") UserLoginDto userLoginDto)
             throws AuthenticationException {
         log.debug("/auth from AuthenticationController is called for "
                 + userLoginDto.getLogin());

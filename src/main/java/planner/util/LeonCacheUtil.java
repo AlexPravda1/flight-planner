@@ -28,7 +28,7 @@ public class LeonCacheUtil {
     private static final int DAYS_RANGE = 80;
     private final LeonApiService leonApiService;
     private final ObjectMapper jsonMapper;
-    private final Map<Long, List<FlightList>> allFlightsMap = new HashMap<>();
+    private static final Map<Long, List<FlightList>> allFlightsMap = new HashMap<>();
 
     public List<FlightList> getAllFlightsMap(Long airlineId) {
         log.info("Provided flights from MAP // no Leon Query " + LocalDateTime.now());

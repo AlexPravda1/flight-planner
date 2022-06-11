@@ -27,9 +27,9 @@ import planner.exception.InvalidJwtAuthenticationException;
 
 class JwtTokenProviderTest extends AbstractTest {
     private static final planner.model.User user = getUserNoRolesNoId();
-    private static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyQGdtYW"
-            + "lsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNjUyNzA4ODgxLCJleHAiOjE2NTQ4NTYzNjV"
-            + "9.CT7cPAcYsbGxfPXJYNvflYFoyAmBE49f3KJ37xx8a7I";
+    private static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyQGdtYWlsLmN"
+            + "vbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNjU0OTMxMDU1LCJleHAiOjE2NTcwNzg1Mzh9.jw5DIoAb"
+            + "HlPK9Hq21x5ecW9wAJrQJlCZbOhS0k2g1_c";
     @Mock
     private UserDetailsService userDetailsService;
     @InjectMocks

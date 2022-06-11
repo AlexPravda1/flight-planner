@@ -51,23 +51,23 @@ public class DataInitializer {
             roleService.save(new Role(USER));
             roles = roleService.findAll();
 
-            User bobAdmin = new User();
-            bobAdmin.setRoles(new HashSet<>(roles));
-            bobAdmin.setEmail("bob@i.ua");
-            bobAdmin.setPassword("1234");
-            bobAdmin.setName("bob");
-            bobAdmin.setSurname("bobinsky");
-            bobAdmin.setAirlineId(1063L);
-            userService.save(bobAdmin);
+            User superAdmin = new User();
+            superAdmin.setRoles(new HashSet<>(roles));
+            superAdmin.setEmail("admin@i.ua");
+            superAdmin.setPassword("SuperPassword123!");
+            superAdmin.setName("Admin");
+            superAdmin.setSurname("Adminsky");
+            superAdmin.setAirlineId(1063L);
+            userService.save(superAdmin);
 
-            User aliceUser = new User();
-            aliceUser.setRoles(Set.of(roles.get(1)));
-            aliceUser.setEmail("alice@i.ua");
-            aliceUser.setPassword("1234");
-            aliceUser.setName("alice");
-            aliceUser.setSurname("alicynsky");
-            aliceUser.setAirlineId(1063L);
-            userService.save(aliceUser);
+            User johnUser = new User();
+            johnUser.setRoles(Set.of(roles.get(1)));
+            johnUser.setEmail("volare@jbs.aero");
+            johnUser.setPassword("John1234!");
+            johnUser.setName("John");
+            johnUser.setSurname("Braid");
+            johnUser.setAirlineId(1063L);
+            userService.save(johnUser);
 
             User jbsUser = new User();
             jbsUser.setRoles(Set.of(roles.get(1)));
@@ -78,7 +78,7 @@ public class DataInitializer {
             jbsUser.setAirlineId(1063L);
             userService.save(jbsUser);
             log.debug("Users injected: {}, {}, {}",
-                    bobAdmin.getName(), aliceUser.getName(), jbsUser.getName());
+                    superAdmin.getName(), johnUser.getName(), jbsUser.getName());
         }
     }
 

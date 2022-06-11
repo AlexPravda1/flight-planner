@@ -18,13 +18,6 @@
 </table>
 <form method ="POST" action="/auth" class="general">
     <table>
-        <tr style="color: red;">
-            <td></td>
-            <td>${SPRING_SECURITY_LAST_EXCEPTION.message}</td>
-            <td><c:out value="${exception.message}" /></td>
-            <td><c:out value="${pageContext.exception.message}" /></td>
-
-        </tr>
         <tr>
             <td>Login:</td>
             <td><label for="login"></label>

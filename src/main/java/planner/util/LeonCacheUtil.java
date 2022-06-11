@@ -26,7 +26,7 @@ public class LeonCacheUtil {
     //Lower data requested from Leon increases max days amount possibility
     //80 days is limit determined "by hand" as of LeonQuery structure by 01-JUN-2022
     private static final int DAYS_RANGE = 80;
-    private static Map<Long, List<FlightList>> allFlightsMap = new HashMap<>();
+    private static final Map<Long, List<FlightList>> allFlightsMap = new HashMap<>();
     private final LeonApiService leonApiService;
     private final ObjectMapper jsonMapper;
 

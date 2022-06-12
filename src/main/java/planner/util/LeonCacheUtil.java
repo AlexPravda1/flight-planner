@@ -37,6 +37,7 @@ public class LeonCacheUtil {
 
     @Scheduled(fixedDelayString = "${cache.flight-list.renew.milliseconds}")
     private void putAllFlights() throws JsonProcessingException {
+        allFlightsMap.clear();
         for (Airline airline : AirlineUtil.getAllAirlines()) {
             String jsonResponse = leonApiService.getAllFlightsByPeriod(airline, DAYS_RANGE);
             List<FlightList> leonData = jsonMapper.readValue(jsonResponse, LeonMetaData.class)

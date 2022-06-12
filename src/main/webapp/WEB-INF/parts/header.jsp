@@ -10,7 +10,7 @@
 <img src="<c:url value="/resources/images/logo.png" />"/>
 </logo>
 <nav>
-    <a href="${pageContext.request.contextPath}/index">Home</a>
+    <a href="${pageContext.request.contextPath}/">Home</a>
     <a href="${pageContext.request.contextPath}/profile">Profile</a>
     <a href="https://jbs.aero/contactus">Contacts</a>
     <a href="https://jbs.aero/contents/lists/about-us">About JBS</a>

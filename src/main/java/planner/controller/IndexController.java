@@ -24,7 +24,7 @@ public class IndexController {
     private final AircraftService aircraftService;
     private final Mapper entityMapper;
 
-    @GetMapping("/index")
+    @GetMapping("/")
     public String index(Authentication authentication, Model model) {
         UserResponseDto user = setUserToPage(authentication, model);
         setAircraftListToPage(model, user);

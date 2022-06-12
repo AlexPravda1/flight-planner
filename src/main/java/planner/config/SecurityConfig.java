@@ -24,6 +24,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import planner.security.jwt.JwtConfigurer;
 import planner.security.jwt.JwtTokenProvider;
 
@@ -82,8 +83,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT).hasRole(ADMIN.value())
 
                 .anyRequest().authenticated()
+
                 .and()
+                .addFilterBefore(new HttpsEnforcerConfig(),
+                        UsernamePasswordAuthenticationFilter.class)
                 .apply(new JwtConfigurer(jwtTokenProvider))
+
                 .and()
                 .headers().frameOptions().disable();
     }

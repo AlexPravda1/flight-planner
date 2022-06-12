@@ -8,7 +8,7 @@ public enum EndpointConfig {
     USER_LOGIN("/user-login"),
     USER_AUTH("/auth"),
     REGISTER("/register"),
-    INDEX("/index"),
+    INDEX("/"),
     TEST("/test/**"),
     FLIGHTS("/flights/**"),
     PROFILE("/profile/**");

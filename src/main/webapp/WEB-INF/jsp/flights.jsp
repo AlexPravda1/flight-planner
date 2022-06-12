@@ -31,8 +31,8 @@
     <tbody>
     <c:forEach items="${leonData}" var="leonFlights">
         <tr>
-            <td>${leonFlights.flightNo} <BR><BR>
-                ${leonFlights.acft.registration}<BR><BR>
+            <td><B>${leonFlights.flightNo} <B><BR><BR>
+                <B>${leonFlights.acft.registration}<B><BR><BR>
                 <c:choose>
                     <c:when test="${leonFlights.passengerList.countExcludingAnimals == 0}">
                         <B>FERRY</B>

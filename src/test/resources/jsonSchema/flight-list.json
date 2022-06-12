@@ -398,7 +398,10 @@
                 }
               },
               "crewList": {
-                "type": "array",
+                "type": [
+                  "null",
+                  "array"
+                ],
                 "items": {
                   "type": "object",
                   "required": [

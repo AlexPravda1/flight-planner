@@ -9,7 +9,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class HttpsEnforcerConfig implements Filter {
     public static final String X_FORWARDED_PROTO = "X-Forwarded-Proto";
 
@@ -23,7 +25,8 @@ public class HttpsEnforcerConfig implements Filter {
                          FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-
+        log.debug("Current link in HTTPS enforcer: " + request.getPathInfo());
+        /*
         if (request.getHeader(X_FORWARDED_PROTO) != null) {
             if (request.getHeader(X_FORWARDED_PROTO).indexOf("https") != 0) {
                 String pathInfo = (request.getPathInfo() != null) ? request.getPathInfo() : "";
@@ -31,7 +34,7 @@ public class HttpsEnforcerConfig implements Filter {
                 return;
             }
         }
-
+        */
         filterChain.doFilter(request, response);
     }
 

@@ -26,6 +26,10 @@ dist/
 # JetBrains IDE
 .idea/
 
+# Sensitive
+src/main/resources/leonApiKey/
+src/main/java/config/DataInitializer.java
+
 # Unit test reports
 TEST*.xml
 

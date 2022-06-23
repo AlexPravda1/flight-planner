@@ -15,15 +15,15 @@ public final class MapperUtil {
         MapperUtil.mapper = mapper;
     }
 
-    public static <FromT, T> List<T> mapToList(List<FromT> fromList,
-                                               final Class<T> toClass) {
+    public static <FromEntity, ToEntity> List<ToEntity> mapToList(List<FromEntity> fromList,
+                                                                  final Class<ToEntity> toClass) {
         return fromList
                 .stream()
                 .map(from -> mapper.map(from, toClass))
                 .collect(Collectors.toList());
     }
 
-    public static <FromT, T> T map(FromT fromObject, final Class<T> toClass) {
+    public static <FromEntity, ToEntity> ToEntity map(FromEntity fromObject, final Class<ToEntity> toClass) {
         return mapper.map(fromObject, toClass);
     }
 }

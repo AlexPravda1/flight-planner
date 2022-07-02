@@ -28,6 +28,13 @@ HTTP requests can be sent in JSON format and are stored in a database.<BR>
 * Maven Checkstyle Plugin
 
 ## Overview
+Project flow:
+1. User authentication is done via stateless JWT, encrypted and saved as access token in HTTP Cookie
+2. Data is taken from Planning System via GraphQL request
+3. Received JSON is mapped to POJO and placed into static Map
+4. Map is updated via scheduled service every 15 mins
+5. Based on selected filters, JSP page is rendered
+
 #### Project has multiple endpoints with user and admin access
 POST: `/register` (to create a user) - ALL Roles (but Airline AccessKey is required for proper results display) <br/>
 GET: `/profile` (to get information about the user and list of availbale aircraft) - ALL Roles <br/>

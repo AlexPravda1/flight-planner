@@ -31,12 +31,11 @@ HTTP requests can be sent in JSON format and are stored in a database.<BR>
 #### Project has multiple endpoints with user and admin access
 POST: `/register` (to create a user) - ALL Roles (but Airline AccessKey is required for proper results display) <br/>
 GET: `/profile` (to get information about the user and list of availbale aircraft) - ALL Roles <br/>
-GET: `/flights` (to get list of the flights) - ALL Roles <br/>
-Can be parametrized with: <br/>
-`daysRange` - between 0 and 90 days, to filter list for specific date range from today till indicated amount of days. <br/> 
-`registration` - string format, to filter list for specific aircraft. <br/>
-`hasNotes` - boolean, filter list for flights with remarks only. <br/>
-`hasFiles` - boolean, filter list for flights with files attached only. <br/>
+GET: `/flights` (to get list of the flights) - ALL Roles. Can be parametrized with: <br/>
+=> `daysRange` - between 0 and 90 days, to filter list for specific date range from today till indicated amount of days. <br/>
+=> `registration` - string format, to filter list for specific aircraft. <br/>
+=> `hasNotes` - boolean, filter list for flights with remarks only. <br/>
+=> `hasFiles` - boolean, filter list for flights with files attached only. <br/>
 
 GET: `/users` (to get list of available users in the system) - ADMIN Role <br/>
 GET: `/users/by-email` (to get specific user info) - ADMIN Role <br/>
@@ -44,7 +43,7 @@ GET: `/users/by-email` (to get specific user info) - ADMIN Role <br/>
 #### Example how to add data into the application (using for example Postman)
 {"email":"bob@gmail.com", "password":"bobsPass", "repeatPassword":"bobsPass", "name":"Bob", "surname":"Smith"}  POST: /register <br/>
 
-## How to start cinema service locally:
+## How to start project locally:
 1. Install and configure Apache Tomcat (recommended version 9.0.50)
 2. Install and configure and create a schema in MySQL
 3. Fork and clone this project
@@ -61,4 +60,19 @@ GET: `/users/by-email` (to get specific user info) - ADMIN Role <br/>
     security.jwt.token.secret-key= JWT_TOKEN_SECRET_WORD
 ~~~
 5. Run this project using Tomcat local server
+~~~
+Couple of screenshots below.
+Main screen with filter settings: 
+~~~
+<img src="src/main/resources/readmi_screens/main.jpg" width="400" alt="main"> <br/>
+
+~~~
+Profile with the list of the aircraft: 
+~~~
+<img src="src/main/resources/readmi_screens/profile.jpg" width="400" alt="profile"> <br/>
+
+~~~
+List of the filtered flights:
+~~~
+<img src="src/main/resources/readmi_screens/list.jpg" width="1500" alt="list"> <br/>
 

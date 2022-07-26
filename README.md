@@ -7,9 +7,6 @@
 * Provide Stateless JWT authentication
 * Provide overview of the flights based on Flight Planning system
 
-~~~
-Project is deployed via Heroku https://leon-planner.herokuapp.com/
-~~~
 This is a web project, which could be characterized as a data gathering application. <BR>
 The project is based on the principles of SOLID and three-tier software architecture.<BR>
 Besides, such frameworks as Spring Web, Spring REST, Spring Security, Hibernate have been used to accomplish the task.<BR>

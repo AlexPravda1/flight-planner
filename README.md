@@ -19,7 +19,7 @@ HTTP requests can be sent in JSON format and are stored in a database.<BR>
 * Hibernate
 * Spring (Core, WEB, Security)
 * Apache Tomcat (to run app locally)
-* JWT Tokens (encrypted, valid for 7 days) are stored in Cookies
+* JWT Tokens (encrypted) are stored in HTTP Only Cookies
 * JSP page to represent the result
 * JSON mapping into POJO classes via DozerMapper
 * Maven Checkstyle Plugin

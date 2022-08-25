@@ -20,11 +20,11 @@ public final class AirlineUtil {
     public static Airline getVlzAirline() {
         Airline airline = new Airline();
         airline.setId(1063L);
-        airline.setName("Volare Aviation UK");
-        airline.setLeonSubDomain("vlz");
+        airline.setName("Aviation UK");
+        airline.setLeonSubDomain("auk");
         try {
             airline.setLeonApiKey(readFileToString(
-                    getFile("classpath:leonApiKey/vlz.txt"), "UTF-8"));
+                    getFile("classpath:leonApiKey/auk.txt"), "UTF-8"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
